@@ -75,6 +75,8 @@
   const state = reactive({
     whichAdToShow: { adType: 'none' } as { adType: string; } | AmazonAdObject | GoogleAdObject,
   });
+  // Important: `.env::VITE_AD_CLIENT` must be set in the importing project, the one in the current project will be ignored
+  const srcScriptGoogleAdSense = `https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${import.meta.env.VITE_AD_CLIENT}`;
 
 
   // === Methods ===
@@ -102,19 +104,6 @@
   // === Lifecycle Hooks ===
   onMounted(() => {
     state.whichAdToShow = pickRandomAd();
-
-    if (state.whichAdToShow.adType === 'GoogleAdSense') {
-      // Add script tag required by Google AdSense
-      useHead({
-        script: [
-          {
-            async: true,
-            crossorigin: 'anonymous',
-            src: `https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${import.meta.env.VITE_AD_CLIENT}`,
-          },
-        ],
-      });
-    }
   });
 </script>
 
@@ -126,6 +115,16 @@
     :adLayoutKey="(<GoogleAdObject>state.whichAdToShow).adLayoutKey"
     :adSlot="(<GoogleAdObject>state.whichAdToShow).adSlot"
   />
+
+  <!-- https://nuxt.com/docs/getting-started/seo-meta#components -->
+  <Head>
+    <Script
+      async
+      crossorigin="anonymous"
+      v-if="state.whichAdToShow.adType === 'GoogleAdSense'"
+      :src="srcScriptGoogleAdSense"
+    />
+  </Head>
 
   <!-- === Amazon Banner === -->
   <AmazonBanner
