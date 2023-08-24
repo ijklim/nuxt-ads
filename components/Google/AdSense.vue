@@ -45,3 +45,11 @@
     :data-ad-slot="adSlot"
   ></ins>
 </template>
+
+<style scoped>
+  ins {
+    /* Centers the ad */
+    margin: auto;
+    max-width: 800px;
+  }
+</style>
