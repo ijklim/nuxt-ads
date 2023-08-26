@@ -27,7 +27,7 @@
       adLayoutKey: '-fb+5w+4e-db+86',
       adSlot: 7471404401,
       adType: 'GoogleAdSense',
-      displayRatio: 100,
+      displayRatio: 1,
     },
     amazonAudiblePlus: {
       adType: 'AmazonBanner',
