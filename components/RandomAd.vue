@@ -4,7 +4,7 @@
   /**
    * Ad Types that could be displayed
    */
-  type AdType = 'AmazonBanner' | 'GoogleAdSense' | 'MochahostBanner';
+  type AdType = 'none' | 'AmazonBanner' | 'GoogleAdSense' | 'MochahostBanner';
 
   interface AmazonAdObject {
     adType: AdType;
@@ -13,6 +13,12 @@
     imageAltText: string;
     imagePath: string;
   };
+
+  // For initialization only
+  interface EmptyAdObject {
+    adType: AdType;
+    displayRatio: number;
+  }
 
   interface GoogleAdObject {
     adFormat: string;
@@ -30,8 +36,10 @@
     imageUrl: string;
   };
 
+  type AdObject = AmazonAdObject | EmptyAdObject | GoogleAdObject | MochahostAdObject;
+
   interface AdsObject {
-    [key: string]: AmazonAdObject | GoogleAdObject | MochahostAdObject;
+    [key: string]: AdObject;
   };
 
   const ads: AdsObject = {
@@ -88,12 +96,11 @@
       adType: 'MochahostBanner',
       href: 'https://affiliates.mochahost.com/idevaffiliate.php?id=6756&tid1=ivan-lim.com',
       imageAltText: 'MochaHost Web Hosting',
-      imageUrl: 'https://affiliates.mochahost.com/media/banners/mshared728x90.gif',
       displayRatio: 2,
     },
   };
   const state = reactive({
-    whichAdToShow: { adType: 'none' } as { adType: string; } | AmazonAdObject | GoogleAdObject,
+    whichAdToShow: { adType: 'none', displayRatio: 0 },
   });
   // Important: `.env::VITE_AD_CLIENT` must be set in the importing project, the one in the current project will be ignored
   const srcScriptGoogleAdSense = `https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${import.meta.env.VITE_AD_CLIENT}`;
@@ -158,7 +165,6 @@
   <MochahostBanner
     v-if="state.whichAdToShow.adType === 'MochahostBanner'"
     :href="(<MochahostAdObject>state.whichAdToShow).href"
-    :imageUrl="(<MochahostAdObject>state.whichAdToShow).imageUrl"
     :imageAltText="(<MochahostAdObject>state.whichAdToShow).imageAltText"
   />
 </template>

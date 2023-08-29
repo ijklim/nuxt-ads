@@ -1,9 +1,11 @@
 <script setup lang="ts">
+  // === Composables ===
+  // nuxt-viewport module: https://nuxt.com/modules/nuxt-viewport
+  const viewport = useViewport();
+
+
+  // === Props ===
   defineProps({
-    height: {
-      type: Number,
-      default: 90,
-    },
     // e.g. https://affiliates.mochahost.com/idevaffiliate.php?id=6756&tid1=ivan-lim.com
     href: {
       type: String,
@@ -13,16 +15,23 @@
       type: String,
       default: '',
     },
-    // Example image url: https://affiliates.mochahost.com/media/banners/mshared728x90.gif
-    imageUrl: {
-      type: String,
-      required: true,
-    },
-    width: {
-      type: Number,
-      default: 728,
-    },
   });
+
+
+  // === Data ===
+  // Mochahost Banners: https://affiliates.mochahost.com/account.php?page=7
+  const BREAKPOINT_CONFIGURATIONS = {
+    default: {
+      height: 90,
+      imageUrl: 'https://affiliates.mochahost.com/media/banners/mshared728x90.gif',
+      width: 728,
+    },
+    mobile: {
+      height: 200,
+      imageUrl: 'https://affiliates.mochahost.com/media/banners/mshared200x200.gif',
+      width: 200,
+    }
+  };
 </script>
 
 <template>
@@ -33,9 +42,9 @@
     >
       <img
         :alt="imageAltText"
-        :height="height"
-        :src="imageUrl"
-        :width="width"
+        :height="BREAKPOINT_CONFIGURATIONS[viewport.breakpoint.value.startsWith('mobile') ? 'mobile' : 'default'].height"
+        :src="BREAKPOINT_CONFIGURATIONS[viewport.breakpoint.value.startsWith('mobile') ? 'mobile' : 'default'].imageUrl"
+        :width="BREAKPOINT_CONFIGURATIONS[viewport.breakpoint.value.startsWith('mobile') ? 'mobile' : 'default'].width"
       />
     </a>
   </div>

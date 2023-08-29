@@ -4,5 +4,8 @@ export default defineNuxtConfig({
     port: 8810,
   },
   devtools: { enabled: false },
+  modules: [
+    'nuxt-viewport',
+  ],
   ssr: true,
 });
