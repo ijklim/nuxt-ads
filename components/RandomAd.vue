@@ -4,23 +4,36 @@
   /**
    * Ad Types that could be displayed
    */
+  type AdType = 'AmazonBanner' | 'GoogleAdSense' | 'MochahostBanner';
+
   interface AmazonAdObject {
-    adType: string;
-    href: string;
-    imagePath: string;
-    imageAltText: string;
+    adType: AdType;
     displayRatio: number;
+    href: string;
+    imageAltText: string;
+    imagePath: string;
   };
+
   interface GoogleAdObject {
     adFormat: string;
     adLayoutKey: string;
     adSlot: number;
-    adType: string;
+    adType: AdType;
     displayRatio: number;
   };
-  interface AdsObject {
-    [key: string]: AmazonAdObject | GoogleAdObject;
+
+  interface MochahostAdObject {
+    adType: AdType;
+    displayRatio: number;
+    href: string;
+    imageAltText: string;
+    imageUrl: string;
   };
+
+  interface AdsObject {
+    [key: string]: AmazonAdObject | GoogleAdObject | MochahostAdObject;
+  };
+
   const ads: AdsObject = {
     googleInFeed: {
       adFormat: 'fluid',
@@ -70,6 +83,13 @@
       imagePath: 'Amazon/AWR_Associate_Central-1.jpg',
       imageAltText: 'Create an Amazon Wedding Registry',
       displayRatio: 1,
+    },
+    mochahostAd: {
+      adType: 'MochahostBanner',
+      href: 'https://affiliates.mochahost.com/idevaffiliate.php?id=6756&tid1=ivan-lim.com',
+      imageAltText: 'MochaHost Web Hosting',
+      imageUrl: 'https://affiliates.mochahost.com/media/banners/mshared728x90.gif',
+      displayRatio: 2,
     },
   };
   const state = reactive({
@@ -132,5 +152,13 @@
     :href="(<AmazonAdObject>state.whichAdToShow).href"
     :image="getImageUrl((<AmazonAdObject>state.whichAdToShow).imagePath)"
     :imageAltText="(<AmazonAdObject>state.whichAdToShow).imageAltText"
+  />
+
+  <!-- === Mochahost Banner === -->
+  <MochahostBanner
+    v-if="state.whichAdToShow.adType === 'MochahostBanner'"
+    :href="(<MochahostAdObject>state.whichAdToShow).href"
+    :imageUrl="(<MochahostAdObject>state.whichAdToShow).imageUrl"
+    :imageAltText="(<MochahostAdObject>state.whichAdToShow).imageAltText"
   />
 </template>
