@@ -36,7 +36,8 @@
 
 <template>
   <div>
-    <a
+    <NuxtLink
+      rel="nofollow noopener"
       target="_blank"
       :href="href"
     >
@@ -46,6 +47,6 @@
         :src="BREAKPOINT_CONFIGURATIONS[viewport.breakpoint.value.startsWith('mobile') ? 'mobile' : 'default'].imageUrl"
         :width="BREAKPOINT_CONFIGURATIONS[viewport.breakpoint.value.startsWith('mobile') ? 'mobile' : 'default'].width"
       />
-    </a>
+    </NuxtLink>
   </div>
 </template>

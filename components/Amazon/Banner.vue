@@ -28,7 +28,8 @@
 
 <template>
   <div class="image-link">
-    <a
+    <NuxtLink
+      rel="nofollow noopener"
       target="_blank"
       :href="href"
     >
@@ -38,7 +39,7 @@
         :src="image"
         :width="width"
       />
-    </a>
+    </NuxtLink>
   </div>
 
   <div class="disclaimer mx-auto">
