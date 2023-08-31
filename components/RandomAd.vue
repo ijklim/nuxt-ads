@@ -1,5 +1,9 @@
 <!-- === Randomly pick one ad from available Google or Amazon ads === -->
 <script setup lang="ts">
+  // === Composables ===
+  const utility = useUtility(import.meta);
+
+
   // === Data ===
   /**
    * Ad Types that could be displayed
@@ -131,40 +135,61 @@
   // === Lifecycle Hooks ===
   onMounted(() => {
     state.whichAdToShow = pickRandomAd();
+
+    // === Send dimension to parent if available ===
+    if (window.parent) {
+      // Note: document.body.scrollHeight is only available after DOM is fully loaded
+      window.onload = () => {
+        // Note: window.innerWidth is the width of the browser, regardless of content
+        // Note: document.body.scrollHeight will adjust according to content
+        // console.log(`[${utility.currentFileName}::event::load] window.innerWidth, document.body.scrollHeight:`, window.innerWidth, document.body.scrollHeight);
+        // console.log(`[${utility.currentFileName}::onMounted] window.parent:`, window.parent);
+        window.parent.postMessage(
+          {
+            height: document.body.scrollHeight,
+            msg: 'dimension',
+          },
+          '*'
+        );
+      };
+    }
   });
 </script>
 
 <template>
-  <!-- === Google AdSense === -->
-  <GoogleAdSense
-    v-if="state.whichAdToShow.adType === 'GoogleAdSense'"
-    :adFormat="(<GoogleAdObject>state.whichAdToShow).adFormat"
-    :adLayoutKey="(<GoogleAdObject>state.whichAdToShow).adLayoutKey"
-    :adSlot="(<GoogleAdObject>state.whichAdToShow).adSlot"
-  />
-
-  <!-- https://nuxt.com/docs/getting-started/seo-meta#components -->
-  <Head>
-    <Script
-      async
-      crossorigin="anonymous"
+  <div class="text-center">
+    <!-- === Google AdSense === -->
+    <GoogleAdSense
       v-if="state.whichAdToShow.adType === 'GoogleAdSense'"
-      :src="srcScriptGoogleAdSense"
+      :adFormat="(<GoogleAdObject>state.whichAdToShow).adFormat"
+      :adLayoutKey="(<GoogleAdObject>state.whichAdToShow).adLayoutKey"
+      :adSlot="(<GoogleAdObject>state.whichAdToShow).adSlot"
     />
-  </Head>
 
-  <!-- === Amazon Banner === -->
-  <AmazonBanner
-    v-if="state.whichAdToShow.adType === 'AmazonBanner'"
-    :href="(<AmazonAdObject>state.whichAdToShow).href"
-    :image="getImageUrl((<AmazonAdObject>state.whichAdToShow).imagePath)"
-    :imageAltText="(<AmazonAdObject>state.whichAdToShow).imageAltText"
-  />
+    <!-- https://nuxt.com/docs/getting-started/seo-meta#components -->
+    <Head
+      v-if="state.whichAdToShow.adType === 'GoogleAdSense'"
+    >
+      <Script
+        async
+        crossorigin="anonymous"
+        :src="srcScriptGoogleAdSense"
+      />
+    </Head>
 
-  <!-- === Mochahost Banner === -->
-  <MochahostBanner
-    v-if="state.whichAdToShow.adType === 'MochahostBanner'"
-    :href="(<MochahostAdObject>state.whichAdToShow).href"
-    :imageAltText="(<MochahostAdObject>state.whichAdToShow).imageAltText"
-  />
+    <!-- === Amazon Banner === -->
+    <AmazonBanner
+      v-if="state.whichAdToShow.adType === 'AmazonBanner'"
+      :href="(<AmazonAdObject>state.whichAdToShow).href"
+      :image="getImageUrl((<AmazonAdObject>state.whichAdToShow).imagePath)"
+      :imageAltText="(<AmazonAdObject>state.whichAdToShow).imageAltText"
+    />
+
+    <!-- === Mochahost Banner === -->
+    <MochahostBanner
+      v-if="state.whichAdToShow.adType === 'MochahostBanner'"
+      :href="(<MochahostAdObject>state.whichAdToShow).href"
+      :imageAltText="(<MochahostAdObject>state.whichAdToShow).imageAltText"
+    />
+  </div>
 </template>

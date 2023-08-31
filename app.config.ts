@@ -1,7 +1,6 @@
-const appName = 'Nuxt Ads';
-const appVersion = '1.1.3';
+import { displayName, version } from '~/package.json';
 
 export default defineAppConfig({
-  appName,
-  appVersion,
+  appName: displayName,
+  appVersion: version,
 });

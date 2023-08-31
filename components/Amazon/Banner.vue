@@ -42,7 +42,7 @@
     </NuxtLink>
   </div>
 
-  <div class="disclaimer mx-auto">
+  <div class="disclaimer">
     Disclaimer: As an Amazon Associate I earn from qualifying purchases
   </div>
 </template>
@@ -58,6 +58,9 @@
   color: black;
   font-family: Arial, Helvetica, sans-serif;
   font-size: 9px;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 1px;
   width: calc(v-bind(width) * 1px);
 }
 </style>
