@@ -1,17 +1,12 @@
+<script setup lang="ts">
+  const appConfig = useAppConfig();
+
+  // Set browser tab title
+  useSeoMeta({
+    title: `${appConfig.appName} v.${appConfig.appVersion}`,
+  });
+</script>
+
 <template>
-  <div>
-    <RandomAd />
-  </div>
+  <RandomAd />
 </template>
-
-<!-- Global styles, substituting for css in nuxt.config.ts -->
-<style>
-  body {
-    margin: 0px;
-    padding: 0px;
-  }
-
-  .text-center {
-    text-align: center;
-  }
-</style>
