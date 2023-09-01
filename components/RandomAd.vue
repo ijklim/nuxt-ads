@@ -1,5 +1,8 @@
 <!-- === Randomly pick one ad from available Google or Amazon ads === -->
 <script setup lang="ts">
+  import { Script } from '@unhead/vue';
+
+
   // === Composables ===
   const utility = useUtility(import.meta);
 
@@ -106,8 +109,6 @@
   const state = reactive({
     whichAdToShow: { adType: 'none', displayRatio: 0 },
   });
-  // Important: `.env::VITE_AD_CLIENT` must be set in the importing project, the one in the current project will be ignored
-  const srcScriptGoogleAdSense = `https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${import.meta.env.VITE_AD_CLIENT}`;
 
 
   // === Methods ===
@@ -136,28 +137,37 @@
   onMounted(() => {
     state.whichAdToShow = pickRandomAd();
 
-    // === Send dimension to parent if available ===
-    if (window.parent) {
-      // Note: document.body.scrollHeight is only available after DOM is fully loaded
-      window.onload = () => {
-        // Note: window.innerWidth is the width of the browser, regardless of content
-        // Note: document.body.scrollHeight will adjust according to content
-        // console.log(`[${utility.currentFileName}::event::load] window.innerWidth, document.body.scrollHeight:`, window.innerWidth, document.body.scrollHeight);
-        // console.log(`[${utility.currentFileName}::onMounted] window.parent:`, window.parent);
-        window.parent.postMessage(
-          {
-            height: document.body.scrollHeight,
-            msg: 'dimension',
-          },
-          '*'
-        );
-      };
+    const scripts: Script[] = [
+      // Supports iframe resizing on parent window
+      {
+        async: true,
+        crossorigin: 'anonymous',
+        integrity: 'sha512-R7Piufj0/o6jG9ZKrAvS2dblFr2kkuG4XVQwStX+/4P+KwOLUXn2DXy0l1AJDxxqGhkM/FJllZHG2PKOAheYzg==',
+        referrerpolicy: 'no-referrer',
+        src: 'https://cdnjs.cloudflare.com/ajax/libs/iframe-resizer/4.3.6/iframeResizer.contentWindow.min.js',
+        type: 'text/javascript',
+      },
+    ];
+
+    // Add Google AdSense script only if necessary
+    if (state.whichAdToShow.adType === 'GoogleAdSense') {
+      // Important: `.env::VITE_AD_CLIENT` must be set in the importing project, the one in the current project will be ignored
+      const srcScriptGoogleAdSense = `https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${import.meta.env.VITE_AD_CLIENT}`;
+      scripts.push({
+        async: true,
+        crossorigin: 'anonymous',
+        src: srcScriptGoogleAdSense,
+      });
     }
+
+    useHead({
+      script: scripts,
+    });
   });
 </script>
 
 <template>
-  <div class="text-center">
+  <div id="nuxt-ad" class="text-center">
     <!-- === Google AdSense === -->
     <GoogleAdSense
       v-if="state.whichAdToShow.adType === 'GoogleAdSense'"
@@ -165,17 +175,6 @@
       :adLayoutKey="(<GoogleAdObject>state.whichAdToShow).adLayoutKey"
       :adSlot="(<GoogleAdObject>state.whichAdToShow).adSlot"
     />
-
-    <!-- https://nuxt.com/docs/getting-started/seo-meta#components -->
-    <Head
-      v-if="state.whichAdToShow.adType === 'GoogleAdSense'"
-    >
-      <Script
-        async
-        crossorigin="anonymous"
-        :src="srcScriptGoogleAdSense"
-      />
-    </Head>
 
     <!-- === Amazon Banner === -->
     <AmazonBanner
