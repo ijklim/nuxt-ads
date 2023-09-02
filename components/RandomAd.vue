@@ -16,6 +16,7 @@
   interface AmazonAdObject {
     adType: AdType;
     displayRatio: number;
+    height?: number;
     href: string;
     imageAltText: string;
     imagePath: string;
@@ -50,13 +51,7 @@
   };
 
   const ads: AdsObject = {
-    googleInFeed: {
-      adFormat: 'fluid',
-      adLayoutKey: '-fb+5w+4e-db+86',
-      adSlot: 7471404401,
-      adType: 'GoogleAdSense',
-      displayRatio: 1,
-    },
+    // === Amazon Bounty ===
     amazonAudiblePlus: {
       adType: 'AmazonBanner',
       href: 'https://www.amazon.com/dp/B00NB86OYE/?ref_=assoc_tag_ph_1485906643682&_encoding=UTF8&camp=1789&creative=9325&linkCode=pf4&tag=aimprove-20&linkId=837a9441c1d588564e1289af56177cff',
@@ -69,7 +64,7 @@
       href: 'https://www.amazon.com/gp/family/signup/welcome?ie=UTF8&*Version*=1&*entries*=0&ref_=assoc_tag_ph_1457104784749&_encoding=UTF8&camp=1789&creative=9325&linkCode=pf4&tag=aimprove-20&linkId=20968e1f5b6ffc1c3bd5652f143047a9',
       imagePath: 'Amazon/33385_mom_ads_300x250_v2.png',
       imageAltText: 'Join Amazon Family 30-Day Free Trial',
-      displayRatio: 2,
+      displayRatio: 1,
     },
     amazonFresh: {
       adType: 'AmazonBanner',
@@ -99,11 +94,32 @@
       imageAltText: 'Create an Amazon Wedding Registry',
       displayRatio: 1,
     },
+
+    // === Amazon Product ===
+    amazonProductFullstarVegetableChopper: {
+      adType: 'AmazonBanner',
+      height: 344,
+      href: 'https://www.amazon.com/Fullstar-Vegetable-Chopper-Spiralizer-Container/dp/B0C1T6J3CS?&_encoding=UTF8&tag=aimprove-20&linkCode=ur2&linkId=5a931ba01d93ed4d53d7577344c8dbd4&camp=1789&creative=9325',
+      imagePath: 'Amazon/FullstarVegetableChopper.webp',
+      imageAltText: 'Fullstar Vegetable Chopper',
+      displayRatio: 5,
+    },
+
+    // === Google AdSense ===
+    googleInFeed: {
+      adFormat: 'fluid',
+      adLayoutKey: '-fb+5w+4e-db+86',
+      adSlot: 7471404401,
+      adType: 'GoogleAdSense',
+      displayRatio: 5,
+    },
+
+    // === Mochahost Web Hosting ===
     mochahostAd: {
       adType: 'MochahostBanner',
       href: 'https://affiliates.mochahost.com/idevaffiliate.php?id=6756&tid1=ivan-lim.com',
       imageAltText: 'MochaHost Web Hosting',
-      displayRatio: 2,
+      displayRatio: 5,
     },
   };
   const state = reactive({
@@ -179,6 +195,7 @@
     <!-- === Amazon Banner === -->
     <AmazonBanner
       v-if="state.whichAdToShow.adType === 'AmazonBanner'"
+      :height="(<AmazonAdObject>state.whichAdToShow)?.height ?? undefined"
       :href="(<AmazonAdObject>state.whichAdToShow).href"
       :image="getImageUrl((<AmazonAdObject>state.whichAdToShow).imagePath)"
       :imageAltText="(<AmazonAdObject>state.whichAdToShow).imageAltText"
