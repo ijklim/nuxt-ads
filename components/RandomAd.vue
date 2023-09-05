@@ -1,11 +1,13 @@
 <!-- === Randomly pick one ad from available Google or Amazon ads === -->
+<!-- Supports route query `adtype` to include (e.g. MochahostBanner) or exclude (e.g. -GoogleAdSense) an AdType from being picked -->
 <script setup lang="ts">
   import { Script } from '@unhead/vue';
 
 
   // === Composables ===
+  const { query } = useRoute();
   const utility = useUtility(import.meta);
-
+  // console.log(`[${utility.currentFileName}] query:`, query);
 
   // === Data ===
   /**
@@ -139,12 +141,39 @@
    * Randomly pick an ad from `ads` considering displayRatio
    */
   const pickRandomAd = () => {
-    const adKeys = Object.keys(ads);
+    const adKeys = Object.keys(ads)
+      .filter((adKey) => {
+        // Filter by url query `adtype` if exists
+        const filterAdType = query?.adtype;
+
+        if (!filterAdType) {
+          return true;
+        }
+
+        if ((filterAdType as string).startsWith('-')) {
+          // If adtype starts with '-', filter out the key that matches the string that comes after
+          return ads[adKey].adType.toLowerCase() !== (filterAdType.slice(1) as string).toLowerCase();
+        }
+
+        // True if adType matches query 'adtype'
+        return ads[adKey].adType.toLowerCase() === (filterAdType as string).toLowerCase();
+      });
+
     // availableAds e.g. ['googleInFeed', 'googleInFeed', 'amazonPrimeStudent', ...]
-    const availableAds = adKeys.flatMap(adKey => Array(ads[adKey].displayRatio).fill(adKey))
+    const availableAds = adKeys.flatMap(adKey => Array(ads[adKey].displayRatio).fill(adKey));
+    // console.log(`[${utility.currentFileName}::pickRandomAd] availableAds:`, availableAds);
+
+    if (!availableAds.length) {
+      // No available ad, most likely filter has removed all available ads
+      return Object.values(ads)[0];
+    }
+
     const indexRandom = Math.floor(Math.random() * availableAds.length);
+    // console.log(`[${utility.currentFileName}::pickRandomAd] indexRandom:`, indexRandom);
+
     // adKeySelected e.g. googleInFeed
     const adKeySelected = availableAds[indexRandom];
+
     return ads[adKeySelected];
   };
 
