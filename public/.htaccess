@@ -26,8 +26,8 @@
 </IfModule>
 
 # Caching
-<FilesMatch "\.(html|htm|js|css|jpg|jpeg|gif|png|wav)$">
-  <IfModule mod_headers.c>
-    Header set Cache-Control "max-age=31536000, public"
-  </IfModule>
-</FilesMatch>
+<IfModule mod_headers.c>
+  <FilesMatch "\.(css|gif|htm|html|jpeg|jpg|js|json|png|svg|wav|webp|woff2)$">
+    Header set Cache-Control "max-age=86400, public"
+  </FilesMatch>
+</IfModule>
