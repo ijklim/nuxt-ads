@@ -22,6 +22,7 @@
     href: string;
     imageAltText: string;
     imagePath: string;
+    width?: number;
   };
 
   // For initialization only
@@ -53,59 +54,53 @@
   };
 
   const ads: AdsObject = {
-    // === Amazon Bounty ===
-    amazonAudiblePlus: {
-      adType: 'AmazonBanner',
-      href: 'https://www.amazon.com/dp/B00NB86OYE/?ref_=assoc_tag_ph_1485906643682&_encoding=UTF8&camp=1789&creative=9325&linkCode=pf4&tag=aimprove-20&linkId=837a9441c1d588564e1289af56177cff',
-      imagePath: 'Amazon/Minerva-Plus-Associate-300x250-V08.png',
-      imageAltText: 'Try Audible Premium Plus and Get Up to Two Free Audiobooks',
-      displayRatio: 1,
-    },
-    amazonFamily: {
-      adType: 'AmazonBanner',
-      href: 'https://www.amazon.com/gp/family/signup/welcome?ie=UTF8&*Version*=1&*entries*=0&ref_=assoc_tag_ph_1457104784749&_encoding=UTF8&camp=1789&creative=9325&linkCode=pf4&tag=aimprove-20&linkId=20968e1f5b6ffc1c3bd5652f143047a9',
-      imagePath: 'Amazon/33385_mom_ads_300x250_v2.png',
-      imageAltText: 'Join Amazon Family 30-Day Free Trial',
-      displayRatio: 1,
-    },
-    amazonFresh: {
-      adType: 'AmazonBanner',
-      href: 'https://www.amazon.com/fresh?ref_=assoc_tag_ph_1524254357421&_encoding=UTF8&camp=1789&creative=9325&linkCode=pf4&tag=aimprove-20&linkId=48b224a906b66a17d7bc2f4e0e9b7b01',
-      imagePath: 'Amazon/AZUS23-100k-0603-Amazon-EBT-H2-AssociateBanners_Set1_300x250_V01.jpg',
-      imageAltText: 'Try Amazon Fresh',
-      displayRatio: 1,
-    },
-    amazonPrime: {
-      adType: 'AmazonBanner',
-      href: 'https://www.amazon.com/gp/video/primesignup?ref_=assoc_tag_ph_1402131641212&_encoding=UTF8&camp=1789&creative=9325&linkCode=pf4&tag=aimprove-20&linkId=98998df7a905a304cfc12dcfc2991a46',
-      imagePath: 'Amazon/AssocAds_GleasonSVOD_300x250.jpg',
-      imageAltText: 'Join Amazon Prime - Watch Thousands of Movies & TV Shows Anytime - Start Free Trial Now',
-      displayRatio: 1,
-    },
-    amazonPrimeStudent: {
-      adType: 'AmazonBanner',
-      href: 'https://www.amazon.com/gp/student/signup/info/?ref_=assoc_tag_ph_1402130811706&_encoding=UTF8&camp=1789&creative=9325&linkCode=pf4&tag=aimprove-20&linkId=06890d150e8415a2ead6189b18a0f7ca',
-      imagePath: 'Amazon/1028240_student_v5a_associate_300x250.jpg',
-      imageAltText: 'Amazon Prime Student 6-month Trial',
-      displayRatio: 1,
-    },
-    amazonWeddingRegistry: {
-      adType: 'AmazonBanner',
-      href: 'https://www.amazon.com/wedding/home?ref_=assoc_tag_ph_1524238801480&_encoding=UTF8&camp=1789&creative=9325&linkCode=pf4&tag=aimprove-20&linkId=4a99f2be4192accb32590c6ac3e1424c',
-      imagePath: 'Amazon/AWR_Associate_Central-1.jpg',
-      imageAltText: 'Create an Amazon Wedding Registry',
-      displayRatio: 1,
-    },
-
     // === Amazon Product ===
-    amazonProductFullstarVegetableChopper: {
+    amazonProductCoolerArcticZoneTitan: {
       adType: 'AmazonBanner',
-      height: 344,
-      href: 'https://www.amazon.com/Fullstar-Vegetable-Chopper-Spiralizer-Container/dp/B0C1T6J3CS?&_encoding=UTF8&tag=aimprove-20&linkCode=ur2&linkId=5a931ba01d93ed4d53d7577344c8dbd4&camp=1789&creative=9325',
-      imagePath: 'Amazon/FullstarVegetableChopper.webp',
-      imageAltText: 'Fullstar Vegetable Chopper',
+      height: 304,
+      href: 'https://www.amazon.com/Arctic-Zone-Freeze-Zipperless-HardBody/dp/B09YFGYYNF?pd_rd_w=DpYWL&content-id=amzn1.sym.309d45c5-3eba-4f62-9bb2-0acdcf0662e7&pf_rd_p=309d45c5-3eba-4f62-9bb2-0acdcf0662e7&pf_rd_r=P0SK8QPRF1Z85YZS7ZNC&pd_rd_wg=muqFO&pd_rd_r=ce76e212-0fdb-4675-8b08-3afc4ec996f4&pd_rd_i=B0CJJK9H3Q&th=1&linkCode=ll1&tag=aimprove-20&linkId=092234b09600657380c789b3d42a792c&language=en_US&ref_=as_li_ss_tl',
+      imagePath: 'Amazon/CoolerArcticZoneTitan.webp',
+      imageAltText: `Arctic Zone Titan Deep Freeze Zipperless Hardbody Cooler`,
+      width: 300,
       displayRatio: 5,
     },
+    amazonProductPickleballPaddlesMTEN: {
+      adType: 'AmazonBanner',
+      height: 301,
+      href: 'https://www.amazon.com/Pickleball-Paddles-Approved-Fiberglass-Portable/dp/B0BYV7P9X7?pd_rd_w=DpYWL&content-id=amzn1.sym.309d45c5-3eba-4f62-9bb2-0acdcf0662e7&pf_rd_p=309d45c5-3eba-4f62-9bb2-0acdcf0662e7&pf_rd_r=P0SK8QPRF1Z85YZS7ZNC&pd_rd_wg=muqFO&pd_rd_r=ce76e212-0fdb-4675-8b08-3afc4ec996f4&pd_rd_i=B0CJK2QWK2&psc=1&linkCode=ll1&tag=aimprove-20&linkId=270e7705d6ad777987bbcbea655ac255&language=en_US&ref_=as_li_ss_tl',
+      imagePath: 'Amazon/PickleballPaddlesMTEN.webp',
+      imageAltText: `MTEN Pickleball Paddles, USAPA Approved Fiberglass Surface Pickleball Set`,
+      width: 300,
+      displayRatio: 5,
+    },
+    amazonProductSmartWatchAppleUltra2: {
+      adType: 'AmazonBanner',
+      height: 335,
+      href: 'https://www.amazon.com/Apple-Cellular-Smartwatch-Precision-Extra-Long/dp/B0CHWZ5VVM?pd_rd_w=F1SKE&content-id=amzn1.sym.309d45c5-3eba-4f62-9bb2-0acdcf0662e7&pf_rd_p=309d45c5-3eba-4f62-9bb2-0acdcf0662e7&pf_rd_r=P0SK8QPRF1Z85YZS7ZNC&pd_rd_wg=muqFO&pd_rd_r=ce76e212-0fdb-4675-8b08-3afc4ec996f4&pd_rd_i=B0CHWZ5VVM&psc=1&linkCode=ll1&tag=aimprove-20&linkId=0cfba7bb290c3f2bbd5222c95a212fca&language=en_US&ref_=as_li_ss_tl',
+      imagePath: 'Amazon/SmartWatchAppleUltra2.webp',
+      imageAltText: `Apple Smart Watch Ultra 2 `,
+      width: 300,
+      displayRatio: 5,
+    },
+    amazonProductSmartWatchTozoS3: {
+      adType: 'AmazonBanner',
+      height: 304,
+      href: 'https://www.amazon.com/TOZO-S3-Bluetooth-Waterproof-Compatible/dp/B07L1GWR66?pd_rd_w=F1SKE&content-id=amzn1.sym.309d45c5-3eba-4f62-9bb2-0acdcf0662e7&pf_rd_p=309d45c5-3eba-4f62-9bb2-0acdcf0662e7&pf_rd_r=P0SK8QPRF1Z85YZS7ZNC&pd_rd_wg=muqFO&pd_rd_r=ce76e212-0fdb-4675-8b08-3afc4ec996f4&pd_rd_i=B0CGLL1JHG&th=1&linkCode=ll1&tag=aimprove-20&linkId=1e1f5d8a5d12a12ef95f24c6e61dcf84&language=en_US&ref_=as_li_ss_tl',
+      imagePath: 'Amazon/SmartWatchTozoS3.webp',
+      imageAltText: `TOZO S3 Smart Watch`,
+      width: 300,
+      displayRatio: 5,
+    },
+    amazonProductTvAmazonFire55: {
+      adType: 'AmazonBanner',
+      height: 194,
+      href: 'https://www.amazon.com/amazon-fire-tv-55-inch-4-series-4k-smart-tv/dp/B0B3H6JPYZ?pd_rd_w=F1SKE&content-id=amzn1.sym.309d45c5-3eba-4f62-9bb2-0acdcf0662e7&pf_rd_p=309d45c5-3eba-4f62-9bb2-0acdcf0662e7&pf_rd_r=P0SK8QPRF1Z85YZS7ZNC&pd_rd_wg=muqFO&pd_rd_r=ce76e212-0fdb-4675-8b08-3afc4ec996f4&pd_rd_i=B0B3H6JPYZ&psc=1&linkCode=ll1&tag=aimprove-20&linkId=9306e2f9c9140bbb99081aa47db5be9a&language=en_US&ref_=as_li_ss_tl',
+      imagePath: 'Amazon/TvAmazonFire55.webp',
+      imageAltText: `TOZO S3 Smart Watch`,
+      width: 300,
+      displayRatio: 5,
+    },
+
 
     // === Google AdSense ===
     googleInFeed: {
@@ -116,12 +111,13 @@
       displayRatio: 5,
     },
 
+
     // === Mochahost Web Hosting ===
     mochahostAd: {
       adType: 'MochahostBanner',
       href: 'https://affiliates.mochahost.com/idevaffiliate.php?id=6756&tid1=ivan-lim.com',
       imageAltText: 'MochaHost Web Hosting',
-      displayRatio: 5,
+      displayRatio: 2,
     },
   };
   const state = reactive({
