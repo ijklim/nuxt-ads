@@ -64,6 +64,15 @@
       width: 300,
       displayRatio: 5,
     },
+    amazonProductMiniPcNab6: {
+      adType: 'AmazonBanner',
+      height: 145,
+      href: 'https://www.amazon.com/NAB6-i7-12650H-Threads-PCIe4-0-Computer/dp/B0C1X191NR?pd_rd_w=OLaNN&content-id=amzn1.sym.81e01203-65b8-4d65-b4bf-32a39dde4f92&pf_rd_p=81e01203-65b8-4d65-b4bf-32a39dde4f92&pf_rd_r=PBWGGNX4812AM560CCWJ&pd_rd_wg=N8JiI&pd_rd_r=348798bf-bf95-4fb5-86d4-c8d438d3645c&pd_rd_i=B0C1X191NR&psc=1&linkCode=ll1&tag=aimprove-20&linkId=dfd65a3cde9039a955f0ac6cc8e71f0f&language=en_US&ref_=as_li_ss_tl',
+      imagePath: 'Amazon/MiniPcNab6.webp',
+      imageAltText: `Mini PC NAB6 Intel Core i7-12650H`,
+      width: 300,
+      displayRatio: 5,
+    },
     amazonProductPickleballPaddlesMTEN: {
       adType: 'AmazonBanner',
       height: 301,
