@@ -94,32 +94,43 @@
       {{ state.disclaimerText }}
     </div>
 
-    <NuxtLink
-      rel="nofollow noopener"
-      target="_blank"
-      :href="href"
-    >
-      <img
-        :alt="imageAltText"
-        :height="imgDimension.height"
-        :src="image"
-        :width="imgDimension.width"
-      />
-    </NuxtLink>
+    <div class="img-wrapper">
+      <NuxtLink
+        rel="nofollow noopener"
+        target="_blank"
+        :href="href"
+      >
+        <img
+          :alt="imageAltText"
+          :height="imgDimension.height"
+          :src="image"
+          :width="imgDimension.width"
+        />
+      </NuxtLink>
+    </div>
   </div>
+
+  <!-- Note: div needed for iframe resizer to reserve vertical space for bottom border of `img-wrapper` -->
+  <div style="line-height: 2px;">&nbsp;</div>
 </template>
 
 <style scoped>
 .ad-wrapper {
-  background-color: white;
-  border-radius: calc(v-bind(PADDING_AD) * 1px);
   margin-left: auto;
   margin-right: auto;
   width: calc(v-bind(imgDimension.width) * 1px + v-bind(PADDING_AD) * 2px);
 }
 
+.img-wrapper {
+  background-color: white;
+  border: 1px solid lightgray;
+  border-top: none;
+  padding: calc(v-bind(PADDING_AD) * 1px);
+}
+
+/* Gradient Samples: https://www.eggradients.com/category/brown-gradient */
 .disclaimer {
-  background: linear-gradient(to bottom left, black, #999);
+  background: linear-gradient(to bottom left, #1E1D1B, #CC9934);
   border-radius: calc(v-bind(PADDING_AD) * 1px) calc(v-bind(PADDING_AD) * 1px) 0px 0px;
   color: white;
   cursor: pointer;
@@ -128,7 +139,6 @@
   margin-left: auto;
   margin-right: auto;
   margin-top: 1px;
-  margin-bottom: 5px;
   padding: calc(v-bind(PADDING_AD) * 1px);
   width: calc(v-bind(imgDimension.width) * 1px);
 }
