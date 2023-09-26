@@ -1,5 +1,10 @@
 <script setup lang="ts">
-  defineProps({
+  // === Composables ===
+  const utility = useUtility(import.meta);
+
+
+  // === Props ===
+  const props = defineProps({
     height: {
       type: Number,
       default: 250,
@@ -24,6 +29,37 @@
       default: 300,
     },
   });
+
+
+  // === Data ===
+  const state = reactive({
+    height: props.height,
+    width: props.width,
+  })
+
+  // === Life Cycle Hooks ===
+  onMounted(() => {
+    /**
+     * Resize banner to fit inside parent window
+     */
+    const resizeImageBasedOnWindowWidth = (event: Event) => {
+      const widthWindow = (event.target as Window)?.innerWidth;
+      // console.log(`[${utility.currentFileName}::resizeImageBasedOnWindowWidth] widthWindow:`, widthWindow);
+
+      if (widthWindow && widthWindow < props.width) {
+        // console.log(`[${utility.currentFileName}::resizeImageBasedOnWindowWidth] widthWindow, props.width:`, widthWindow, props.width);
+        state.width = widthWindow;
+        state.height = props.height * (state.width / props.width);
+        return;
+      }
+
+      state.height = props.height;
+      state.width = props.width;
+    };
+
+    window.onload = resizeImageBasedOnWindowWidth;
+    window.onresize = resizeImageBasedOnWindowWidth;
+  });
 </script>
 
 <template>
@@ -35,9 +71,9 @@
     >
       <img
         :alt="imageAltText"
-        :height="height"
+        :height="state.height"
         :src="image"
-        :width="width"
+        :width="state.width"
       />
     </NuxtLink>
   </div>
@@ -61,6 +97,6 @@
   margin-left: auto;
   margin-right: auto;
   margin-top: 1px;
-  width: calc(v-bind(width) * 1px);
+  width: calc(v-bind(state.width) * 1px);
 }
 </style>

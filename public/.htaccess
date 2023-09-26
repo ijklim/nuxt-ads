@@ -26,8 +26,20 @@
 </IfModule>
 
 # Caching
-<IfModule mod_headers.c>
-  <FilesMatch "\.(css|gif|htm|html|jpeg|jpg|js|json|png|svg|wav|webp|woff2)$">
+<ifmodule mod_headers.c>
+  <filesmatch "\.(php)$">
+    Header set Cache-Control "max-age=1"
+  </filesmatch>
+  <filesmatch "\.(css|htm|html|ini|js|json|xml)$">
+    Header set Cache-Control "max-age=60, s-maxage=31449600, public"
+  </filesmatch>
+  <filesmatch "\.(pdf)$">
     Header set Cache-Control "max-age=86400, public"
+  </filesmatch>
+  <FilesMatch "\.(gif|ico|jpeg|jpg|png|svg|wav|webp)$">
+    Header set Cache-Control "max-age=31449600, public"
   </FilesMatch>
-</IfModule>
+  <filesmatch "\.(eot|woff2)$">
+    Header set Cache-Control "max-age=314496000, public"
+  </filesmatch>
+</ifmodule>
