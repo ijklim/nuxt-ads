@@ -33,6 +33,8 @@
 
   // === Data ===
   const PADDING_AD = 5;
+  const DISCLAIMER_TITLE_COLOR_1 = '#1E1D1B';
+  const DISCLAIMER_TITLE_COLOR_2 = '#CC9934';
   interface StateObject {
     disclaimerText: string;
     widthWindow: number | undefined;
@@ -123,14 +125,14 @@
 
 .img-wrapper {
   background-color: white;
-  border: 1px solid lightgray;
+  border: 1px solid v-bind(DISCLAIMER_TITLE_COLOR_2);
   border-top: none;
   padding: calc(v-bind(PADDING_AD) * 1px);
 }
 
 /* Gradient Samples: https://www.eggradients.com/category/brown-gradient */
 .disclaimer {
-  background: linear-gradient(to bottom left, #1E1D1B, #CC9934);
+  background: linear-gradient(to bottom left, v-bind(DISCLAIMER_TITLE_COLOR_1), v-bind(DISCLAIMER_TITLE_COLOR_2));
   border-radius: calc(v-bind(PADDING_AD) * 1px) calc(v-bind(PADDING_AD) * 1px) 0px 0px;
   color: white;
   cursor: pointer;

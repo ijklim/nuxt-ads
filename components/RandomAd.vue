@@ -138,7 +138,7 @@
   const getImageUrl = (imagePath: string) => {
     // Note: Path must start with a static folder (e.g. ./images/) for Vite to process the image in Production build
     // https://vitejs.dev/guide/assets.html
-    const result = new URL(`../assets/img/${imagePath}`, import.meta.url).href;
+    const result = `/img/${imagePath}`;
     return result;
   };
 
