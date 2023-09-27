@@ -128,6 +128,7 @@
   border: 1px solid v-bind(DISCLAIMER_TITLE_COLOR_2);
   border-top: none;
   padding: calc(v-bind(PADDING_AD) * 1px);
+  padding-bottom: 0px;
 }
 
 /* Gradient Samples: https://www.eggradients.com/category/brown-gradient */

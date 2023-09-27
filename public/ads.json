@@ -1,0 +1,75 @@
+{
+  "AmazonBanner": [
+    {
+      "height": 304,
+      "href": "https://www.amazon.com/Arctic-Zone-Freeze-Zipperless-HardBody/dp/B09YFGYYNF?pd_rd_w=DpYWL&content-id=amzn1.sym.309d45c5-3eba-4f62-9bb2-0acdcf0662e7&pf_rd_p=309d45c5-3eba-4f62-9bb2-0acdcf0662e7&pf_rd_r=P0SK8QPRF1Z85YZS7ZNC&pd_rd_wg=muqFO&pd_rd_r=ce76e212-0fdb-4675-8b08-3afc4ec996f4&pd_rd_i=B0CJJK9H3Q&th=1&linkCode=ll1&tag=aimprove-20&linkId=092234b09600657380c789b3d42a792c&language=en_US&ref_=as_li_ss_tl",
+      "imagePath": "Amazon/CoolerArcticZoneTitan.webp",
+      "imageAltText": "Arctic Zone Titan Deep Freeze Zipperless Hardbody Cooler",
+      "width": 300,
+      "displayRatio": 2
+    },
+    {
+      "height": 300,
+      "href": "https://www.amazon.com/Camera-Smart-Videos-AI-Intelligent-Recognition-Spieces-Wireless/dp/B0CGDVPQHK?pd_rd_w=E85i4&content-id=amzn1.sym.309d45c5-3eba-4f62-9bb2-0acdcf0662e7&pf_rd_p=309d45c5-3eba-4f62-9bb2-0acdcf0662e7&pf_rd_r=7FYS0S58GYG4HNDMRF8V&pd_rd_wg=yKVHS&pd_rd_r=8a0502a0-e396-477a-8eb1-b681a1ba4f42&pd_rd_i=B0CJVTQX9C&psc=1&linkCode=ll1&tag=aimprove-20&linkId=ef85e1fdae30c4281dc7f2e7eacdd549&language=en_US&ref_=as_li_ss_tl",
+      "imagePath": "Amazon/BirdFeederBocoa.webp",
+      "imageAltText": "Bocoa Bird Feeder with Smart Bird Watcher Camera",
+      "width": 300,
+      "displayRatio": 5
+    },
+    {
+      "height": 145,
+      "href": "https://www.amazon.com/NAB6-i7-12650H-Threads-PCIe4-0-Computer/dp/B0C1X191NR?pd_rd_w=OLaNN&content-id=amzn1.sym.81e01203-65b8-4d65-b4bf-32a39dde4f92&pf_rd_p=81e01203-65b8-4d65-b4bf-32a39dde4f92&pf_rd_r=PBWGGNX4812AM560CCWJ&pd_rd_wg=N8JiI&pd_rd_r=348798bf-bf95-4fb5-86d4-c8d438d3645c&pd_rd_i=B0C1X191NR&psc=1&linkCode=ll1&tag=aimprove-20&linkId=dfd65a3cde9039a955f0ac6cc8e71f0f&language=en_US&ref_=as_li_ss_tl",
+      "imagePath": "Amazon/MiniPcNab6.webp",
+      "imageAltText": "Mini PC NAB6 Intel Core i7-12650H",
+      "width": 300,
+      "displayRatio": 5
+    },
+    {
+      "height": 301,
+      "href": "https://www.amazon.com/Pickleball-Paddles-Approved-Fiberglass-Portable/dp/B0BYV7P9X7?pd_rd_w=DpYWL&content-id=amzn1.sym.309d45c5-3eba-4f62-9bb2-0acdcf0662e7&pf_rd_p=309d45c5-3eba-4f62-9bb2-0acdcf0662e7&pf_rd_r=P0SK8QPRF1Z85YZS7ZNC&pd_rd_wg=muqFO&pd_rd_r=ce76e212-0fdb-4675-8b08-3afc4ec996f4&pd_rd_i=B0CJK2QWK2&psc=1&linkCode=ll1&tag=aimprove-20&linkId=270e7705d6ad777987bbcbea655ac255&language=en_US&ref_=as_li_ss_tl",
+      "imagePath": "Amazon/PickleballPaddlesMTEN.webp",
+      "imageAltText": "MTEN Pickleball Paddles, USAPA Approved Fiberglass Surface Pickleball Set",
+      "width": 300,
+      "displayRatio": 5
+    },
+    {
+      "height": 335,
+      "href": "https://www.amazon.com/Apple-Cellular-Smartwatch-Precision-Extra-Long/dp/B0CHWZ5VVM?pd_rd_w=F1SKE&content-id=amzn1.sym.309d45c5-3eba-4f62-9bb2-0acdcf0662e7&pf_rd_p=309d45c5-3eba-4f62-9bb2-0acdcf0662e7&pf_rd_r=P0SK8QPRF1Z85YZS7ZNC&pd_rd_wg=muqFO&pd_rd_r=ce76e212-0fdb-4675-8b08-3afc4ec996f4&pd_rd_i=B0CHWZ5VVM&psc=1&linkCode=ll1&tag=aimprove-20&linkId=0cfba7bb290c3f2bbd5222c95a212fca&language=en_US&ref_=as_li_ss_tl",
+      "imagePath": "Amazon/SmartWatchAppleUltra2.webp",
+      "imageAltText": "Apple Smart Watch Ultra 2",
+      "width": 300,
+      "displayRatio": 5
+    },
+    {
+      "height": 304,
+      "href": "https://www.amazon.com/TOZO-S3-Bluetooth-Waterproof-Compatible/dp/B07L1GWR66?pd_rd_w=F1SKE&content-id=amzn1.sym.309d45c5-3eba-4f62-9bb2-0acdcf0662e7&pf_rd_p=309d45c5-3eba-4f62-9bb2-0acdcf0662e7&pf_rd_r=P0SK8QPRF1Z85YZS7ZNC&pd_rd_wg=muqFO&pd_rd_r=ce76e212-0fdb-4675-8b08-3afc4ec996f4&pd_rd_i=B0CGLL1JHG&th=1&linkCode=ll1&tag=aimprove-20&linkId=1e1f5d8a5d12a12ef95f24c6e61dcf84&language=en_US&ref_=as_li_ss_tl",
+      "imagePath": "Amazon/SmartWatchTozoS3.webp",
+      "imageAltText": "TOZO S3 Smart Watch",
+      "width": 300,
+      "displayRatio": 5
+    },
+    {
+      "height": 194,
+      "href": "https://www.amazon.com/amazon-fire-tv-55-inch-4-series-4k-smart-tv/dp/B0B3H6JPYZ?pd_rd_w=F1SKE&content-id=amzn1.sym.309d45c5-3eba-4f62-9bb2-0acdcf0662e7&pf_rd_p=309d45c5-3eba-4f62-9bb2-0acdcf0662e7&pf_rd_r=P0SK8QPRF1Z85YZS7ZNC&pd_rd_wg=muqFO&pd_rd_r=ce76e212-0fdb-4675-8b08-3afc4ec996f4&pd_rd_i=B0B3H6JPYZ&psc=1&linkCode=ll1&tag=aimprove-20&linkId=9306e2f9c9140bbb99081aa47db5be9a&language=en_US&ref_=as_li_ss_tl",
+      "imagePath": "Amazon/TvAmazonFire55.webp",
+      "imageAltText": "TOZO S3 Smart Watch",
+      "width": 300,
+      "displayRatio": 5
+    }
+  ],
+  "GoogleAdSense": [
+    {
+      "adFormat": "fluid",
+      "adLayoutKey": "-fb+5w+4e-db+86",
+      "adSlot": 7471404401,
+      "displayRatio": 5
+    }
+  ],
+  "MochahostBanner": [
+    {
+      "href": "https://affiliates.mochahost.com/idevaffiliate.php?id=6756&tid1=ivan-lim.com",
+      "imageAltText": "MochaHost Web Hosting",
+      "displayRatio": 2
+    }
+  ]
+}
