@@ -24,6 +24,10 @@
       type: String,
       default: '',
     },
+    imageDescription: {
+      type: String,
+      default: undefined,
+    },
     width: {
       type: Number,
       default: 300,
@@ -96,20 +100,24 @@
       {{ state.disclaimerText }}
     </div>
 
-    <div class="img-wrapper">
-      <NuxtLink
-        rel="nofollow noopener"
-        target="_blank"
-        :href="href"
-      >
+    <NuxtLink
+      rel="nofollow noopener"
+      target="_blank"
+      :href="href"
+    >
+      <figure>
         <img
           :alt="imageAltText"
           :height="imgDimension.height"
           :src="image"
           :width="imgDimension.width"
         />
-      </NuxtLink>
-    </div>
+
+        <hr>
+
+        <figcaption>{{ imageDescription ?? imageAltText }}</figcaption>
+      </figure>
+    </NuxtLink>
   </div>
 
   <!-- Note: div needed for iframe resizer to reserve vertical space for bottom border of `img-wrapper` -->
@@ -123,12 +131,36 @@
   width: calc(v-bind(imgDimension.width) * 1px + v-bind(PADDING_AD) * 2px);
 }
 
-.img-wrapper {
+a {
+  /* Remove underline in figcaption */
+  text-decoration: none;
+}
+
+/* === Wrapper around product image, add border and padding === */
+figure {
   background-color: white;
   border: 1px solid v-bind(DISCLAIMER_TITLE_COLOR_2);
   border-top: none;
   padding: calc(v-bind(PADDING_AD) * 1px);
   padding-bottom: 0px;
+  margin: 0px;
+}
+
+/* === Separator before caption === */
+figure hr {
+  border-style: dashed;
+  margin: 7px auto 3px;
+  width: 33%;
+}
+
+/* === Caption for product image === */
+figure figcaption {
+  color: v-bind(DISCLAIMER_TITLE_COLOR_1);
+  cursor: pointer;
+  font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+  font-size: 0.9rem;
+  padding: 5px 0px;
+  width: 100%;
 }
 
 /* Gradient Samples: https://www.eggradients.com/category/brown-gradient */

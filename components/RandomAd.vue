@@ -21,6 +21,7 @@
     height?: number;
     href: string;
     imageAltText: string;
+    imageDescription?: string;
     imagePath: string;
     width?: number;
   };
@@ -158,6 +159,7 @@
       :href="(<AmazonAdObject>state.whichAdToShow).href"
       :image="getImageUrl((<AmazonAdObject>state.whichAdToShow).imagePath)"
       :imageAltText="(<AmazonAdObject>state.whichAdToShow).imageAltText"
+      :imageDescription="(<AmazonAdObject>state.whichAdToShow)?.imageDescription ?? undefined"
     />
 
     <!-- === Mochahost Banner === -->
