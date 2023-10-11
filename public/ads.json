@@ -1,6 +1,26 @@
 {
   "AmazonBanner": [
     {
+      "height": 240,
+      "href": "https://www.amazon.com/Introducing-Amazon-powerful-octa-core-processor/dp/B0B1VQ1ZQY?psc=1&linkCode=ll1&tag=aimprove-20&linkId=b92881b3f9326a1f62be71e89064f43d&language=en_US&ref_=as_li_ss_tl",
+      "imagePath": "Amazon/TabletAmazonFireMax11.webp",
+      "imageAltText": "Amazon Fire Max 11 Tablet",
+      "imageDescription": "Amazon Fire Max 11 tablet, our most powerful tablet yet, vivid 11' display, octa-core processor, 4 GB RAM, 14-hour battery life, 64 GB, Gray",
+      "price": 149.99,
+      "priceDiscountAmount": "-35%",
+      "displayRatio": 3
+    },
+    {
+      "height": 251,
+      "href": "https://www.amazon.com/Amazon-tablet-release-Tablet-Housekeeping/dp/B0BL8VHN81?psc=1&linkCode=ll1&tag=aimprove-20&linkId=9b19faec5444e44c5c11d33d60304213&language=en_US&ref_=as_li_ss_tl",
+      "imagePath": "Amazon/TabletAmazonFireHd10KidsPro.webp",
+      "imageAltText": "Amazon Fire HD 10 Kids Pro Tablet",
+      "imageDescription": "Amazon Fire HD 10 Kids Pro tablet, 10.1', 1080p Full HD, ages 6-12, 32 GB, (2021 release), named 'Best Tablet for Big Kids' by Good Housekeeping",
+      "price": 119.99,
+      "priceDiscountAmount": "-40%",
+      "displayRatio": 3
+    },
+    {
       "height": 278,
       "href": "https://www.amazon.com/Amazon-Official-Site-Fire-HD-Kids-8-Pro-Tablet-8-inch-Display-2022-release/dp/B09BG6DSBY?psc=1&linkCode=ll1&tag=aimprove-20&linkId=9747ee3107935309c925a87d6550322b&language=en_US&ref_=as_li_ss_tl",
       "imagePath": "Amazon/TabletAmazonFireHd8KidsPro.webp",
