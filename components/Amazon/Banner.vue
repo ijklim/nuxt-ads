@@ -28,6 +28,14 @@
       type: String,
       default: undefined,
     },
+    price: {
+      type: Number,
+      default: undefined,
+    },
+    priceDiscountAmount: {
+      type: String,
+      default: undefined,
+    },
     width: {
       type: Number,
       default: 300,
@@ -115,7 +123,17 @@
 
         <hr>
 
-        <figcaption>{{ imageDescription ?? imageAltText }}</figcaption>
+        <figcaption>
+          {{ imageDescription ?? imageAltText }}
+          <div v-if="price">
+            <span
+              style="color:red;"
+              v-if="priceDiscountAmount"
+              v-text="priceDiscountAmount">
+            </span>
+            ${{ price.toFixed(2) }}
+          </div>
+        </figcaption>
       </figure>
     </NuxtLink>
   </div>

@@ -1,13 +1,41 @@
 {
   "AmazonBanner": [
     {
+      "height": 278,
+      "href": "https://www.amazon.com/Amazon-Official-Site-Fire-HD-Kids-8-Pro-Tablet-8-inch-Display-2022-release/dp/B09BG6DSBY?psc=1&linkCode=ll1&tag=aimprove-20&linkId=9747ee3107935309c925a87d6550322b&language=en_US&ref_=as_li_ss_tl",
+      "imagePath": "Amazon/TabletAmazonFireHd8KidsPro.webp",
+      "imageAltText": "Amazon Fire HD 8 Kids Pro Tablet",
+      "imageDescription": "Amazon Fire HD 8 Kids Pro tablet, 8' HD display, ages 6-12, 30% faster processor, 13 hours battery life, Kid-Friendly Case, 32 GB, (2022 release)",
+      "price": 74.99,
+      "priceDiscountAmount": "-50%",
+      "displayRatio": 3
+    },
+    {
+      "height": 235,
+      "href": "https://www.amazon.com/Lenovo-IdeaPad-i5-1135G7-Fingerprint-Accessories/dp/B0C5Y2XC79?crid=JDAMYQPYFCPJ&keywords=laptop+top+seller&qid=1696029917&refinements=p_36%3A40000-70000%2Cp_n_feature_seven_browse-bin%3A117987656011&rnid=2421885011&s=pc&sprefix=laptop+top+seller%2Caps%2C92&sr=1-25&ufe=app_do%3Aamzn1.fos.ac2169a1-b668-44b9-8bd0-5ec63b24bcb5&linkCode=ll1&tag=aimprove-20&linkId=1c97d67af5b5201b53b03cb08308f74a&language=en_US&ref_=as_li_ss_tl",
+      "imagePath": "Amazon/LaptopLenovoIdeaPad3.webp",
+      "imageAltText": "Lenovo IdeaPad 3 Laptop",
+      "imageDescription": "Lenovo IdeaPad 3 14' FHD Laptop, Intel Core i5-1135G7 (up to 4.20GHz, beats i7-1065G7), 20GB DDR4 RAM, 1TB NVMe SSD, Webcam, Fingerprint Reader, HDMI, WiFi 6, Win 11",
+      "price": 519,
+      "displayRatio": 3
+    },
+    {
+      "height": 190,
+      "href": "https://www.amazon.com/HP-14Touchscreen-Convertible-i5-1135G7-GMAccessories/dp/B0C6QJT6G9?crid=JDAMYQPYFCPJ&keywords=laptop+top+seller&qid=1696029917&refinements=p_36%3A40000-70000%2Cp_n_feature_seven_browse-bin%3A117987656011&rnid=2421885011&s=pc&sprefix=laptop+top+seller%2Caps%2C92&sr=1-27&ufe=app_do%3Aamzn1.fos.ac2169a1-b668-44b9-8bd0-5ec63b24bcb5&linkCode=ll1&tag=aimprove-20&linkId=003e19e49ae901f40aab337980edbebb&language=en_US&ref_=as_li_ss_tl",
+      "imagePath": "Amazon/LaptopHpPavilionX360.webp",
+      "imageAltText": "HP Pavilion x360 Laptop",
+      "imageDescription": "HP Pavilion x360 Laptop, 14' Touchscreen 2in1 Convertible Newest, Intel Core i5-1135G7 (beats i7-1065G7), 16GB RAM, 1TB PCle SSD, Intel Iris Xe Graphics, Webcam, Win 11",
+      "price": 639.99,
+      "displayRatio": 3
+    },
+    {
       "height": 304,
       "href": "https://www.amazon.com/Arctic-Zone-Freeze-Zipperless-HardBody/dp/B09YFGYYNF?pd_rd_w=DpYWL&content-id=amzn1.sym.309d45c5-3eba-4f62-9bb2-0acdcf0662e7&pf_rd_p=309d45c5-3eba-4f62-9bb2-0acdcf0662e7&pf_rd_r=P0SK8QPRF1Z85YZS7ZNC&pd_rd_wg=muqFO&pd_rd_r=ce76e212-0fdb-4675-8b08-3afc4ec996f4&pd_rd_i=B0CJJK9H3Q&th=1&linkCode=ll1&tag=aimprove-20&linkId=092234b09600657380c789b3d42a792c&language=en_US&ref_=as_li_ss_tl",
       "imagePath": "Amazon/CoolerArcticZoneTitan.webp",
       "imageAltText": "Arctic Zone Titan Deep Freeze Zipperless Hardbody Cooler",
       "imageDescription": "Arctic Zone Titan Deep Freeze Cooler - 16 Can Zipperless Hardbody Cooler - Deep Freeze Insulation, HardBody Liner, and SmartShelf, Blue Lagoon",
-      "width": 300,
-      "displayRatio": 2
+      "price": 42.99,
+      "displayRatio": 1
     },
     {
       "height": 300,
@@ -15,8 +43,9 @@
       "imagePath": "Amazon/BirdFeederBocoa.webp",
       "imageAltText": "Bocoa Bird Feeder with Smart Bird Watcher Camera",
       "imageDescription": "Bocoa Bird Feeder, Smart Bird Watcher Camera with Solar Pannel, Auto Capture Bird Videos - AI Intelligent Recognition Birds Spieces - Wireless Camera Bird Watching Gifts for Family",
-      "width": 300,
-      "displayRatio": 5
+      "price": 159.99,
+      "priceDiscountAmount": "-47%",
+      "displayRatio": 1
     },
     {
       "height": 145,
@@ -24,8 +53,9 @@
       "imagePath": "Amazon/MiniPcNab6.webp",
       "imageAltText": "Mini PC NAB6 Intel Core i7-12650H",
       "imageDescription": "Mini PC NAB6 Intel Core i7-12650H, 10 Cores 16 Threads, up to 4.7GHz 32GB RAM DDR4 1TB PCIe4.0 SSD Dual 2.5 G RJ45 LAN Mini Desktop Computer, 2 x HDMI, 7 x USB Port, WiFi 6, BT5.2",
-      "width": 300,
-      "displayRatio": 5
+      "price": 447.20,
+      "priceDiscountAmount": "-22%",
+      "displayRatio": 2
     },
     {
       "height": 301,
@@ -33,8 +63,9 @@
       "imagePath": "Amazon/PickleballPaddlesMTEN.webp",
       "imageAltText": "MTEN Pickleball Paddles, USAPA Approved Fiberglass Surface Pickleball Set",
       "imageDescription": "MTEN Pickleball Paddles, USAPA Approved Fiberglass Surface Pickleball Set with Pickleball Rackets, Pickle Ball Paddle Set for Men & Women",
-      "width": 300,
-      "displayRatio": 5
+      "price": 39.99,
+      "priceDiscountAmount": "-50%",
+      "displayRatio": 1
     },
     {
       "height": 335,
@@ -42,8 +73,9 @@
       "imagePath": "Amazon/SmartWatchAppleUltra2.webp",
       "imageAltText": "Apple Smart Watch Ultra 2",
       "imageDescription": "Apple Watch Ultra 2 [GPS + Cellular 49mm] Smartwatch with Rugged Titanium Case & Blue Ocean Band. Fitness Tracker, Precision GPS, Action Button, Extra-Long Battery Life, Bright Retina Display",
-      "width": 300,
-      "displayRatio": 5
+      "price": 749,
+      "priceDiscountAmount": "-6%",
+      "displayRatio": 2
     },
     {
       "height": 304,
@@ -51,8 +83,9 @@
       "imagePath": "Amazon/SmartWatchTozoS3.webp",
       "imageAltText": "TOZO S3 Smart Watch",
       "imageDescription": "TOZO S3 Smart Watch (Answer/Make Call) Bluetooth Fitness Tracker with Heart Rate, Blood Oxygen Monitor, Sleep Monitor IP68 Waterproof 1.83-inch HD Color for Men Women Compatible with iPhone & Android",
-      "width": 300,
-      "displayRatio": 5
+      "price": 33.99,
+      "priceDiscountAmount": "-15%",
+      "displayRatio": 2
     },
     {
       "height": 194,
@@ -60,8 +93,9 @@
       "imagePath": "Amazon/TvAmazonFire55.webp",
       "imageAltText": "Amazon Fire TV 55'",
       "imageDescription": "Amazon Fire TV 55\" 4-Series 4K UHD smart TV, stream live TV without cable",
-      "width": 300,
-      "displayRatio": 5
+      "price": 339.99,
+      "priceDiscountAmount": "-35%",
+      "displayRatio": 2
     }
   ],
   "GoogleAdSense": [
@@ -69,14 +103,14 @@
       "adFormat": "fluid",
       "adLayoutKey": "-fb+5w+4e-db+86",
       "adSlot": 7471404401,
-      "displayRatio": 5
+      "displayRatio": 2
     }
   ],
   "MochahostBanner": [
     {
       "href": "https://affiliates.mochahost.com/idevaffiliate.php?id=6756&tid1=ivan-lim.com",
       "imageAltText": "MochaHost Web Hosting",
-      "displayRatio": 2
+      "displayRatio": 1
     }
   ]
 }

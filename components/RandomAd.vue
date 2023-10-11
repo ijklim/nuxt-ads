@@ -15,40 +15,36 @@
    */
   type AdType = 'none' | 'AmazonBanner' | 'GoogleAdSense' | 'MochahostBanner';
 
-  interface AmazonAdObject {
+  // Core Ad Object
+  interface IEmptyAdObject {
     adType?: AdType;
     displayRatio: number;
+  }
+
+  interface IAmazonAdObject extends IEmptyAdObject {
     height?: number;
     href: string;
     imageAltText: string;
     imageDescription?: string;
     imagePath: string;
+    price?: number;
+    priceDiscountAmount?: string;
     width?: number;
   };
 
-  // For initialization only
-  interface EmptyAdObject {
-    adType?: AdType;
-    displayRatio: number;
-  }
-
-  interface GoogleAdObject {
+  interface IGoogleAdObject extends IEmptyAdObject {
     adFormat: string;
     adLayoutKey: string;
     adSlot: number;
-    adType?: AdType;
-    displayRatio: number;
   };
 
-  interface MochahostAdObject {
-    adType?: AdType;
-    displayRatio: number;
+  interface IMochahostAdObject extends IEmptyAdObject {
     href: string;
     imageAltText: string;
     imageUrl: string;
   };
 
-  type AdObject = AmazonAdObject | EmptyAdObject | GoogleAdObject | MochahostAdObject;
+  type AdObject = IAmazonAdObject | IEmptyAdObject | IGoogleAdObject | IMochahostAdObject;
 
   interface AdsObject {
     [key: string]: AdObject[];
@@ -147,26 +143,28 @@
     <!-- === Google AdSense === -->
     <GoogleAdSense
       v-if="state.whichAdToShow.adType === 'GoogleAdSense'"
-      :adFormat="(<GoogleAdObject>state.whichAdToShow).adFormat"
-      :adLayoutKey="(<GoogleAdObject>state.whichAdToShow).adLayoutKey"
-      :adSlot="(<GoogleAdObject>state.whichAdToShow).adSlot"
+      :adFormat="(<IGoogleAdObject>state.whichAdToShow).adFormat"
+      :adLayoutKey="(<IGoogleAdObject>state.whichAdToShow).adLayoutKey"
+      :adSlot="(<IGoogleAdObject>state.whichAdToShow).adSlot"
     />
 
     <!-- === Amazon Banner === -->
     <AmazonBanner
       v-if="state.whichAdToShow.adType === 'AmazonBanner'"
-      :height="(<AmazonAdObject>state.whichAdToShow)?.height ?? undefined"
-      :href="(<AmazonAdObject>state.whichAdToShow).href"
-      :image="getImageUrl((<AmazonAdObject>state.whichAdToShow).imagePath)"
-      :imageAltText="(<AmazonAdObject>state.whichAdToShow).imageAltText"
-      :imageDescription="(<AmazonAdObject>state.whichAdToShow)?.imageDescription ?? undefined"
+      :height="(<IAmazonAdObject>state.whichAdToShow)?.height ?? undefined"
+      :href="(<IAmazonAdObject>state.whichAdToShow).href"
+      :image="getImageUrl((<IAmazonAdObject>state.whichAdToShow).imagePath)"
+      :imageAltText="(<IAmazonAdObject>state.whichAdToShow).imageAltText"
+      :imageDescription="(<IAmazonAdObject>state.whichAdToShow)?.imageDescription ?? undefined"
+      :price="(<IAmazonAdObject>state.whichAdToShow)?.price ?? undefined"
+      :priceDiscountAmount="(<IAmazonAdObject>state.whichAdToShow)?.priceDiscountAmount ?? undefined"
     />
 
     <!-- === Mochahost Banner === -->
     <MochahostBanner
       v-if="state.whichAdToShow.adType === 'MochahostBanner'"
-      :href="(<MochahostAdObject>state.whichAdToShow).href"
-      :imageAltText="(<MochahostAdObject>state.whichAdToShow).imageAltText"
+      :href="(<IMochahostAdObject>state.whichAdToShow).href"
+      :imageAltText="(<IMochahostAdObject>state.whichAdToShow).imageAltText"
     />
   </div>
 </template>
