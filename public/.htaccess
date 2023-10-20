@@ -16,7 +16,7 @@
   RewriteRule . /index.html [L]
 </IfModule>
 
-# GZip Compression
+# === GZip Compression ===
 <IfModule mod_deflate.c>
   AddOutputFilterByType DEFLATE text/html text/plain text/xml application/xml application/xhtml+xml text/javascript text/css application/x-javascript application/javascript
   BrowserMatch ^Mozilla/4 gzip-only-text/html
@@ -25,13 +25,13 @@
   Header append Vary User-Agent
 </IfModule>
 
-# Caching
-<ifmodule mod_headers.c>
+# === Caching ===
+<IfModule mod_headers.c>
   <filesmatch "\.(php)$">
     Header set Cache-Control "max-age=1"
   </filesmatch>
   <filesmatch "\.(css|htm|html|ini|js|json|xml)$">
-    Header set Cache-Control "max-age=60, s-maxage=31449600, public"
+    Header set Cache-Control "max-age=604800, s-maxage=31449600, public"
   </filesmatch>
   <filesmatch "\.(pdf)$">
     Header set Cache-Control "max-age=86400, public"
@@ -42,4 +42,4 @@
   <filesmatch "\.(eot|woff2)$">
     Header set Cache-Control "max-age=314496000, public"
   </filesmatch>
-</ifmodule>
+</IfModule>

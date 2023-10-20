@@ -50,44 +50,38 @@
     [key: string]: AdObject[];
   };
 
-  const state = reactive({
+  interface IStateObject {
+    whichAdToShow: AdObject;
+  }
+  const state: IStateObject = reactive({
     whichAdToShow: { adType: 'none', displayRatio: 0 },
   });
 
 
   // === Methods ===
-  const getImageUrl = (imagePath: string) => {
-    // Note: Path must start with a static folder (e.g. ./images/) for Vite to process the image in Production build
-    // https://vitejs.dev/guide/assets.html
-    const result = `/img/${imagePath}`;
-    return result;
-  };
-
   /**
    * Randomly pick an ad from `ads` considering displayRatio
    */
-  const pickRandomAd = (ads: AdsObject) => {
+  const pickRandomAd = (ads: AdObject[]) => {
     // Filter by url query `adtype` if exists
     const filterAdType = query?.adtype;
 
     // availableAds e.g. [{ adType: AmazonBanner, ... }, { adType: AmazonBanner, ... }, { adType: GoogleAdSense, ... }, ...]
-    const availableAds = (Object.keys(ads) as string[])
-      .filter((adType) => {
+    const availableAds = (ads)
+      .filter((ad) => {
         if (!filterAdType) {
           return true;
         }
 
+        const adType = (ad.adType as AdType).toLowerCase() ;
+
         if ((filterAdType as string).startsWith('-')) {
           // If adtype starts with '-', filter out the key that matches the string that comes after
-          return adType.toLowerCase() !== (filterAdType.slice(1) as string).toLowerCase();
+          return adType !== (filterAdType.slice(1) as string).toLowerCase();
         }
 
         // True if adType matches query 'adtype'
-        return adType.toLowerCase() === (filterAdType as string).toLowerCase();
-      })
-      .flatMap((adType) => {
-        return ads[adType]
-          .flatMap((ad) => (Array(ad.displayRatio).fill({ adType, ...ad })));
+        return adType === (filterAdType as string).toLowerCase();
       });
     // console.log(`[${utility.currentFileName}::pickRandomAd] availableAds:`, availableAds);
 
@@ -103,38 +97,53 @@
   };
 
 
+  interface IFetchResponse {
+    ad_code: string,
+    ad_format: string,
+    ad_layout_key: string,
+    ad_type: AdType,
+    display_ratio: string,
+    height: string,
+    image_description: string,
+    price: string,
+    price_discount_amount: string,
+    product_code: string,
+    title: string,
+    url_affiliate: string,
+    url_product: string,
+    url_segment_image: string,
+    width: string,
+  }
+
   // === Lifecycle Hooks ===
   onMounted(async () => {
-    const ads = await $fetch('/ads.json').catch((error) => error.data);
-
-    state.whichAdToShow = pickRandomAd(ads as AdsObject);
-
-    const scripts: Script[] = [
-      // Supports iframe resizing on parent window
-      {
-        async: true,
-        crossorigin: 'anonymous',
-        integrity: 'sha512-R7Piufj0/o6jG9ZKrAvS2dblFr2kkuG4XVQwStX+/4P+KwOLUXn2DXy0l1AJDxxqGhkM/FJllZHG2PKOAheYzg==',
-        referrerpolicy: 'no-referrer',
-        src: 'https://cdnjs.cloudflare.com/ajax/libs/iframe-resizer/4.3.6/iframeResizer.contentWindow.min.js',
-        type: 'text/javascript',
-      },
-    ];
-
-    // Add Google AdSense script only if necessary
-    if (state.whichAdToShow.adType === 'GoogleAdSense') {
-      // Important: `.env::VITE_AD_CLIENT` must be set in the importing project, the one in the current project will be ignored
-      const srcScriptGoogleAdSense = `https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${import.meta.env.VITE_AD_CLIENT}`;
-      scripts.push({
-        async: true,
-        crossorigin: 'anonymous',
-        src: srcScriptGoogleAdSense,
+    // useFetch: https://nuxt.com/docs/api/composables/use-fetch
+    const url = `${import.meta.env.VITE_ADS_SERVER}/api/json/ads`;
+    const apiResponse = await $fetch<IFetchResponse[]>(url)
+      .catch((error) => {
+        console.error(`[${utility.currentFileName}::onMounted] Fail to retrieve valid ads data, aborting.`, error);
       });
-    }
 
-    useHead({
-      script: scripts,
-    });
+    if (apiResponse && Array.isArray(apiResponse)) {
+      // console.log(`[${utility.currentFileName}::onMounted] apiResponse:`, toRaw(apiResponse));
+      const ads: AdObject[] = apiResponse
+        .map((item): AdObject => ({
+          adFormat: item.ad_format,
+          adLayoutKey: item.ad_layout_key,
+          adType: item.ad_type,
+          displayRatio: parseInt(item.display_ratio),
+          height: parseInt(item.height),
+          href: item.url_affiliate,
+          imageAltText: item.title,
+          imageDescription: item.image_description,
+          imagePath: item.url_segment_image ? `${import.meta.env.VITE_ADS_SERVER}${item.url_segment_image}` : undefined,
+          price: item.price ? parseFloat(item.price) : undefined,
+          priceDiscountAmount: item.price_discount_amount,
+          width: parseInt(item.width),
+        }));
+
+      state.whichAdToShow = pickRandomAd(ads);
+    }
   });
 </script>
 
@@ -153,7 +162,7 @@
       v-if="state.whichAdToShow.adType === 'AmazonBanner'"
       :height="(<IAmazonAdObject>state.whichAdToShow)?.height ?? undefined"
       :href="(<IAmazonAdObject>state.whichAdToShow).href"
-      :image="getImageUrl((<IAmazonAdObject>state.whichAdToShow).imagePath)"
+      :image="(<IAmazonAdObject>state.whichAdToShow).imagePath"
       :imageAltText="(<IAmazonAdObject>state.whichAdToShow).imageAltText"
       :imageDescription="(<IAmazonAdObject>state.whichAdToShow)?.imageDescription ?? undefined"
       :price="(<IAmazonAdObject>state.whichAdToShow)?.price ?? undefined"

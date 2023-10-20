@@ -47,12 +47,12 @@
   const PADDING_AD = 5;
   const DISCLAIMER_TITLE_COLOR_1 = '#1E1D1B';
   const DISCLAIMER_TITLE_COLOR_2 = '#CC9934';
-  interface StateObject {
+  interface IStateObject {
     disclaimerText: string;
     widthWindow: number | undefined;
   }
   const DEFAULT_DISCLAIMER_TEXT = 'Ad • Amazon';
-  const state: StateObject = reactive({
+  const state: IStateObject = reactive({
     disclaimerText: DEFAULT_DISCLAIMER_TEXT,
     widthWindow: undefined,
   });
