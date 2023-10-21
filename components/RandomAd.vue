@@ -9,6 +9,7 @@
   const utility = useUtility(import.meta);
   // console.log(`[${utility.currentFileName}] query:`, query);
 
+
   // === Data ===
   /**
    * Ad Types that could be displayed
@@ -46,9 +47,23 @@
 
   type AdObject = IAmazonAdObject | IEmptyAdObject | IGoogleAdObject | IMochahostAdObject;
 
-  interface AdsObject {
-    [key: string]: AdObject[];
-  };
+  interface IResponseFetchAds {
+    ad_code: string,
+    ad_format: string,
+    ad_layout_key: string,
+    ad_type: AdType,
+    display_ratio: string,
+    height: string,
+    image_description: string,
+    price: string,
+    price_discount_amount: string,
+    product_code: string,
+    title: string,
+    url_affiliate: string,
+    url_product: string,
+    url_segment_image: string,
+    width: string,
+  }
 
   interface IStateObject {
     whichAdToShow: AdObject;
@@ -97,29 +112,11 @@
   };
 
 
-  interface IFetchResponse {
-    ad_code: string,
-    ad_format: string,
-    ad_layout_key: string,
-    ad_type: AdType,
-    display_ratio: string,
-    height: string,
-    image_description: string,
-    price: string,
-    price_discount_amount: string,
-    product_code: string,
-    title: string,
-    url_affiliate: string,
-    url_product: string,
-    url_segment_image: string,
-    width: string,
-  }
-
   // === Lifecycle Hooks ===
   onMounted(async () => {
     // useFetch: https://nuxt.com/docs/api/composables/use-fetch
     const url = `${import.meta.env.VITE_ADS_SERVER}/api/json/ads`;
-    const apiResponse = await $fetch<IFetchResponse[]>(url)
+    const apiResponse = await $fetch<IResponseFetchAds[]>(url)
       .catch((error) => {
         console.error(`[${utility.currentFileName}::onMounted] Fail to retrieve valid ads data, aborting.`, error);
       });
