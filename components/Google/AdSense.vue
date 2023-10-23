@@ -32,6 +32,21 @@
       window.adsbygoogle.push({});
     }, 3000);
   });
+
+
+  // === HTML Head ===
+  useHead({
+    script: [
+      // Supports Google AdSense
+      {
+        async: true,
+        crossorigin: 'anonymous',
+        referrerpolicy: 'origin',
+        src: 'https://api.ivan-lim.com/?a=pagead2_googlesyndication',
+        type: 'text/javascript',
+      },
+    ],
+  });
 </script>
 
 <template>

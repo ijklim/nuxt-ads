@@ -1,6 +1,9 @@
 <script setup lang="ts">
+  // === Composables ===
   const appConfig = useAppConfig();
 
+
+  // === HTML Head ===
   useHead({
     script: [
       // Supports iframe resizing in parent iframe

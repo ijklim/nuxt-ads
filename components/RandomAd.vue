@@ -27,7 +27,7 @@
     href: string;
     imageAltText: string;
     imageDescription?: string;
-    imagePath: string;
+    imagePath?: string;
     price?: number;
     priceDiscountAmount?: string;
     width?: number;
@@ -47,7 +47,7 @@
 
   type AdObject = IAmazonAdObject | IEmptyAdObject | IGoogleAdObject | IMochahostAdObject;
 
-  interface IResponseFetchAds {
+  interface IResponseFetchAd {
     ad_code: string,
     ad_format: string,
     ad_layout_key: string,
@@ -75,72 +75,66 @@
 
   // === Methods ===
   /**
-   * Randomly pick an ad from `ads` considering displayRatio
+   * Call ads-server api to retrieve a random ad
+   *
+   * Note: All query strings are passed to server for processing
    */
-  const pickRandomAd = (ads: AdObject[]) => {
-    // Filter by url query `adtype` if exists
-    const filterAdType = query?.adtype;
-
-    // availableAds e.g. [{ adType: AmazonBanner, ... }, { adType: AmazonBanner, ... }, { adType: GoogleAdSense, ... }, ...]
-    const availableAds = (ads)
-      .filter((ad) => {
-        if (!filterAdType) {
-          return true;
-        }
-
-        const adType = (ad.adType as AdType).toLowerCase() ;
-
-        if ((filterAdType as string).startsWith('-')) {
-          // If adtype starts with '-', filter out the key that matches the string that comes after
-          return adType !== (filterAdType.slice(1) as string).toLowerCase();
-        }
-
-        // True if adType matches query 'adtype'
-        return adType === (filterAdType as string).toLowerCase();
+  const pickRandomAd = async () => {
+    // useFetch: https://nuxt.com/docs/api/composables/use-fetch
+    const params = new URLSearchParams();
+    params.append('random', "1");
+    // console.log(`[${utility.currentFileName}::pickRandomAd()] query:`, toRaw(query));
+    // Add other query strings from url
+    Object.keys(query)
+      .forEach((key) => {
+        params.append(key, `${query[key]}`);
       });
-    // console.log(`[${utility.currentFileName}::pickRandomAd] availableAds:`, availableAds);
 
-    if (!availableAds.length) {
-      // No available ad, most likely filter has removed all available ads
-      return Object.values(ads)[0];
+    const url = `${import.meta.env.VITE_ADS_SERVER}/api/ads?${params.toString()}`;
+    const apiResponse = await $fetch<IResponseFetchAd>(url)
+      .catch((error) => {
+        console.error(`[${utility.currentFileName}::pickRandomAd()] Fail to retrieve valid ads data, aborting.`, error);
+      });
+
+    /**
+     * Checking a few Ad properties to ensure response matches Ad type
+     *
+     * @param {IResponseFetchAd} apiResponse
+     */
+    const isAd = (apiResponse: IResponseFetchAd) => {
+      return (
+        'ad_code' in apiResponse &&
+        'ad_type' in apiResponse &&
+        'display_ratio' in apiResponse &&
+        'url_affiliate' in apiResponse &&
+        true
+      );
+    };
+
+    if (apiResponse && isAd(apiResponse)) {
+      // console.log(`[${utility.currentFileName}::onMounted] apiResponse:`, toRaw(apiResponse));
+      state.whichAdToShow = {
+        adFormat: apiResponse.ad_format,
+        adLayoutKey: apiResponse.ad_layout_key,
+        adSlot: (apiResponse.ad_type === 'GoogleAdSense') ? parseInt(apiResponse.ad_code) : undefined,
+        adType: apiResponse.ad_type,
+        displayRatio: parseInt(apiResponse.display_ratio),
+        height: parseInt(apiResponse.height),
+        href: apiResponse.url_affiliate,
+        imageAltText: apiResponse.title,
+        imageDescription: apiResponse.image_description,
+        imagePath: apiResponse.url_segment_image ? `${import.meta.env.VITE_ADS_SERVER}${apiResponse.url_segment_image}` : undefined,
+        price: apiResponse.price ? parseFloat(apiResponse.price) : undefined,
+        priceDiscountAmount: apiResponse.price_discount_amount,
+        width: parseInt(apiResponse.width),
+      };
     }
-
-    const indexRandom = Math.floor(Math.random() * availableAds.length);
-    // console.log(`[${utility.currentFileName}::pickRandomAd] indexRandom:`, indexRandom);
-
-    return availableAds[indexRandom];
   };
 
 
   // === Lifecycle Hooks ===
-  onMounted(async () => {
-    // useFetch: https://nuxt.com/docs/api/composables/use-fetch
-    const url = `${import.meta.env.VITE_ADS_SERVER}/api/json/ads`;
-    const apiResponse = await $fetch<IResponseFetchAds[]>(url)
-      .catch((error) => {
-        console.error(`[${utility.currentFileName}::onMounted] Fail to retrieve valid ads data, aborting.`, error);
-      });
-
-    if (apiResponse && Array.isArray(apiResponse)) {
-      // console.log(`[${utility.currentFileName}::onMounted] apiResponse:`, toRaw(apiResponse));
-      const ads: AdObject[] = apiResponse
-        .map((item): AdObject => ({
-          adFormat: item.ad_format,
-          adLayoutKey: item.ad_layout_key,
-          adType: item.ad_type,
-          displayRatio: parseInt(item.display_ratio),
-          height: parseInt(item.height),
-          href: item.url_affiliate,
-          imageAltText: item.title,
-          imageDescription: item.image_description,
-          imagePath: item.url_segment_image ? `${import.meta.env.VITE_ADS_SERVER}${item.url_segment_image}` : undefined,
-          price: item.price ? parseFloat(item.price) : undefined,
-          priceDiscountAmount: item.price_discount_amount,
-          width: parseInt(item.width),
-        }));
-
-      state.whichAdToShow = pickRandomAd(ads);
-    }
+  onMounted(() => {
+    pickRandomAd();
   });
 </script>
 
