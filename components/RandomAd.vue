@@ -27,7 +27,7 @@
     href: string;
     imageAltText: string;
     imageDescription?: string;
-    imagePath?: string;
+    imagePath: string;
     price?: number;
     priceDiscountAmount?: string;
     width?: number;

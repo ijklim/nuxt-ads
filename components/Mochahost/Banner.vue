@@ -18,20 +18,41 @@
   });
 
 
-  // === Data ===
-  // Mochahost Banners: https://affiliates.mochahost.com/account.php?page=7
-  const BREAKPOINT_CONFIGURATIONS = {
-    default: {
-      height: 90,
-      imageUrl: 'https://affiliates.mochahost.com/media/banners/mshared728x90.gif',
-      width: 728,
-    },
-    mobile: {
-      height: 200,
-      imageUrl: 'https://affiliates.mochahost.com/media/banners/mshared200x200.gif',
-      width: 200,
+  // === Computed Field ===
+  /**
+   * Select the most appropriate configuration based on current breakpoint
+   *
+   * Valid Breakpoints: desktopWide, desktopMedium, desktop, tablet, mobileWide, mobileMedium, mobile
+   */
+  const activeBreakpointConfiguration = computed(() => {
+    switch (viewport.breakpoint.value) {
+      case 'mobile':
+        // Smallest width
+        return {
+          height: 200,
+          imageUrl: 'https://affiliates.mochahost.com/media/banners/mshared200x200.gif',
+          width: 200,
+        };
+      case 'mobileMedium':
+        return {
+          height: 250,
+          imageUrl: 'https://affiliates.mochahost.com/media/banners/mshared300x250.gif',
+          width: 300,
+        };
+      case 'mobileWide':
+        return {
+          height: 280,
+          imageUrl: 'https://affiliates.mochahost.com/media/banners/mshared336x280.gif',
+          width: 336,
+        };
+      default:
+        return {
+          height: 90,
+          imageUrl: 'https://affiliates.mochahost.com/media/banners/mshared728x90.gif',
+          width: 728,
+        };
     }
-  };
+  });
 </script>
 
 <template>
@@ -43,10 +64,15 @@
     >
       <img
         :alt="imageAltText"
-        :height="BREAKPOINT_CONFIGURATIONS[viewport.breakpoint.value.startsWith('mobile') ? 'mobile' : 'default'].height"
-        :src="BREAKPOINT_CONFIGURATIONS[viewport.breakpoint.value.startsWith('mobile') ? 'mobile' : 'default'].imageUrl"
-        :width="BREAKPOINT_CONFIGURATIONS[viewport.breakpoint.value.startsWith('mobile') ? 'mobile' : 'default'].width"
+        :height="activeBreakpointConfiguration.height"
+        :src="activeBreakpointConfiguration.imageUrl"
+        :width="activeBreakpointConfiguration.width"
       />
     </NuxtLink>
+  </div>
+
+  <!-- Debug Only -->
+  <div style="display:none; background-color:palegoldenrod; padding:10px;">
+    viewport.breakpoint: {{ viewport.breakpoint }}
   </div>
 </template>

@@ -24,8 +24,15 @@
 
 
   // === Lifecycle Hooks ===
+  // Add `adsbygoogle` as a valid window property for Typescript
+  declare global {
+    interface Window {
+        adsbygoogle: {[key: string]: unknown}[]
+    }
+  }
+
   onMounted(() => {
-    window.adsbygoogle = window.adsbygoogle || [];
+    window.adsbygoogle = window?.adsbygoogle || [];
 
     // Slight delay before showing ad
     setTimeout(() => {
