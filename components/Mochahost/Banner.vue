@@ -25,32 +25,28 @@
    * Valid Breakpoints: desktopWide, desktopMedium, desktop, tablet, mobileWide, mobileMedium, mobile
    */
   const activeBreakpointConfiguration = computed(() => {
+    const configuration = (imageUrl: string, width: number, height: number) => {
+      return { imageUrl, height, width };
+    };
+    const imagePath = 'https://affiliates.mochahost.com/media/banners/';
+
+    // Note: breakpoint settings in nuxt.config.ts should be larger than configuration width for each case and smaller than next level up
     switch (viewport.breakpoint.value) {
+      case 'mochahostMobileSmall':
+        // mochahostMobileSmall (249) > width (200), < next level width (250)
+        return configuration(`${imagePath}mshared200x200.gif`, 200, 200);
+      case 'mochahostMobile':
+        return configuration(`${imagePath}mshared250x250.gif`, 250, 250);
+      case 'mochahostMobileMedium':
       case 'mobile':
-        // Smallest width
-        return {
-          height: 200,
-          imageUrl: 'https://affiliates.mochahost.com/media/banners/mshared200x200.gif',
-          width: 200,
-        };
+        return configuration(`${imagePath}mshared300x250.gif`, 300, 250);
       case 'mobileMedium':
-        return {
-          height: 250,
-          imageUrl: 'https://affiliates.mochahost.com/media/banners/mshared300x250.gif',
-          width: 300,
-        };
       case 'mobileWide':
-        return {
-          height: 280,
-          imageUrl: 'https://affiliates.mochahost.com/media/banners/mshared336x280.gif',
-          width: 336,
-        };
+        return configuration(`${imagePath}mshared336x280.gif`, 336, 280);
+      case 'mochahostTabletMedium':
+        return configuration(`${imagePath}mshared468x60.gif`, 468, 60);
       default:
-        return {
-          height: 90,
-          imageUrl: 'https://affiliates.mochahost.com/media/banners/mshared728x90.gif',
-          width: 728,
-        };
+        return configuration(`${imagePath}mshared728x90.gif`, 728, 90);
     }
   });
 </script>
@@ -73,6 +69,7 @@
 
   <!-- Debug Only -->
   <div style="display:none; background-color:palegoldenrod; padding:10px;">
-    viewport.breakpoint: {{ viewport.breakpoint }}
+    <li>viewport.breakpoint: {{ viewport.breakpoint }}</li>
+    <li>viewport.breakpointValue: {{ viewport.breakpointValue(viewport.breakpoint.value) }}</li>
   </div>
 </template>

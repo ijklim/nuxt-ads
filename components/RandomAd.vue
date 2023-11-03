@@ -166,5 +166,33 @@
       :href="(<IMochahostAdObject>state.whichAdToShow).href"
       :imageAltText="(<IMochahostAdObject>state.whichAdToShow).imageAltText"
     />
+
+    <button
+      density="compact"
+      @click="pickRandomAd"
+    >
+      Shuffle
+    </button>
   </div>
 </template>
+
+<style scoped>
+  button {
+    background-color: darkgreen;
+    border: 0;
+    border-radius: 3px;
+    box-shadow: 0 0 0 1px black;
+    color: white;
+    cursor: pointer;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    margin-top: 2px;
+    /* margin-bottom needed for iframeResizer to reserve space at the bottom */
+    margin-bottom: 5px;
+    padding: 2px 10px;
+  }
+
+  button:hover {
+    background-color: palegreen;
+    color: darkgreen;
+  }
+</style>
