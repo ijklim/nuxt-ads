@@ -1,5 +1,9 @@
-<!-- === Randomly pick one ad from available Google or Amazon ads === -->
-<!-- Supports route query `adtype` to include (e.g. MochahostBanner) or exclude (e.g. -GoogleAdSense) an AdType from being picked -->
+<!-- === Randomly pick one ad from available ads returned by api call to VITE_ADS_SERVER === -->
+<!--
+  Query Strings Supported:
+  • [laravel-ads::AdController.php::get()] at, pk, random
+  • sb: If '1' display Shuffle Button
+-->
 <script setup lang="ts">
   import { Script } from '@unhead/vue';
 
@@ -169,6 +173,7 @@
 
     <button
       density="compact"
+      v-if="query?.sb === '1'"
       @click="pickRandomAd"
     >
       Shuffle

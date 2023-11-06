@@ -20,11 +20,13 @@ export default defineNuxtConfig({
       mobileMedium: 375,
       mobileWide: 425,
       tablet: 768,
-      // Custom Settings based on Mochahost Banners, 1px smaller than banner width
-      mochahostTabletMedium: 727,
-      mochahostMobileMedium: 335,
-      mochahostMobile: 299,
-      mochahostMobileSmall: 249,
+      // === Custom Settings based on Mochahost Banners, same as banner width
+      mochahostTabletMedium: 728,
+      mochahostMobileMedium: 336,
+      mochahostMobile: 298,
+      mochahostMobileSmall: 250,
+      mochahostMobileExtraSmall: 200,
+      mochahostImpossible: 50,
     }
   },
   ssr: true,
