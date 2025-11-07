@@ -18,8 +18,8 @@ export default defineNuxtConfig({
   runtimeConfig: {
     // Keys within public are also exposed client-side
     public: {
-      adClient: process.env.AD_CLIENT,
-      adsServer: process.env.ADS_SERVER
+      adClient: '',   // Will be overridden by NUXT_PUBLIC_AD_CLIENT
+      adsServer: ''   // Will be overridden by NUXT_PUBLIC_ADS_SERVER
     },
   },
 

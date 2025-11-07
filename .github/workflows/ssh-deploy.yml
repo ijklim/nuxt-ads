@@ -55,10 +55,11 @@ jobs:
       - name: Install dependencies
         run: pnpm install --no-frozen-lockfile
 
-      # Remove .nuxt to clear any runtime files injected from environment variables
-      # This ensures new .env settings are picked up during the following build/generate steps
-      - name: Clear Nuxt cache
-        run: rm -rf .nuxt
+      # Set up environment variables here using GitHub Secrets
+      - name: Create .env file from secrets
+        run: |
+          echo "NUXT_PUBLIC_ADS_SERVER=${{ secrets.NUXT_PUBLIC_ADS_SERVER }}" > .env
+          echo "NUXT_PUBLIC_AD_CLIENT=${{ secrets.NUXT_PUBLIC_AD_CLIENT }}" >> .env
 
       - name: Generate static site
         run: pnpm generate
