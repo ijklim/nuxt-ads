@@ -46,5 +46,8 @@ pnpm audit
 
 # Fix security vulnerabilities (auto-fix what's possible)
 pnpm audit --fix
+
+# Choose packages to update interactively to their newest versions
+pnpm update --interactive --latest
 ```
 

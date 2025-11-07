@@ -1,5 +1,7 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
+  compatibilityDate: '2025-11-07',
+
   // Note: Can't use css here if project is to be extended by another app, will cause compilation error
   css: [
     '@/assets/css/main.css',
