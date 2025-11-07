@@ -138,7 +138,8 @@
       });
 
     const url = `${runtimeConfig.public.adsServer}/api/ads?${params.toString()}`;
-    // console.log('[Debug Only] pickRandomAd()::url', url);
+    console.log('[Debug Only] pickRandomAd()::runtimeConfig.public', runtimeConfig.public);
+    console.log('[Debug Only] pickRandomAd()::url', url);
 
     const apiResponse = await $fetch<IResponseFetchAd>(url)
       .catch((error) => {
