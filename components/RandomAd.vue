@@ -5,9 +5,6 @@
   • sb: If '1' display Shuffle Button
 -->
 <script setup lang="ts">
-  import { Script } from '@unhead/vue';
-
-
   // === Composables ===
   const { query } = useRoute();
   const utility = useUtility(import.meta);
@@ -26,6 +23,7 @@
     displayRatio: number;
   }
 
+  // Should match `ijklim_ads::ad_types::AmazonBanner`
   interface IAmazonAdObject extends IEmptyAdObject {
     height?: number;
     href: string;
@@ -37,19 +35,31 @@
     width?: number;
   };
 
+  // Should match `ijklim_ads::ad_types::GoogleAdSense`
   interface IGoogleAdObject extends IEmptyAdObject {
     adFormat: string;
     adLayoutKey: string;
     adSlot: number;
   };
 
-  interface IMochahostAdObject extends IEmptyAdObject {
+  // Obsolete: Replaced IImageAdObject
+  // interface IMochahostAdObject extends IEmptyAdObject {
+  //   height: number;
+  //   href: string;
+  //   imageAltText: string;
+  //   imageUrl: string;
+  // };
+
+  // Should match `ijklim_ads::ad_types::Image`
+  interface IImageAdObject extends IEmptyAdObject {
+    height: number;
     href: string;
     imageAltText: string;
-    imageUrl: string;
+    imagePath: string;
+    width?: number;
   };
 
-  type AdObject = IAmazonAdObject | IEmptyAdObject | IGoogleAdObject | IMochahostAdObject;
+  type AdObject = IAmazonAdObject | IEmptyAdObject | IGoogleAdObject | IImageAdObject;
 
   interface IResponseFetchAd {
     ad_code: string,
@@ -78,6 +88,38 @@
 
 
   // === Methods ===
+  /**
+   * Send ad dimension to parent window for auto-resizing
+   *
+   * Note: The parent-window message listener is registered in ads.js
+   */
+  const notifyParentOfAdDimensions = (imagePath: string, height: number | null, width: number | null) => {
+    const img = new Image();
+    img.onload = () => {
+      const naturalHeight = img.naturalHeight;
+      const naturalWidth = img.naturalWidth;
+      const aspectRatio = naturalHeight / naturalWidth;
+      let calculatedHeight = height ?? naturalHeight;
+      let calculatedWidth = width ?? naturalWidth;
+
+      // If width is set, use it to calculate height base on aspect ratio
+      if (width) {
+        calculatedHeight = Math.round(width * aspectRatio);
+      } else if (height) {
+        calculatedWidth = Math.round(height / aspectRatio);
+      }
+
+      const message = {
+        type: 'ad-dimension',
+        height: calculatedHeight,
+        width: calculatedWidth,
+      };
+      // console.log('[Debug Only] message', message);  // For debug purpose only
+      window.parent.postMessage(message, '*');
+    };
+    img.src = imagePath;
+  };
+
   /**
    * Call ads-server api to retrieve a random ad
    *
@@ -116,6 +158,10 @@
     };
 
     if (apiResponse && isAd(apiResponse)) {
+      const height = parseInt(apiResponse.height);
+      const width = parseInt(apiResponse.width);
+      const imagePath = apiResponse.url_segment_image ? `${import.meta.env.VITE_ADS_SERVER}${apiResponse.url_segment_image}` : undefined;
+
       // console.log(`[${utility.currentFileName}::onMounted] apiResponse:`, toRaw(apiResponse));
       state.whichAdToShow = {
         adFormat: apiResponse.ad_format,
@@ -123,17 +169,22 @@
         adSlot: (apiResponse.ad_type === 'GoogleAdSense') ? parseInt(apiResponse.ad_code) : undefined,
         adType: apiResponse.ad_type,
         displayRatio: parseInt(apiResponse.display_ratio),
-        height: parseInt(apiResponse.height),
+        height,
         href: apiResponse.url_affiliate,
         imageAltText: apiResponse.title,
         imageDescription: apiResponse.image_description,
-        imagePath: apiResponse.url_segment_image ? `${import.meta.env.VITE_ADS_SERVER}${apiResponse.url_segment_image}` : undefined,
+        imagePath,
         price: apiResponse.price ? parseFloat(apiResponse.price) : undefined,
         priceDiscountAmount: apiResponse.price_discount_amount,
-        width: parseInt(apiResponse.width),
+        width,
       };
+
+      if (imagePath) notifyParentOfAdDimensions(imagePath, height, width);
     }
   };
+
+
+
 
 
   // === Lifecycle Hooks ===
@@ -143,7 +194,7 @@
 </script>
 
 <template>
-  <div id="nuxt-ad" class="text-center">
+  <div class="text-center">
     <!-- === Google AdSense === -->
     <GoogleAdSense
       v-if="state.whichAdToShow.adType === 'GoogleAdSense'"
@@ -164,12 +215,21 @@
       :priceDiscountAmount="(<IAmazonAdObject>state.whichAdToShow)?.priceDiscountAmount ?? undefined"
     />
 
-    <!-- === Mochahost Banner === -->
-    <MochahostBanner
-      v-if="state.whichAdToShow.adType === 'MochahostBanner'"
-      :href="(<IMochahostAdObject>state.whichAdToShow).href"
-      :imageAltText="(<IMochahostAdObject>state.whichAdToShow).imageAltText"
-    />
+    <!-- === ImageAd === -->
+    <NuxtLink
+      v-if="['MochahostBanner', 'ImageAd'].includes(state.whichAdToShow.adType ?? '')"
+      rel="nofollow noopener"
+      target="_blank"
+      :href="(<IImageAdObject>state.whichAdToShow).href"
+    >
+      <figure>
+        <img
+          :alt="(<IImageAdObject>state.whichAdToShow).imageAltText"
+          :src="(<IImageAdObject>state.whichAdToShow).imagePath"
+          style="max-width: 100%; height: auto;"
+        />
+      </figure>
+    </NuxtLink>
 
     <button
       density="compact"
@@ -199,5 +259,9 @@
   button:hover {
     background-color: palegreen;
     color: darkgreen;
+  }
+
+  figure {
+    margin: 0;
   }
 </style>
