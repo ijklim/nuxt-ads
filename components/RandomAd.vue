@@ -1,4 +1,4 @@
-<!-- === Randomly pick one ad from available ads returned by api call to VITE_ADS_SERVER === -->
+<!-- === Randomly pick one ad from available ads returned by api call to ad server === -->
 <!--
   Query Strings Supported:
   • [laravel-ads::AdController.php::get()] at, pk, random
@@ -7,6 +7,7 @@
 <script setup lang="ts">
   // === Composables ===
   const { query } = useRoute();
+  const runtimeConfig = useRuntimeConfig();
   const utility = useUtility(import.meta);
   // console.log(`[${utility.currentFileName}] query:`, query);
 
@@ -136,7 +137,7 @@
         params.append(key, `${query[key]}`);
       });
 
-    const url = `${import.meta.env.VITE_ADS_SERVER}/api/ads?${params.toString()}`;
+    const url = `${runtimeConfig.public.adsServer}/api/ads?${params.toString()}`;
     const apiResponse = await $fetch<IResponseFetchAd>(url)
       .catch((error) => {
         console.error(`[${utility.currentFileName}::pickRandomAd()] Fail to retrieve valid ads data, aborting.`, error);
@@ -148,6 +149,8 @@
      * @param {IResponseFetchAd} apiResponse
      */
     const isAd = (apiResponse: IResponseFetchAd) => {
+      // console.log('[Debug Only] isAd()::apiResponse', apiResponse);
+
       return (
         'ad_code' in apiResponse &&
         'ad_type' in apiResponse &&
@@ -160,7 +163,7 @@
     if (apiResponse && isAd(apiResponse)) {
       const height = parseInt(apiResponse.height);
       const width = parseInt(apiResponse.width);
-      const imagePath = apiResponse.url_segment_image ? `${import.meta.env.VITE_ADS_SERVER}${apiResponse.url_segment_image}` : undefined;
+      const imagePath = apiResponse.url_segment_image ? `${runtimeConfig.public.adsServer}${apiResponse.url_segment_image}` : undefined;
 
       // console.log(`[${utility.currentFileName}::onMounted] apiResponse:`, toRaw(apiResponse));
       state.whichAdToShow = {

@@ -1,5 +1,8 @@
 <!-- Doc: https://support.google.com/adsense/answer/9274025?sjid=15958214024945695758-NA -->
 <script setup lang="ts">
+  // === Composables ===
+  const runtimeConfig = useRuntimeConfig();
+
   // === Props ===
   // The props below are required by Google AdSense
   defineProps({
@@ -20,7 +23,7 @@
 
 
   // === Data ===
-  const adClient = ref(import.meta.env.VITE_AD_CLIENT);
+  const adClient = ref(runtimeConfig.public.adClient);
 
 
   // === Lifecycle Hooks ===

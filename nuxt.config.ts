@@ -13,6 +13,16 @@ export default defineNuxtConfig({
   modules: [
     'nuxt-viewport',
   ],
+
+  // https://nuxt.com/docs/getting-started/configuration
+  runtimeConfig: {
+    // Keys within public are also exposed client-side
+    public: {
+      adClient: '',   // Will be overridden by NUXT_PUBLIC_AD_CLIENT
+      adsServer: '',  // Will be overridden by NUXT_PUBLIC_ADS_SERVER
+    },
+  },
+
   viewport: {
     breakpoints: {
       desktop: 1024,

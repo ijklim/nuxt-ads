@@ -22,11 +22,11 @@ A Nuxt-based ad server that displays randomized advertisements from a backend AP
 Create a `.env` file in the project root with the following variables:
 
 ```env
-# Google AdSense Publisher ID
-VITE_AD_CLIENT=ca-pub-0000000000000000
+# Google AdSense Publisher ID (if applicable)
+NUXT_PUBLIC_AD_CLIENT=ca-pub-0000000000000000
 
 # Backend API URL for fetching ads
-VITE_ADS_SERVER=https://your-ads-api.com
+NUXT_PUBLIC_ADS_SERVER=https://your-ads-api.com
 ```
 
 **Important:** On shared hosting servers, you **must manually create the `.env` file** since it's not included in version control for security reasons. Contact your hosting provider or use their file manager to:
