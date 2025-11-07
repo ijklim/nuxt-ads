@@ -138,6 +138,8 @@
       });
 
     const url = `${runtimeConfig.public.adsServer}/api/ads?${params.toString()}`;
+    // console.log('[Debug Only] pickRandomAd()::url', url);
+
     const apiResponse = await $fetch<IResponseFetchAd>(url)
       .catch((error) => {
         console.error(`[${utility.currentFileName}::pickRandomAd()] Fail to retrieve valid ads data, aborting.`, error);

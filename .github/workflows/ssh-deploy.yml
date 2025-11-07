@@ -55,6 +55,11 @@ jobs:
       - name: Install dependencies
         run: pnpm install --no-frozen-lockfile
 
+      # Remove .nuxt to clear any runtime files injected from environment variables
+      # This ensures new .env settings are picked up during the following build/generate steps
+      - name: Clear Nuxt cache
+        run: rm -rf .nuxt
+
       - name: Generate static site
         run: pnpm generate
 
