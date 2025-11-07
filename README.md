@@ -1,69 +1,50 @@
-# Nuxt 3 Minimal Starter
+# Ad App
 
-Look at the [Nuxt 3 documentation](https://nuxt.com/docs/getting-started/introduction) to learn more.
+A Nuxt-based ad server that displays randomized advertisements from a backend API. This application:
 
-## Creation
+- Fetches ads dynamically from a Laravel backend API
+- Displays ads in multiple formats: Google AdSense, Amazon banners, and image-based ads
+- Provides a reusable `ads.js` embed script that websites can include via a simple `<script>` tag
+- Auto-resizes iframes based on content dimensions while maintaining aspect ratio
+- Supports responsive sizing to adapt to container width
+- Offers optional shuffle functionality for testing
+
+**Key Features:**
+- Lightweight embeddable script for third-party sites
+- Automatic dimension calculation based on image aspect ratio
+- Dynamic ad rotation with configurable parameters
+- Cross-origin iframe communication via postMessage
+- Production-ready Nuxt 3 setup
+
+
+## Commands
 
 ```bash
-npx nuxi init nuxt-ads
-```
+# Nuxt project creation
+npx nuxi init timer-nuxt
 
-## Setup
-
-Make sure to install the dependencies:
-
-```bash
-# npm
-npm install
-
-# pnpm
+# Install dependencies
 pnpm install
 
-# yarn
-yarn install
+# Start the development server
+pnpm dev
+
+# Build for Node.js server deployment (Vercel, Heroku, etc.)
+# Creates server and client code, requires Node.js runtime
+pnpm build
+
+# Generate static site for static hosting (GitHub Pages, shared hosting, CDN)
+# Pre-renders all routes to static HTML files
+# Use this for deployment to shared hosting via SCP/FTP
+pnpm generate
+
+# Locally preview production build
+pnpm preview
+
+# Audit for security vulnerabilities in dependencies
+pnpm audit
+
+# Fix security vulnerabilities (auto-fix what's possible)
+pnpm audit --fix
 ```
 
-## Development Server
-
-Start the development server on `http://localhost:3000`:
-
-```bash
-# npm
-npm run dev
-
-# pnpm
-pnpm run dev
-
-# yarn
-yarn dev
-```
-
-## Production
-
-Build the application for production:
-
-```bash
-# npm
-npm run build
-
-# pnpm
-pnpm run build
-
-# yarn
-yarn build
-```
-
-Locally preview production build:
-
-```bash
-# npm
-npm run preview
-
-# pnpm
-pnpm run preview
-
-# yarn
-yarn preview
-```
-
-Check out the [deployment documentation](https://nuxt.com/docs/getting-started/deployment) for more information.

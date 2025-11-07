@@ -1,0 +1,112 @@
+# Version: 2.5.0
+# Last Updated: 2025-11-07
+
+name: Deploy to Shared Hosting
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+# Permissions: Restrict what the workflow can do
+# - contents: read allows checkout of your repository code
+# This follows the principle of least privilege: only grant what's needed
+# For this workflow: We only need to read the code; we don't need write access
+permissions:
+  contents: read
+
+# Concurrency control: Ensures only one deployment runs at a time
+# - group: Logical grouping for this workflow (same across all project types)
+# - cancel-in-progress: Cancels any currently running deployment before starting a new one
+# This prevents multiple deployments from stacking up or conflicting if you push rapidly
+concurrency:
+  group: shared-hosting-deploy
+  cancel-in-progress: true
+
+jobs:
+  build:
+    name: Build static site
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          # Cache: Speed up dependency installation by caching pnpm's store directory
+          # On subsequent runs, pnpm reuses cached dependencies instead of re-downloading them
+          # Saves significant time and bandwidth, especially for workflows that run frequently
+          cache: 'pnpm'
+
+      # Install dependencies for the project
+      # --no-frozen-lockfile: Allows pnpm to update the lock file if needed
+      #   By default, pnpm is strict and fails if pnpm-lock.yaml is missing or outdated
+      #   This flag lets pnpm regenerate the lock file, useful if it's not committed or is stale
+      #   Tradeoff: Less reproducible (lock file may differ between runs), but more flexible
+      # Note: For production, consider using --frozen-lockfile for strict reproducibility
+      - name: Install dependencies
+        run: pnpm install --no-frozen-lockfile
+
+      - name: Generate static site
+        run: pnpm generate
+
+      # Store the generated static site as an artifact for the deploy job
+      # Artifacts are temporary files that persist between jobs in the same workflow run
+      # This avoids rebuilding the site during the deploy job; we just reuse the pre-built output
+      # Artifacts are automatically deleted after 90 days (configurable in GitHub settings)
+      - name: Upload generated site as artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: generated-output
+          path: .output/public
+
+  deploy:
+    name: Upload to shared hosting
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download site artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: generated-output
+          path: generated-output
+
+      # Deploy via SCP using appleboy/scp-action
+      # appleboy/scp-action is more mature and actively maintained than other SCP alternatives
+      # It provides better reliability, more features, and faster bug fixes
+      # Latest stable version: v0.1.4
+      - name: Deploy generated site via SCP
+        uses: appleboy/scp-action@v0.1.4
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USERNAME }}
+          key: ${{ secrets.SSH_KEY }}
+          port: ${{ secrets.SSH_PORT }}
+          source: generated-output/
+          target: ${{ secrets.SSH_DEPLOY_PATH }}
+          # strip_components: Remove leading path components from source files
+          # 1 removes "generated-output/" prefix so files copy directly to target
+          strip_components: 1
+          # overwrite: Replace files on remote even if they already exist
+          overwrite: true
+
+      - name: Run remote post-deploy commands
+        uses: appleboy/ssh-action@v1.2.2
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USERNAME }}
+          key: ${{ secrets.SSH_KEY }}
+          port: ${{ secrets.SSH_PORT }}
+          script: |
+            echo "Running post-deploy tasks on server"
+            cd ${{ secrets.SSH_DEPLOY_PATH }}
+            date > .deploy_timestamp
+            echo "Remote tasks completed"
