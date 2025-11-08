@@ -32,6 +32,10 @@
   </filesmatch>
   <filesmatch "\.(css|htm|html|ini|js|json|xml)$">
     Header set Cache-Control "max-age=604800, s-maxage=31449600, public"
+
+    # To solve CORS error
+    Header set Access-Control-Allow-Origin "*"
+    Header set Access-Control-Allow-Methods "GET, OPTIONS"
   </filesmatch>
   <filesmatch "\.(pdf)$">
     Header set Cache-Control "max-age=86400, public"

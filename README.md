@@ -29,16 +29,24 @@ NUXT_PUBLIC_AD_CLIENT=ca-pub-0000000000000000
 NUXT_PUBLIC_ADS_SERVER=https://your-ads-api.com
 ```
 
-**Important:** On shared hosting servers, you **must manually create the `.env` file** since it's not included in version control for security reasons. Contact your hosting provider or use their file manager to:
-
-1. Create a new file named `.env` in the root directory
-2. Add the required environment variables
-3. Ensure the file has appropriate permissions (readable by the application)
-
-For local development, you can copy from `.env.example` if available:
+**For Local Development:**
+Copy from `.env.example`:
 ```bash
 cp .env.example .env
 ```
+
+**For GitHub Actions Deployment:**
+Since the app uses static generation (`pnpm generate`), environment variables must be set **at build time**. The GitHub Actions workflow creates a `.env` file from GitHub Secrets before generating the static site.
+
+Add these secrets to your GitHub repository:
+- `Settings` > `Secrets and variables` > `Actions` > `New repository secret`
+  - `NUXT_PUBLIC_AD_CLIENT`: Your Google AdSense Publisher ID
+  - `NUXT_PUBLIC_ADS_SERVER`: Your ads API URL
+
+Once set, the values are baked into the static HTML during deployment. **To change values, update the secrets and trigger a new deployment.**
+
+**Important:** Do NOT manually create `.env` on shared hosting servers. The environment variables must be provided during the build phase via GitHub Secrets.
+
 
 ## Commands
 
@@ -75,23 +83,27 @@ pnpm update --interactive --latest
 ```
 
 
-## === GitHub Action Auto Deploy to Shared Hosting Server ===
+## GitHub Action Auto Deploy to Shared Hosting Server
 
-* Ensure these secret names match the variables referenced in `.github/workflows/ssh-deploy.yml`
+### Required Secrets
 
-* In the repository, go to `Settings` > `Secrets and variables` > `Actions` > `Repository secrets` > `New repository secret`
+In your repository, go to `Settings` > `Secrets and variables` > `Actions` > `Repository secrets`:
 
-  * SSH_HOST: Server hostname/IP
+**Nuxt Build Configuration:**
+- `NUXT_PUBLIC_ADS_SERVER`: Backend API URL for fetching ads (e.g., `https://api.example.com`)
+- `NUXT_PUBLIC_AD_CLIENT`: Google AdSense Publisher ID (e.g., `ca-pub-0000000000000000`)
 
-  * SSH_USERNAME: Your SSH username
+**SSH Deployment Credentials:**
+- `SSH_HOST`: Server hostname/IP
+- `SSH_USERNAME`: Your SSH username
+- `SSH_KEY`: Your private SSH key content (the entire key including headers)
+- `SSH_PORT`: SSH port number (default is 22)
+- `SSH_DEPLOY_PATH`: Path on host to copy files to
 
-  * SSH_KEY: Your private SSH key content (the entire key including headers)
-
-  * SSH_PORT: SSH port number (default is 22)
-
-  * SSH_DEPLOY_PATH: Path on host to copy files
-
-* Create GitHub action file (e.g. `.github/workflows/ssh-deploy.yml`)
+The GitHub Actions workflow (`.github/workflows/ssh-deploy.yml`) automatically:
+1. Creates a `.env` file from these secrets before build
+2. Runs `pnpm generate` to build the static site with environment variables embedded
+3. Deploys the generated files to your server via SCP
 
 
 

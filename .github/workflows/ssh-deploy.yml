@@ -1,5 +1,20 @@
-# Version: 2.5.0
-# Last Updated: 2025-11-07
+# Version: 3.1.0
+# Last Updated: 2025-11-08
+
+# === REQUIRED GITHUB SECRETS ===
+# Before running this workflow, configure these secrets in your GitHub repository:
+# Settings > Secrets and variables > Actions > Repository secrets
+#
+# Nuxt Build Configuration:
+#   - NUXT_PUBLIC_ADS_SERVER: Backend API URL (e.g., https://api.example.com)
+#   - NUXT_PUBLIC_AD_CLIENT: Google AdSense Publisher ID (e.g., ca-pub-0000000000000000)
+#
+# SSH Deployment Credentials:
+#   - SSH_HOST: Server hostname or IP address
+#   - SSH_USERNAME: SSH username for authentication
+#   - SSH_KEY: Private SSH key content (include headers like -----BEGIN RSA PRIVATE KEY-----)
+#   - SSH_PORT: SSH port number (typically 22)
+#   - SSH_DEPLOY_PATH: Target directory on remote server (e.g., /home/user/public_html)
 
 name: Deploy to Shared Hosting
 
@@ -56,6 +71,7 @@ jobs:
         run: pnpm install --no-frozen-lockfile
 
       # Set up environment variables here using GitHub Secrets
+      # Note: Ensure environment variables/secrets are created before running `pnpm generate`
       - name: Create .env file from secrets
         run: |
           echo "NUXT_PUBLIC_ADS_SERVER=${{ secrets.NUXT_PUBLIC_ADS_SERVER }}" > .env
