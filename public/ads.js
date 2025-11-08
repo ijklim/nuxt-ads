@@ -2,7 +2,7 @@
  * Nuxt Ad Display Script
  *
  * Usage:
- * <script src="https://ads.ivan-lim.com/ads.js" data-ad-container-id="ad-container-id"></script>
+ * <script src="https://ads.ivan-lim.com/ads.js" data-ad-container-id="ad-container-id" async></script>
  *
  * Optional attributes:
  * - data-ad-container-id: ID of container element (if not provided, inserts after script tag)
