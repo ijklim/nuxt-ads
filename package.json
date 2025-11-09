@@ -1,7 +1,7 @@
 {
   "name": "nuxt-app",
   "displayName": "Nuxt Ads",
-  "version": "3.2.0",
+  "version": "3.3.0",
   "private": true,
   "scripts": {
     "build": "nuxt build",
