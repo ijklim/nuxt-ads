@@ -89,26 +89,26 @@ test/23-add-unit-tests
 ### PR Title Format
 
 ```
-type: Brief description (Closes/Fixes #issue-number)
+type: brief description (closes/fixes #issue-number)
 ```
 
 ### Examples
 
 ```
-feat: Add pull request approval requirement (Fixes #1)
-fix: Resolve ad loading race condition (Closes #42)
-docs: Update installation instructions (Closes #15)
-test: Add unit tests for RandomAd component (Resolves #23)
+feat: add pull request approval requirement (fixes #1)
+fix: resolve ad loading race condition (closes #42)
+docs: update installation instructions (closes #15)
+test: add unit tests for RandomAd component (resolves #23)
 ```
 
 ### PR Title Rules
 
 1. **Start with a type** followed immediately by a colon and a space (`type: `)
-2. **Use imperative mood** for the description (e.g., "Add", "Fix", "Update")
+2. **Use imperative mood** for the description (e.g., "add", "fix", "update")
 3. **Keep under 72 characters**
 4. **Include issue reference** in parentheses at the end
-   - Single issue: `(Fixes #N)` or `(Closes #N)`
-   - Multiple issues: `(Resolves #N1, #N2)`
+   - Single issue: `(fixes #N)` or `(closes #N)`
+   - Multiple issues: `(resolves #N1, #N2)`
 5. **No period** at the end
 
 ### PR Body
@@ -116,10 +116,6 @@ test: Add unit tests for RandomAd component (Resolves #23)
 - Provide a clear description of what changes were made
 - Explain **why** the changes were necessary
 - Include any relevant context or screenshots
-- Reference the issue using GitHub keywords:
-  - `Closes #42` - Closes an issue
-  - `Fixes #123` - Fixes a bug
-  - `Resolves #42` - Resolves an issue
 - List any breaking changes
 - Mention if documentation needs to be updated
 
