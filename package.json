@@ -1,21 +1,37 @@
 {
   "name": "nuxt-app",
   "displayName": "Nuxt Ads",
-  "version": "3.1.1",
+  "version": "3.2.0",
   "private": true,
   "scripts": {
     "build": "nuxt build",
     "dev": "nuxt dev",
     "generate": "nuxt generate",
     "preview": "nuxt preview",
-    "postinstall": "nuxt prepare"
+    "postinstall": "nuxt prepare",
+    "test": "vitest --run",
+    "test:watch": "vitest --watch",
+    "test:coverage": "vitest --run --coverage",
+    "test:e2e": "playwright test",
+    "test:e2e:ui": "playwright test --ui"
   },
   "devDependencies": {
     "@nuxt/devtools": "latest",
+    "@playwright/test": "^1.56.1",
+    "@vitest/coverage-v8": "^4.0.8",
+    "@vue/test-utils": "^2.4.6",
+    "jsdom": "^27.1.0",
     "nuxt": "^4.2.1",
-    "nuxt-viewport": "^2.0.6"
+    "nuxt-viewport": "^2.0.6",
+    "vitest": "^4.0.8"
   },
   "dependencyNotes": {
-    "nuxt-viewport": "Module that detects screen breakpoint, used by Mochahost banner"
+    "nuxt-viewport": "Module that detects screen breakpoint, used by Mochahost banner",
+
+    "vitest": "Lightning-fast unit test framework powered by Vite. Used for component and utility function testing with hot module reloading support.",
+    "@vue/test-utils": "Official Vue 3 testing utility library. Provides component mounting, DOM queries, event simulation, and mocking capabilities for Vue components.",
+    "@vitest/coverage-v8": "Code coverage reporting for Vitest. Generates coverage reports to track test effectiveness and identify untested code paths.",
+    "jsdom": "JavaScript implementation of web standards (DOM, HTML). Provides a fake browser environment for Vitest to run DOM-dependent tests without a real browser.",
+    "@playwright/test": "End-to-end testing framework by Microsoft. Used for critical user workflow testing in real browsers (Chromium, Firefox, WebKit) with cross-browser support."
   }
 }

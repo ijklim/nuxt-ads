@@ -242,7 +242,7 @@
       v-if="query?.sb === '1'"
       @click="pickRandomAd"
     >
-      Shuffle
+      Shuffle (remove this: fail test)
     </button>
   </div>
 </template>

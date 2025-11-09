@@ -1,5 +1,6 @@
-# Version: 3.1.0
-# Last Updated: 2025-11-08
+# Version: 3.2.0
+# Last Updated: 2025-11-09
+# Added testing job that runs before build/deploy
 
 # === REQUIRED GITHUB SECRETS ===
 # Before running this workflow, configure these secrets in your GitHub repository:
@@ -40,8 +41,8 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  build:
-    name: Build static site
+  test-and-build:
+    name: Test and build
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -70,6 +71,10 @@ jobs:
       - name: Install dependencies
         run: pnpm install --no-frozen-lockfile
 
+      # Run tests first - if they fail, the workflow stops here
+      - name: Run unit tests
+        run: pnpm test
+
       # Set up environment variables here using GitHub Secrets
       # Note: Ensure environment variables/secrets are created before running `pnpm generate`
       - name: Create .env file from secrets
@@ -92,7 +97,7 @@ jobs:
 
   deploy:
     name: Upload to shared hosting
-    needs: build
+    needs: test-and-build
     runs-on: ubuntu-latest
     steps:
       - name: Download site artifact
