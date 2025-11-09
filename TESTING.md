@@ -251,42 +251,52 @@ pnpm exec playwright test --debug
 
 ## CI/CD Integration
 
-### GitHub Actions
+### GitHub Actions - Pull Request Workflow
 
-Add to `.github/workflows/test.yml`:
+This project uses automated testing on pull requests via `.github/workflows/pr-tests.yml`.
 
-```yaml
-name: Tests
+**Workflow Features:**
+- ✅ Runs unit tests on every PR
+- ✅ Runs E2E tests on every PR
+- ✅ Verifies build succeeds
+- ✅ Checks code formatting (if lint script exists)
+- ✅ Posts coverage reports as PR comments
+- ✅ Blocks merge if any tests fail
 
-on: [push, pull_request]
+**When Tests Run:**
+- Pull request created
+- New commits pushed to PR
+- PR reopened
 
-jobs:
-  unit-tests:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: pnpm/action-setup@v2
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 20
-          cache: 'pnpm'
-      - run: pnpm install
-      - run: pnpm test
-      - run: pnpm test:coverage
+**Status Checks:**
+The following checks must pass before merge:
+1. `Run unit tests` - Vitest unit tests
+2. `Run E2E tests` - Playwright tests
+3. `Build verification` - Ensures project builds successfully
+4. `Lint and format check` - Code style validation (if configured)
 
-  e2e-tests:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: pnpm/action-setup@v2
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 20
-          cache: 'pnpm'
-      - run: pnpm install
-      - run: pnpm build
-      - run: pnpm test:e2e
-```
+### Branch Protection Requirements
+
+To enforce testing requirements, configure branch protection rules:
+
+**Required Settings:**
+- ✅ Require status checks to pass before merging
+- ✅ Require at least 1 approval from code reviewer
+- ✅ Dismiss stale reviews on new commits
+- ✅ Require conversation resolution before merging
+
+**Setup Instructions:**
+See [`.github/BRANCH_PROTECTION.md`](.github/BRANCH_PROTECTION.md) for detailed setup guide.
+
+### Local Development Workflow
+
+Before creating a PR:
+1. Run tests locally: `pnpm test`
+2. Run E2E tests: `pnpm test:e2e`
+3. Check coverage: `pnpm test:coverage`
+4. Build project: `pnpm build`
+
+This ensures your PR will pass all automated checks.
 
 ## Coverage Goals
 

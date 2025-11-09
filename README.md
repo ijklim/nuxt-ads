@@ -125,6 +125,54 @@ pnpm update --interactive --latest
 
 ---
 
+## Testing
+
+This project uses **Vitest** for unit testing and **Playwright** for E2E testing.
+
+### Running Tests
+
+```bash
+# Run unit tests
+pnpm test
+
+# Run tests in watch mode (re-run on file changes)
+pnpm test:watch
+
+# Run tests with coverage report
+pnpm test:coverage
+
+# Run E2E tests
+pnpm test:e2e
+
+# Run E2E tests in UI mode
+pnpm test:e2e:ui
+```
+
+### Pull Request Testing Requirements
+
+All pull requests must pass automated tests before merging:
+
+✅ **Required Status Checks:**
+- Unit tests must pass
+- E2E tests must pass
+- Build must succeed
+- Code formatting check (if configured)
+
+✅ **Required Approvals:**
+- At least 1 code review approval required
+- Stale approvals dismissed on new commits
+
+✅ **Merge Protection:**
+- Cannot merge if tests fail
+- Cannot merge without approval
+- All conversations must be resolved
+
+**See [TESTING.md](TESTING.md) for comprehensive testing documentation**
+
+**See [.github/BRANCH_PROTECTION.md](.github/BRANCH_PROTECTION.md) for branch protection setup**
+
+---
+
 ## Deployment
 
 ### GitHub Actions Auto Deploy to Shared Hosting
