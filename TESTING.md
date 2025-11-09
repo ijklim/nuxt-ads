@@ -57,6 +57,7 @@ This project uses **Vitest + Vue Test Utils + Playwright** instead of **@nuxt/te
    - Better IDE integration and debugging support
 
 **When @nuxt/test-utils Would Be Better:**
+
 - If we were testing Nuxt plugins, middleware, or server routes
 - If we needed server-side rendering specific testing
 - If the project was heavily Nuxt-specific without portability concerns
@@ -75,6 +76,7 @@ pnpm install
 ```
 
 This installs:
+
 - **vitest** ^4.0.8 - Unit test framework
 - **@vue/test-utils** ^2.4.6 - Vue component testing utilities
 - **jsdom** ^27.1.0 - Simulated browser environment
@@ -142,61 +144,74 @@ pnpm run test && pnpm test:e2e
 ### Unit Tests (RandomAd.test.ts)
 
 **Component Rendering:**
+
 - ✅ Default state rendering
 - ✅ Shuffle button visibility based on query params
 - ✅ Dynamic component rendering
 
 **Ad Fetching:**
+
 - ✅ API call on mount
 - ✅ Query parameter construction
 - ✅ Error handling
 
 **Ad Type Rendering:**
+
 - ✅ GoogleAdSense component
 - ✅ AmazonBanner component
 - ✅ Image ad rendering
 
 **Data Validation:**
+
 - ✅ Required field validation
 - ✅ Invalid response handling
 
 **User Interactions:**
+
 - ✅ Shuffle button click handling
 - ✅ Multiple shuffle clicks
 
 **PostMessage Communication:**
+
 - ✅ Parent window notifications with dimensions
 
 ### E2E Tests (critical-paths.spec.ts)
 
 **Ad Loading:**
+
 - ✅ Ad loads on page load
 - ✅ Correct API endpoint is called
 - ✅ Query parameters are passed to API
 
 **Shuffle Functionality:**
+
 - ✅ Shuffle button shows when sb=1
 - ✅ New ad fetches on shuffle
 - ✅ Button hidden when not requested
 
 **Ad Types:**
+
 - ✅ AmazonBanner rendering
 - ✅ GoogleAdSense rendering
 - ✅ Image ad rendering
 
 **Error Handling:**
+
 - ✅ Graceful degradation on API errors
 
 **Accessibility:**
+
 - ✅ Alt text on images
 - ✅ Link relationships (nofollow, noopener)
 - ✅ Button text visibility
 
 **Performance:**
+
 - ✅ Load time < 5 seconds
 - ✅ No memory leaks on repeated shuffles
 
 **ads.js Embed:**
+
 - ✅ No CORS errors
 
 ## Mock Data
@@ -213,6 +228,7 @@ Mock API responses are defined in `tests/fixtures/mockData.ts`:
 ## Best Practices
 
 ### Unit Testing
+
 1. **Test behavior, not implementation** - Focus on what users see, not internal details
 2. **Mock external dependencies** - API calls, route, composables
 3. **Use fixtures** - Realistic test data that mirrors production
@@ -220,6 +236,7 @@ Mock API responses are defined in `tests/fixtures/mockData.ts`:
 5. **Arrange-Act-Assert** - Setup → Execute → Verify
 
 ### E2E Testing
+
 1. **Test critical paths only** - Don't test every possible state
 2. **Use data-testid attributes** - More reliable than CSS selectors
 3. **Wait for elements properly** - Use `waitForLoadState`, `waitForSelector`
@@ -229,6 +246,7 @@ Mock API responses are defined in `tests/fixtures/mockData.ts`:
 ## Debugging Tests
 
 ### Vitest
+
 ```bash
 # Debug mode with node inspector
 node --inspect-brk ./node_modules/vitest/vitest.mjs
@@ -238,6 +256,7 @@ pnpm test:watch
 ```
 
 ### Playwright
+
 ```bash
 # UI mode (recommended for debugging)
 pnpm test:e2e:ui
@@ -251,42 +270,57 @@ pnpm exec playwright test --debug
 
 ## CI/CD Integration
 
-### GitHub Actions
+### GitHub Actions - Pull Request Workflow
 
-Add to `.github/workflows/test.yml`:
+This project uses automated testing on pull requests via `.github/workflows/pr-tests.yml`.
 
-```yaml
-name: Tests
+**Workflow Features:**
 
-on: [push, pull_request]
+- ✅ Runs unit tests on every PR
+- ✅ Runs E2E tests on every PR
+- ✅ Verifies build succeeds
+- ✅ Checks code formatting (if lint script exists)
+- ✅ Posts coverage reports as PR comments
+- ✅ Blocks merge if any tests fail
 
-jobs:
-  unit-tests:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: pnpm/action-setup@v2
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 20
-          cache: 'pnpm'
-      - run: pnpm install
-      - run: pnpm test
-      - run: pnpm test:coverage
+**When Tests Run:**
 
-  e2e-tests:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: pnpm/action-setup@v2
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 20
-          cache: 'pnpm'
-      - run: pnpm install
-      - run: pnpm build
-      - run: pnpm test:e2e
-```
+- Pull request created
+- New commits pushed to PR
+- PR reopened
+
+**Status Checks:**
+The following checks must pass before merge:
+
+1. `Run unit tests` - Vitest unit tests
+2. `Run E2E tests` - Playwright tests
+3. `Build verification` - Ensures project builds successfully
+4. `Lint and format check` - Code style validation (if configured)
+
+### Branch Protection Requirements
+
+To enforce testing requirements, configure branch protection rules:
+
+**Required Settings:**
+
+- ✅ Require status checks to pass before merging
+- ✅ Require at least 1 approval from code reviewer
+- ✅ Dismiss stale reviews on new commits
+- ✅ Require conversation resolution before merging
+
+**Setup Instructions:**
+See [`.github/BRANCH_PROTECTION.md`](.github/BRANCH_PROTECTION.md) for detailed setup guide.
+
+### Local Development Workflow
+
+Before creating a PR:
+
+1. Run tests locally: `pnpm test`
+2. Run E2E tests: `pnpm test:e2e`
+3. Check coverage: `pnpm test:coverage`
+4. Build project: `pnpm build`
+
+This ensures your PR will pass all automated checks.
 
 ## Coverage Goals
 

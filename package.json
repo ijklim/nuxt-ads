@@ -23,11 +23,11 @@
     "jsdom": "^27.1.0",
     "nuxt": "^4.2.1",
     "nuxt-viewport": "^2.0.6",
+    "prettier": "^3.6.2",
     "vitest": "^4.0.8"
   },
   "dependencyNotes": {
     "nuxt-viewport": "Module that detects screen breakpoint, used by Mochahost banner",
-
     "vitest": "Lightning-fast unit test framework powered by Vite. Used for component and utility function testing with hot module reloading support.",
     "@vue/test-utils": "Official Vue 3 testing utility library. Provides component mounting, DOM queries, event simulation, and mocking capabilities for Vue components.",
     "@vitest/coverage-v8": "Code coverage reporting for Vitest. Generates coverage reports to track test effectiveness and identify untested code paths.",

@@ -29,6 +29,9 @@ importers:
       nuxt-viewport:
         specifier: ^2.0.6
         version: 2.3.1(magicast@0.5.1)(vue@3.5.24)
+      prettier:
+        specifier: ^3.6.2
+        version: 3.6.2
       vitest:
         specifier: ^4.0.8
         version: 4.0.8(jiti@2.6.1)(jsdom@27.1.0)(terser@5.44.1)(yaml@2.8.1)
@@ -2672,6 +2675,11 @@ packages:
   postcss@8.5.6:
     resolution: {integrity: sha512-3Ybi1tAuwAP9s0r1UQ2J4n5Y0G05bJkpUIO0/bI9MhwmD70S5aTWbXGBwxHrelT+XM1k6dM0pk+SwNkpTRN7Pg==}
     engines: {node: ^10 || ^12 || >=14}
+
+  prettier@3.6.2:
+    resolution: {integrity: sha512-I7AIg5boAr5R0FFtJ6rCfD+LFsWHp81dolrFD8S79U9tb8Az2nGrJncnMSnys+bpQJfRUzqs9hnA81OAA3hCuQ==}
+    engines: {node: '>=14'}
+    hasBin: true
 
   pretty-bytes@7.1.0:
     resolution: {integrity: sha512-nODzvTiYVRGRqAOvE84Vk5JDPyyxsVk0/fbA/bq7RqlnhksGpset09XTxbpvLTIjoaF7K8Z8DG8yHtKGTPSYRw==}
@@ -6431,6 +6439,8 @@ snapshots:
       nanoid: 3.3.11
       picocolors: 1.1.1
       source-map-js: 1.2.1
+
+  prettier@3.6.2: {}
 
   pretty-bytes@7.1.0: {}
 

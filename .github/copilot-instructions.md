@@ -1,7 +1,9 @@
 # Nuxt Ads Project Standards
 
 ## 🧪 Testing
+
 When working on `tests/**/*.test.ts` files:
+
 - Use **Vitest** with `globals: true` for a cleaner syntax.
 - Mock external dependencies using `(globalThis as any)` when necessary for global functions (e.g., mock timing APIs).
 - Always include `beforeEach()` to reset mocks and clear component wrappers.
@@ -10,7 +12,9 @@ When working on `tests/**/*.test.ts` files:
 ---
 
 ## 🏗️ Components
+
 When working on `components/**/*.vue` files:
+
 - Use **Composition API** with `<script setup lang="ts">` as the standard.
 - Define explicit **TypeScript interfaces** or types for all `defineProps` and `defineEmits`.
 - Follow **Nuxt auto-import conventions** (do not manually import composables like `useRuntimeConfig`).
@@ -19,6 +23,7 @@ When working on `components/**/*.vue` files:
 ---
 
 ## ⚡ Project Architecture (Data Fetching)
+
 - **Server-Side Data Fetching:** Prefer using **`useAsyncData`** or **`useFetch`** composables for all server-side data fetching logic.
 - **Client-Side Data Fetching:** Only use client-side fetching (e.g., direct `fetch` or Axios) within a `onMounted` hook if the data is strictly non-critical and not required for initial rendering.
 - **State Management:** Use **`useState`** for global application state and stick to the standard reactive API for local state.
@@ -26,6 +31,7 @@ When working on `components/**/*.vue` files:
 ---
 
 ## 📝 Code Style & Formatting
+
 - **Formatting:** All generated code must adhere to the project's **Prettier** formatting rules.
 - **Indentation:** Use **two spaces** for indentation.
 - **Semicolons:** Semicolons are required at the end of statements.
@@ -33,6 +39,7 @@ When working on `components/**/*.vue` files:
 ---
 
 ## 💬 Commit Messages
+
 - **Style:** Generate commit messages using the **Conventional Commits** specification.
 - **Format:** `type: subject` where subject starts with lowercase (e.g., `feat: add feature` not `feat: Add feature`)
 - **Types:** Use `feat`, `fix`, `docs`, `style`, `refactor`, `perf`, `test`, `chore`, or `ci`
@@ -46,9 +53,11 @@ When working on `components/**/*.vue` files:
 ---
 
 ## 🔀 GitHub Integration (for Copilot Coding Agent)
+
 When creating branches and pull requests for GitHub issues:
 
 ### Branch Names
+
 - **Format:** `type/issue-number-short-description`
 - **Types:** Match the type to the PR title (feat, fix, docs, style, refactor, perf, test, chore, ci, etc.)
 - **Examples:** `feat/1-pr-approval-requirement`, `fix/42-ad-loading-race-condition`
@@ -59,6 +68,7 @@ When creating branches and pull requests for GitHub issues:
   - No underscores, trailing slashes, or special characters.
 
 ### Pull Request Titles
+
 - **Format:** `type: brief description (closes/fixes #issue-number)`
 - **Types:** Follow [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/): feat, fix, docs, style, refactor, perf, test, chore, ci, etc.
 - **Examples:** `feat: add pull request approval requirement (fixes #1)`, `fix: resolve ad loading race condition (closes #42)`

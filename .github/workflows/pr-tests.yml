@@ -1,0 +1,210 @@
+# Version: 1.0.0
+# Last Updated: 2025-11-09
+# Purpose: Run tests on pull requests to ensure code quality
+
+name: Pull Request Tests
+
+on:
+  pull_request:
+    branches:
+      - main
+      - develop
+    types: [opened, synchronize, reopened]
+
+# Permissions: Restrict what the workflow can do
+# - contents: read allows checkout of your repository code
+# - pull-requests: write allows commenting on PRs with test results
+permissions:
+  contents: read
+  pull-requests: write
+
+# Concurrency control: Ensures only one test run per PR at a time
+# - group: Logical grouping per PR (prevents duplicate runs)
+# - cancel-in-progress: Cancels currently running tests if new commits are pushed
+concurrency:
+  group: pr-tests-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  unit-tests:
+    name: Run unit tests
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install --no-frozen-lockfile
+
+      - name: Run unit tests
+        run: pnpm test
+
+      - name: Generate coverage report
+        if: always()
+        run: pnpm test:coverage
+
+      - name: Comment PR with test results
+        if: always()
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            let coverageComment = '## Test Results\n\n';
+
+            coverageComment += '✅ Unit tests completed.\n\n';
+
+            // Check if coverage report exists
+            if (fs.existsSync('coverage/coverage-summary.json')) {
+              const coverage = JSON.parse(fs.readFileSync('coverage/coverage-summary.json', 'utf8'));
+              const total = coverage.total;
+              
+              coverageComment += '### Coverage Summary\n\n';
+              coverageComment += '| Category | Percentage |\n';
+              coverageComment += '|----------|------------|\n';
+              coverageComment += `| Lines | ${total.lines.pct}% |\n`;
+              coverageComment += `| Statements | ${total.statements.pct}% |\n`;
+              coverageComment += `| Functions | ${total.functions.pct}% |\n`;
+              coverageComment += `| Branches | ${total.branches.pct}% |\n`;
+            }
+
+            // Find existing comment
+            const { data: comments } = await github.rest.issues.listComments({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+            });
+
+            const botComment = comments.find(comment => 
+              comment.user.type === 'Bot' && comment.body.includes('## Test Results')
+            );
+
+            if (botComment) {
+              await github.rest.issues.updateComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                comment_id: botComment.id,
+                body: coverageComment
+              });
+            } else {
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: context.issue.number,
+                body: coverageComment
+              });
+            }
+
+  e2e-tests:
+    name: Run E2E tests
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install --no-frozen-lockfile
+
+      - name: Install Playwright browsers
+        run: pnpm exec playwright install --with-deps chromium
+
+      - name: Build application
+        run: pnpm build
+
+      - name: Run E2E tests
+        run: pnpm test:e2e
+
+      - name: Upload test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report
+          path: playwright-report/
+          retention-days: 30
+
+  lint-check:
+    name: Lint and format check
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install --no-frozen-lockfile
+
+      - name: Check for lint script
+        id: check-lint
+        run: |
+          if grep -q '"lint"' package.json; then
+            echo "has_lint=true" >> $GITHUB_OUTPUT
+          else
+            echo "has_lint=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Run lint
+        if: steps.check-lint.outputs.has_lint == 'true'
+        run: pnpm lint
+
+  build-check:
+    name: Build verification
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install --no-frozen-lockfile
+
+      - name: Build project
+        run: pnpm build
+
+      - name: Check build output
+        run: |
+          if [ ! -d ".output" ]; then
+            echo "Build failed: .output directory not found"
+            exit 1
+          fi
+          echo "✅ Build successful"

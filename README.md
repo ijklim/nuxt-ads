@@ -10,6 +10,7 @@ A Nuxt-based ad server that displays randomized advertisements from a backend AP
 - Offers optional shuffle functionality for testing
 
 **Key Features:**
+
 - Lightweight embeddable script for third-party sites
 - Automatic dimension calculation based on image aspect ratio
 - Dynamic ad rotation with configurable parameters
@@ -21,29 +22,34 @@ A Nuxt-based ad server that displays randomized advertisements from a backend AP
 ## 🎯 Technical Highlights
 
 **Architecture & Design Patterns:**
+
 - **Type-Safe Development** - Full TypeScript implementation across Vue components and server-side code
 - **Component-Based Architecture** - Reusable Vue 3 components with strict interface contracts (IAmazonAdObject, IGoogleAdObject, IImageAdObject)
 - **Reactive State Management** - Vue 3 Composition API with reactive stores and computed properties
 - **Error Handling** - Comprehensive error boundary implementation with graceful fallbacks
 
 **Frontend Technologies:**
+
 - **Vue 3 + Nuxt 4** - Modern SSR-capable framework with auto-imports and file-based routing
 - **Server-Side Rendering (SSR)** - SEO-friendly dynamic rendering with static generation support
 - **Responsive Design** - CSS Grid/Flexbox with container queries for adaptive layouts
 - **Cross-Origin Communication** - Iframe resizing via postMessage API with origin validation
 
 **Backend Integration:**
+
 - **RESTful API Consumption** - Structured API calls with $fetch composable and proper error handling
 - **Data Normalization** - API response validation with TypeScript interfaces
 - **Query String Management** - Dynamic parameter passing and URL encoding
 
 **DevOps & CI/CD:**
+
 - **GitHub Actions Automation** - Automated build, test, and deployment pipeline
 - **Static Site Generation** - Nuxt generate for serverless deployment (CDN-friendly)
 - **Environment Configuration** - Runtime-config management via GitHub Secrets (no hardcoded values)
 - **SSH Deployment** - Automated SCP-based file transfer to shared hosting
 
 **Security & Best Practices:**
+
 - **CORS Middleware** - Proper cross-origin request handling with configurable headers
 - **XSS Prevention** - Content sanitization and trusted origin validation
 - **Secret Management** - GitHub Secrets for sensitive credentials (never committed to repo)
@@ -75,6 +81,7 @@ NUXT_PUBLIC_ADS_SERVER=https://your-ads-api.com
 ```
 
 **For Local Development:**
+
 ```bash
 cp .env.example .env
 ```
@@ -83,6 +90,7 @@ cp .env.example .env
 Since the app uses static generation (`pnpm generate`), environment variables must be set **at build time**. The GitHub Actions workflow creates a `.env` file from GitHub Secrets before generating the static site.
 
 Add these secrets to your GitHub repository:
+
 - `Settings` > `Secrets and variables` > `Actions` > `New repository secret`
   - `NUXT_PUBLIC_AD_CLIENT`: Your Google AdSense Publisher ID
   - `NUXT_PUBLIC_ADS_SERVER`: Your ads API URL
@@ -125,6 +133,57 @@ pnpm update --interactive --latest
 
 ---
 
+## Testing
+
+This project uses **Vitest** for unit testing and **Playwright** for E2E testing.
+
+### Running Tests
+
+```bash
+# Run unit tests
+pnpm test
+
+# Run tests in watch mode (re-run on file changes)
+pnpm test:watch
+
+# Run tests with coverage report
+pnpm test:coverage
+
+# Run E2E tests
+pnpm test:e2e
+
+# Run E2E tests in UI mode
+pnpm test:e2e:ui
+```
+
+### Pull Request Testing Requirements
+
+All pull requests must pass automated tests before merging:
+
+✅ **Required Status Checks:**
+
+- Unit tests must pass
+- E2E tests must pass
+- Build must succeed
+- Code formatting check (if configured)
+
+✅ **Required Approvals:**
+
+- At least 1 code review approval required
+- Stale approvals dismissed on new commits
+
+✅ **Merge Protection:**
+
+- Cannot merge if tests fail
+- Cannot merge without approval
+- All conversations must be resolved
+
+**See [TESTING.md](TESTING.md) for comprehensive testing documentation**
+
+**See [.github/BRANCH_PROTECTION.md](.github/BRANCH_PROTECTION.md) for branch protection setup**
+
+---
+
 ## Deployment
 
 ### GitHub Actions Auto Deploy to Shared Hosting
@@ -134,10 +193,12 @@ pnpm update --interactive --latest
 In your repository, go to `Settings` > `Secrets and variables` > `Actions` > `Repository secrets`:
 
 **Nuxt Build Configuration:**
+
 - `NUXT_PUBLIC_ADS_SERVER`: Backend API URL for fetching ads (e.g., `https://api.example.com`)
 - `NUXT_PUBLIC_AD_CLIENT`: Google AdSense Publisher ID (e.g., `ca-pub-0000000000000000`)
 
 **SSH Deployment Credentials:**
+
 - `SSH_HOST`: Server hostname/IP
 - `SSH_USERNAME`: Your SSH username
 - `SSH_KEY`: Your private SSH key content (the entire key including headers)
@@ -147,6 +208,7 @@ In your repository, go to `Settings` > `Secrets and variables` > `Actions` > `Re
 #### How It Works
 
 The GitHub Actions workflow (`.github/workflows/ssh-deploy.yml`) automatically:
+
 1. Creates a `.env` file from these secrets before build
 2. Runs `pnpm generate` to build the static site with environment variables embedded
 3. Deploys the generated files to your server via SCP
