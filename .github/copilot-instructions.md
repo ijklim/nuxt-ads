@@ -34,7 +34,13 @@ When working on `components/**/*.vue` files:
 
 ## 💬 Commit Messages
 - **Style:** Generate commit messages using the **Conventional Commits** specification.
-- **Prefixes:** Use prefixes like `feat:`, `fix:`, `docs:`, `style:`, `refactor:`, or `chore:` (e.g., `feat: implement dark mode toggle`).
+- **Format:** `type: subject` where subject starts with lowercase (e.g., `feat: add feature` not `feat: Add feature`)
+- **Types:** Use `feat`, `fix`, `docs`, `style`, `refactor`, `perf`, `test`, `chore`, or `ci`
+- **Rules:**
+  - Start subject with lowercase letter
+  - Use imperative mood (e.g., "add" not "added" or "adds")
+  - Keep subject under 72 characters
+  - No period at the end
 - **Body:** Include a brief, descriptive body if the change is non-trivial.
 
 ---
@@ -53,12 +59,12 @@ When creating branches and pull requests for GitHub issues:
   - No underscores, trailing slashes, or special characters.
 
 ### Pull Request Titles
-- **Format:** `type: Brief description (Closes/Fixes #issue-number)`
+- **Format:** `type: brief description (closes/fixes #issue-number)`
 - **Types:** Follow [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/): feat, fix, docs, style, refactor, perf, test, chore, ci, etc.
-- **Examples:** `feat: Add pull request approval requirement (Fixes #1)`, `fix: Resolve ad loading race condition (Closes #42)`
+- **Examples:** `feat: add pull request approval requirement (fixes #1)`, `fix: resolve ad loading race condition (closes #42)`
 - **Rules:**
   - Start with a type followed immediately by a colon and a space (`type: `).
-  - Use imperative mood for description (e.g., "Add", "Fix", "Update").
+  - Use imperative mood with lowercase for description (e.g., "add", "fix", "update").
   - Keep under 72 characters.
-  - Include issue reference in parentheses (e.g., `(Fixes #N)` or `(Resolves #N1, #N2)`).
+  - Include issue reference in parentheses with lowercase keywords (e.g., `(fixes #N)` or `(resolves #N1, #N2)`).
   - No period at the end.
