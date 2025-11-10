@@ -189,10 +189,6 @@
     }
   };
 
-
-
-
-
   // === Lifecycle Hooks ===
   onMounted(() => {
     pickRandomAd();
