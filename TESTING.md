@@ -253,40 +253,30 @@ pnpm exec playwright test --debug
 
 ### GitHub Actions
 
-Add to `.github/workflows/test.yml`:
+This project has two GitHub Actions workflows:
 
-```yaml
-name: Tests
+#### Pull Request Tests (`.github/workflows/pr-tests.yml`)
+Automatically runs on every pull request to ensure code quality:
 
-on: [push, pull_request]
+**Unit Tests Job:**
+- Runs Vitest test suite
+- Must pass before PR can be merged
+- Duration: ~30-60 seconds
 
-jobs:
-  unit-tests:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: pnpm/action-setup@v2
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 20
-          cache: 'pnpm'
-      - run: pnpm install
-      - run: pnpm test
-      - run: pnpm test:coverage
+**E2E Tests Job:**
+- Runs Playwright browser tests
+- Must pass before PR can be merged
+- Duration: ~2-5 minutes
+- Uploads test report on failure
 
-  e2e-tests:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: pnpm/action-setup@v2
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 20
-          cache: 'pnpm'
-      - run: pnpm install
-      - run: pnpm build
-      - run: pnpm test:e2e
-```
+**Branch Protection:**
+Both test jobs are required status checks. See [BRANCH_PROTECTION.md](./BRANCH_PROTECTION.md) for setup instructions.
+
+#### Deployment Workflow (`.github/workflows/ssh-deploy.yml`)
+Runs on pushes to `main` branch:
+- Runs unit tests before building
+- Builds and deploys to shared hosting
+- Only deploys if tests pass
 
 ## Coverage Goals
 
@@ -297,6 +287,7 @@ jobs:
 
 ## Resources
 
+- [Branch Protection Setup](./BRANCH_PROTECTION.md) - Configure required status checks and approvals
 - [Vitest Documentation](https://vitest.dev/)
 - [Vue Test Utils](https://test-utils.vuejs.org/)
 - [Playwright Documentation](https://playwright.dev/)

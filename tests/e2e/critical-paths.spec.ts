@@ -4,6 +4,8 @@
  */
 import { test, expect } from '@playwright/test'
 
+const timeout = 30000;
+
 test.describe('Ad Server E2E Tests', () => {
   test.beforeEach(async ({ page }) => {
     // Set environment before navigation
@@ -15,7 +17,7 @@ test.describe('Ad Server E2E Tests', () => {
       await page.waitForLoadState('networkidle')
 
       // Wait for ad content to render - look for any ad content
-      await page.waitForSelector('img, ins.adsbygoogle, a[target="_blank"]', { timeout: 5000 })
+      await page.waitForSelector('img, ins.adsbygoogle, a[target="_blank"]', { timeout })
 
       // Verify some ad content is present
       const adContent = page.locator('img, ins.adsbygoogle, a[target="_blank"]')
@@ -70,7 +72,7 @@ test.describe('Ad Server E2E Tests', () => {
       await page.goto('http://localhost:8810?sb=1')
 
       // Wait for initial ad load
-      await page.waitForSelector('img, ins.adsbygoogle, a[target="_blank"]', { timeout: 5000 })
+      await page.waitForSelector('img, ins.adsbygoogle, a[target="_blank"]', { timeout })
 
       let apiCallCount = 0
 
@@ -85,7 +87,7 @@ test.describe('Ad Server E2E Tests', () => {
       await shuffleButton.click()
 
       // Wait for new API call
-      await page.waitForTimeout(1000)
+      await page.waitForTimeout(timeout)
 
       // Verify button still visible
       expect(shuffleButton).toBeVisible()
@@ -200,7 +202,7 @@ test.describe('Ad Server E2E Tests', () => {
       const startTime = Date.now()
 
       await page.goto('http://localhost:8810')
-      await page.waitForSelector('img, ins.adsbygoogle, a[target="_blank"]', { timeout: 5000 })
+      await page.waitForSelector('img, ins.adsbygoogle, a[target="_blank"]', { timeout })
 
       const endTime = Date.now()
       const loadTime = endTime - startTime

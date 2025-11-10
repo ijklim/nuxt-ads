@@ -11,7 +11,7 @@ export default defineConfig({
   fullyParallel: true,
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 2 : 0,
-  workers: process.env.CI ? 1 : undefined,
+  workers: process.env.CI ? 4 : undefined,
   reporter: [['html', { outputFolder: './playwright-results' }]],
   outputDir: './playwright-results',
   use: {
@@ -40,6 +40,6 @@ export default defineConfig({
     command: `pnpm dev --port=${portTesting}`,
     url: `http://localhost:${portTesting}`,
     reuseExistingServer: true,
-    timeout: 5 * 1000,
+    timeout: 30 * 1000,
   },
 });
