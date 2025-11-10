@@ -38,10 +38,12 @@ A Nuxt-based ad server that displays randomized advertisements from a backend AP
 - **Query String Management** - Dynamic parameter passing and URL encoding
 
 **DevOps & CI/CD:**
-- **GitHub Actions Automation** - Automated build, test, and deployment pipeline
+- **Automated Testing & Quality Gates** - Vitest unit tests (13+ tests) run on every PR with automatic blocking if tests fail
+- **Continuous Integration** - GitHub Actions workflows enforce code quality with mandatory test passage before merge
+- **Test Automation** - Unit tests verify component functionality, state management, and API integration
 - **Static Site Generation** - Nuxt generate for serverless deployment (CDN-friendly)
 - **Environment Configuration** - Runtime-config management via GitHub Secrets (no hardcoded values)
-- **SSH Deployment** - Automated SCP-based file transfer to shared hosting
+- **SSH Deployment** - Automated SCP-based file transfer to shared hosting with pre-deployment testing
 
 **Security & Best Practices:**
 - **CORS Middleware** - Proper cross-origin request handling with configurable headers
