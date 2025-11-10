@@ -40,6 +40,6 @@ export default defineConfig({
     command: `pnpm dev --port=${portTesting}`,
     url: `http://localhost:${portTesting}`,
     reuseExistingServer: true,
-    timeout: 5 * 1000,
+    timeout: 30 * 1000,
   },
 });
