@@ -46,25 +46,4 @@ When working on `components/**/*.vue` files:
 ---
 
 ## 🔀 GitHub Integration (for Copilot Coding Agent)
-When creating branches and pull requests for GitHub issues:
-
-### Branch Names
-- **Format:** `type/issue-number-short-description`
-- **Types:** Match the type to the PR title (feat, fix, docs, style, refactor, perf, test, chore, ci, etc.)
-- **Examples:** `feat/1-pr-approval-requirement`, `fix/42-ad-loading-race-condition`
-- **Rules:**
-  - Use lowercase only.
-  - Use hyphens (`-`) to separate words.
-  - Include the issue number when applicable.
-  - No underscores, trailing slashes, or special characters.
-
-### Pull Request Titles
-- **Format:** `type: brief description (closes/fixes #issue-number)`
-- **Types:** Follow [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/): feat, fix, docs, style, refactor, perf, test, chore, ci, etc.
-- **Examples:** `feat: add pull request approval requirement (fixes #1)`, `fix: resolve ad loading race condition (closes #42)`
-- **Rules:**
-  - Start with a type followed immediately by a colon and a space (`type: `).
-  - Use imperative mood with lowercase for description (e.g., "add", "fix", "update").
-  - Keep under 72 characters.
-  - Include issue reference in parentheses with lowercase keywords (e.g., `(fixes #N)` or `(resolves #N1, #N2)`).
-  - No period at the end.
+When creating commit messages, branches, and pull requests for GitHub issues, follow the detailed conventions in [CONTRIBUTING.md](../CONTRIBUTING.md).
