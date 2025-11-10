@@ -50,19 +50,6 @@ When working on `components/**/*.vue` files:
 
 ---
 
-## 💬 Commit Messages
-- **Style:** Generate commit messages using the **Conventional Commits** specification.
-- **Format:** `type: subject` where subject starts with lowercase (e.g., `feat: add feature` not `feat: Add feature`)
-- **Types:** Use `feat`, `fix`, `docs`, `style`, `refactor`, `perf`, `test`, `chore`, or `ci`
-- **Rules:**
-  - Start subject with lowercase letter
-  - Use imperative mood (e.g., "add" not "added" or "adds")
-  - Keep subject under 72 characters
-  - No period at the end
-- **Body:** Include a brief, descriptive body if the change is non-trivial.
-
----
-
 ## 📦 Dependency Management
 When adding or updating dependencies:
 - **Use pnpm** as the package manager (not npm or yarn)
@@ -145,5 +132,8 @@ pnpm preview      # Preview production build locally
 
 ---
 
-## 🔀 GitHub Integration (for Copilot Coding Agent)
+## 🔀 Branch, PR, and Commit Conventions
+
+**CRITICAL: Both human contributors and Copilot agents MUST follow these exact conventions.**
+
 When creating commit messages, branches, and pull requests for GitHub issues, follow the detailed conventions in [CONTRIBUTING.md](../CONTRIBUTING.md).
