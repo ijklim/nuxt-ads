@@ -1,5 +1,7 @@
 import { defineConfig, devices } from '@playwright/test'
 
+const portTesting = 8810;
+
 /**
  * Playwright configuration for E2E testing
  * Run with: pnpm test:e2e
@@ -10,7 +12,8 @@ export default defineConfig({
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 2 : 0,
   workers: process.env.CI ? 1 : undefined,
-  reporter: 'html',
+  reporter: [['html', { outputFolder: './playwright-results' }]],
+  outputDir: './playwright-results',
   use: {
     baseURL: 'http://localhost:8810',
     trace: 'on-first-retry',
@@ -34,8 +37,9 @@ export default defineConfig({
   ],
 
   webServer: {
-    command: 'pnpm dev',
-    url: 'http://localhost:8810',
-    reuseExistingServer: !process.env.CI,
+    command: `pnpm dev --port=${portTesting}`,
+    url: `http://localhost:${portTesting}`,
+    reuseExistingServer: true,
+    timeout: 5 * 1000,
   },
-})
+});

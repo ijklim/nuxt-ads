@@ -169,11 +169,8 @@ optional footer
 
 ```
 feat: implement dark mode toggle
-
 fix: resolve ad loading race condition
-
 docs: update testing documentation
-
 test: add unit tests for RandomAd component
 ```
 
