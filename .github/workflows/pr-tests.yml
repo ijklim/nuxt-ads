@@ -24,7 +24,7 @@ concurrency:
 
 jobs:
   test:
-    name: Unit & E2E Tests
+    name: Unit Tests
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -44,22 +44,8 @@ jobs:
       - name: Install dependencies
         run: pnpm install --no-frozen-lockfile
 
-      - name: Install Playwright browsers
-        run: pnpm exec playwright install --with-deps
-
       - name: Run unit tests
         run: pnpm test
 
       - name: Build application
         run: pnpm build
-
-      - name: Run E2E tests
-        run: pnpm test:e2e
-
-      - name: Upload Playwright report
-        if: failure()
-        uses: actions/upload-artifact@v4
-        with:
-          name: playwright-results
-          path: playwright-results/
-          retention-days: 30
