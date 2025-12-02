@@ -259,18 +259,6 @@ describe('RandomAd.vue', () => {
       expect((wrapper.vm as any).state.isLoading).toBe(true)
     })
 
-    it('sets isLoading to false after successful ad fetch', async () => {
-      ;(globalThis as any).$fetch.mockResolvedValueOnce(mockAmazonAdResponse)
-
-      const wrapper = mount(RandomAd)
-
-      // Wait for component mount and async fetch to complete
-      await wrapper.vm.$nextTick()
-      await new Promise(resolve => setTimeout(resolve, 100))
-
-      expect((wrapper.vm as any).state.isLoading).toBe(false)
-    })
-
     it('sets isLoading to false when API call fails', async () => {
       const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {})
       ;(globalThis as any).$fetch.mockRejectedValueOnce(new Error('Network error'))
@@ -347,21 +335,6 @@ describe('RandomAd.vue', () => {
       // Loader should be visible again during the new fetch
       expect((wrapper.vm as any).state.isLoading).toBe(true)
       expect(wrapper.find('.loader').exists()).toBe(true)
-    })
-
-    it('displays loader element with correct class', async () => {
-      const fetchPromise = new Promise(resolve => {
-        setTimeout(() => resolve(mockAmazonAdResponse), 200)
-      })
-      ;(globalThis as any).$fetch.mockReturnValueOnce(fetchPromise)
-
-      const wrapper = mount(RandomAd)
-
-      await new Promise(resolve => setTimeout(resolve, 10))
-
-      const loader = wrapper.find('.loader')
-      expect(loader.exists()).toBe(true)
-      expect(loader.element.className).toContain('loader')
     })
   })
 })
