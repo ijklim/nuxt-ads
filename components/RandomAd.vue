@@ -81,9 +81,11 @@
   }
 
   interface IStateObject {
+    isLoading: boolean;
     whichAdToShow: AdObject;
   }
   const state: IStateObject = reactive({
+    isLoading: false,
     whichAdToShow: { adType: 'none', displayRatio: 0 },
   });
 
@@ -127,65 +129,70 @@
    * Note: All query strings are passed to server for processing
    */
   const pickRandomAd = async () => {
-    // useFetch: https://nuxt.com/docs/api/composables/use-fetch
-    const params = new URLSearchParams();
-    params.append('random', "1");
-    // console.log(`[${utility.currentFileName}::pickRandomAd()] query:`, toRaw(query));
-    // Add other query strings from url
-    Object.keys(query)
-      .forEach((key) => {
-        params.append(key, `${query[key]}`);
-      });
+    try {
+      state.isLoading = true;
 
-    const url = `${runtimeConfig.public.adsServer}/api/ads?${params.toString()}`;
-    // console.log('[Debug Only] pickRandomAd()::runtimeConfig.public', runtimeConfig.public);
-    // console.log('[Debug Only] pickRandomAd()::url', url);
+      // useFetch: https://nuxt.com/docs/api/composables/use-fetch
+      const params = new URLSearchParams();
+      params.append('random', "1");
+      // console.log(`[${utility.currentFileName}::pickRandomAd()] query:`, toRaw(query));
+      // Add other query strings from url
+      Object.keys(query)
+        .forEach((key) => {
+          params.append(key, `${query[key]}`);
+        });
 
-    const apiResponse = await $fetch<IResponseFetchAd>(url)
-      .catch((error) => {
-        console.error(`[${utility.currentFileName}::pickRandomAd()] Fail to retrieve valid ads data, aborting.`, error);
-      });
+      const url = `${runtimeConfig.public.adsServer}/api/ads?${params.toString()}`;
+      // console.log('[Debug Only] pickRandomAd()::runtimeConfig.public', runtimeConfig.public);
+      // console.log('[Debug Only] pickRandomAd()::url', url);
 
-    /**
-     * Checking a few Ad properties to ensure response matches Ad type
-     *
-     * @param {IResponseFetchAd} apiResponse
-     */
-    const isAd = (apiResponse: IResponseFetchAd) => {
-      // console.log('[Debug Only] isAd()::apiResponse', apiResponse);
+      const apiResponse = await $fetch<IResponseFetchAd>(url);
 
-      return (
-        'ad_code' in apiResponse &&
-        'ad_type' in apiResponse &&
-        'display_ratio' in apiResponse &&
-        'url_affiliate' in apiResponse &&
-        true
-      );
-    };
+      /**
+       * Checking a few Ad properties to ensure response matches Ad type
+       *
+       * @param {IResponseFetchAd} apiResponse
+       */
+      const isAd = (apiResponse: IResponseFetchAd) => {
+        // console.log('[Debug Only] isAd()::apiResponse', apiResponse);
 
-    if (apiResponse && isAd(apiResponse)) {
-      const height = parseInt(apiResponse.height);
-      const width = parseInt(apiResponse.width);
-      const imagePath = apiResponse.url_segment_image ? `${runtimeConfig.public.adsServer}${apiResponse.url_segment_image}` : undefined;
-
-      // console.log(`[${utility.currentFileName}::onMounted] apiResponse:`, toRaw(apiResponse));
-      state.whichAdToShow = {
-        adFormat: apiResponse.ad_format,
-        adLayoutKey: apiResponse.ad_layout_key,
-        adSlot: (apiResponse.ad_type === 'GoogleAdSense') ? parseInt(apiResponse.ad_code) : undefined,
-        adType: apiResponse.ad_type,
-        displayRatio: parseInt(apiResponse.display_ratio),
-        height,
-        href: apiResponse.url_affiliate,
-        imageAltText: apiResponse.title,
-        imageDescription: apiResponse.image_description,
-        imagePath,
-        price: apiResponse.price ? parseFloat(apiResponse.price) : undefined,
-        priceDiscountAmount: apiResponse.price_discount_amount,
-        width,
+        return (
+          'ad_code' in apiResponse &&
+          'ad_type' in apiResponse &&
+          'display_ratio' in apiResponse &&
+          'url_affiliate' in apiResponse &&
+          true
+        );
       };
 
-      if (imagePath) notifyParentOfAdDimensions(imagePath, height, width);
+      if (apiResponse && isAd(apiResponse)) {
+        const height = parseInt(apiResponse.height);
+        const width = parseInt(apiResponse.width);
+        const imagePath = apiResponse.url_segment_image ? `${runtimeConfig.public.adsServer}${apiResponse.url_segment_image}` : undefined;
+
+        // console.log(`[${utility.currentFileName}::onMounted] apiResponse:`, toRaw(apiResponse));
+        state.whichAdToShow = {
+          adFormat: apiResponse.ad_format,
+          adLayoutKey: apiResponse.ad_layout_key,
+          adSlot: (apiResponse.ad_type === 'GoogleAdSense') ? parseInt(apiResponse.ad_code) : undefined,
+          adType: apiResponse.ad_type,
+          displayRatio: parseInt(apiResponse.display_ratio),
+          height,
+          href: apiResponse.url_affiliate,
+          imageAltText: apiResponse.title,
+          imageDescription: apiResponse.image_description,
+          imagePath,
+          price: apiResponse.price ? parseFloat(apiResponse.price) : undefined,
+          priceDiscountAmount: apiResponse.price_discount_amount,
+          width,
+        };
+
+        if (imagePath) notifyParentOfAdDimensions(imagePath, height, width);
+      }
+    } catch (error) {
+      console.error(`[${utility.currentFileName}::pickRandomAd()] Fail to retrieve valid ads data, aborting.`, error);
+    } finally {
+      state.isLoading = false;
     }
   };
 
@@ -197,6 +204,14 @@
 
 <template>
   <div class="text-center">
+    <!-- === Loader === -->
+    <div
+      v-if="state.isLoading"
+      aria-label="Loading advertisement"
+      class="loader"
+      role="status"
+    />
+
     <!-- === Google AdSense === -->
     <GoogleAdSense
       v-if="state.whichAdToShow.adType === 'GoogleAdSense'"
@@ -265,5 +280,20 @@
 
   figure {
     margin: 0;
+  }
+
+  .loader {
+    border: 4px solid #f3f3f3;
+    border-top: 4px solid darkgreen;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    animation: spin 1s linear infinite;
+    margin: 20px auto;
+  }
+
+  @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
   }
 </style>
