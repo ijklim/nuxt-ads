@@ -111,7 +111,7 @@ jobs:
       # It provides better reliability, more features, and faster bug fixes
       # Latest stable version: v0.1.4
       - name: Deploy generated site via SCP
-        uses: appleboy/scp-action@v0.1.4
+        uses: appleboy/scp-action@v1.0.0
         with:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USERNAME }}
