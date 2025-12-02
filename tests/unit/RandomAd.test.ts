@@ -92,7 +92,7 @@ describe('RandomAd.vue', () => {
       await wrapper.vm.$nextTick()
       await new Promise(resolve => setTimeout(resolve, 100))
 
-      const state = wrapper.vm.state
+      const state = (wrapper.vm as any).state
       expect(state.whichAdToShow.adType).toBe('GoogleAdSense')
     })
 
@@ -104,7 +104,7 @@ describe('RandomAd.vue', () => {
       await wrapper.vm.$nextTick()
       await new Promise(resolve => setTimeout(resolve, 100))
 
-      const state = wrapper.vm.state
+      const state = (wrapper.vm as any).state
       expect(state.whichAdToShow.adType).toBe('AmazonBanner')
     })
 
@@ -116,7 +116,7 @@ describe('RandomAd.vue', () => {
       await wrapper.vm.$nextTick()
       await new Promise(resolve => setTimeout(resolve, 100))
 
-      const state = wrapper.vm.state
+      const state = (wrapper.vm as any).state
       expect(state.whichAdToShow.adType).toBe('MochahostBanner')
     })
   })
@@ -146,7 +146,7 @@ describe('RandomAd.vue', () => {
       await wrapper.vm.$nextTick()
       // Wait for async operations to complete
       await new Promise(resolve => setTimeout(resolve, 100))
-      const state = wrapper.vm.state
+      const state = (wrapper.vm as any).state
       expect(state.whichAdToShow.adType).toBe('AmazonBanner')
     })
 
@@ -162,7 +162,7 @@ describe('RandomAd.vue', () => {
       const wrapper = mount(RandomAd)
 
       await wrapper.vm.$nextTick()
-      const state = wrapper.vm.state
+      const state = (wrapper.vm as any).state
       expect(state.whichAdToShow.adType).toBe('none')
     })
   })
@@ -200,29 +200,51 @@ describe('RandomAd.vue', () => {
       const wrapper = mount(RandomAd)
 
       await wrapper.vm.$nextTick()
+      // Wait for async fetch to complete
+      await new Promise(resolve => setTimeout(resolve, 100))
 
-      // Simulate image load
-      const imageElement = {
-        naturalHeight: 280,
-        naturalWidth: 336,
+      // Mock Image constructor to simulate image loading
+      const originalImage = (globalThis as any).Image
+      ;(globalThis as any).Image = class MockImage {
+        onload: (() => void) | null = null
+        naturalHeight = 280
+        naturalWidth = 336
+
+        constructor() {
+          // Simulate immediate image load
+          setTimeout(() => {
+            if (this.onload) this.onload()
+          }, 0)
+        }
       }
 
-      // Call the method directly with mock image path
-      wrapper.vm.notifyParentOfAdDimensions('/ads/test.jpg', 280, 336)
+      try {
+        // Call the method directly with mock image path
+        (wrapper.vm as any).notifyParentOfAdDimensions('/ads/test.jpg', 280, 336)
 
-      // Note: postMessage would be called asynchronously after image loads
-      expect(postMessageSpy.mock.calls.length >= 0).toBe(true)
+        // Wait for mocked image load to trigger onload callback
+        await new Promise(resolve => setTimeout(resolve, 50))
+
+        // Verify postMessage was called
+        expect(postMessageSpy).toHaveBeenCalled()
+      } finally {
+        // Restore original Image
+        ;(globalThis as any).Image = originalImage
+      }
     })
   })
 
   describe('isLoading State', () => {
-    it('initializes isLoading as false', () => {
+    it('initializes isLoading as false after fetch completes', async () => {
       ;(globalThis as any).$fetch.mockResolvedValueOnce(mockAmazonAdResponse)
 
       const wrapper = mount(RandomAd)
 
-      // Wait for the async fetch to complete
-      expect((wrapper.vm as any).state.isLoading).toBeDefined()
+      // Wait for component mount and async fetch to complete
+      await wrapper.vm.$nextTick()
+      await new Promise(resolve => setTimeout(resolve, 100))
+
+      expect((wrapper.vm as any).state.isLoading).toBe(false)
     })
 
     it('sets isLoading to true when pickRandomAd is called', async () => {
@@ -242,7 +264,8 @@ describe('RandomAd.vue', () => {
 
       const wrapper = mount(RandomAd)
 
-      // Wait for the async fetch to complete
+      // Wait for component mount and async fetch to complete
+      await wrapper.vm.$nextTick()
       await new Promise(resolve => setTimeout(resolve, 100))
 
       expect((wrapper.vm as any).state.isLoading).toBe(false)
@@ -326,7 +349,7 @@ describe('RandomAd.vue', () => {
       expect(wrapper.find('.loader').exists()).toBe(true)
     })
 
-    it('has correct loader styling with animation classes', async () => {
+    it('displays loader element with correct class', async () => {
       const fetchPromise = new Promise(resolve => {
         setTimeout(() => resolve(mockAmazonAdResponse), 200)
       })

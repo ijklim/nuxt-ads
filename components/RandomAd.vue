@@ -129,72 +129,71 @@
    * Note: All query strings are passed to server for processing
    */
   const pickRandomAd = async () => {
-    state.isLoading = true;
+    try {
+      state.isLoading = true;
 
-    // useFetch: https://nuxt.com/docs/api/composables/use-fetch
-    const params = new URLSearchParams();
-    params.append('random', "1");
-    // console.log(`[${utility.currentFileName}::pickRandomAd()] query:`, toRaw(query));
-    // Add other query strings from url
-    Object.keys(query)
-      .forEach((key) => {
-        params.append(key, `${query[key]}`);
-      });
+      // useFetch: https://nuxt.com/docs/api/composables/use-fetch
+      const params = new URLSearchParams();
+      params.append('random', "1");
+      // console.log(`[${utility.currentFileName}::pickRandomAd()] query:`, toRaw(query));
+      // Add other query strings from url
+      Object.keys(query)
+        .forEach((key) => {
+          params.append(key, `${query[key]}`);
+        });
 
-    const url = `${runtimeConfig.public.adsServer}/api/ads?${params.toString()}`;
-    // console.log('[Debug Only] pickRandomAd()::runtimeConfig.public', runtimeConfig.public);
-    // console.log('[Debug Only] pickRandomAd()::url', url);
+      const url = `${runtimeConfig.public.adsServer}/api/ads?${params.toString()}`;
+      // console.log('[Debug Only] pickRandomAd()::runtimeConfig.public', runtimeConfig.public);
+      // console.log('[Debug Only] pickRandomAd()::url', url);
 
-    const apiResponse = await $fetch<IResponseFetchAd>(url)
-      .catch((error) => {
-        console.error(`[${utility.currentFileName}::pickRandomAd()] Fail to retrieve valid ads data, aborting.`, error);
-        state.isLoading = false;
-        return;
-      });
+      const apiResponse = await $fetch<IResponseFetchAd>(url);
 
-    /**
-     * Checking a few Ad properties to ensure response matches Ad type
-     *
-     * @param {IResponseFetchAd} apiResponse
-     */
-    const isAd = (apiResponse: IResponseFetchAd) => {
-      // console.log('[Debug Only] isAd()::apiResponse', apiResponse);
+      /**
+       * Checking a few Ad properties to ensure response matches Ad type
+       *
+       * @param {IResponseFetchAd} apiResponse
+       */
+      const isAd = (apiResponse: IResponseFetchAd) => {
+        // console.log('[Debug Only] isAd()::apiResponse', apiResponse);
 
-      return (
-        'ad_code' in apiResponse &&
-        'ad_type' in apiResponse &&
-        'display_ratio' in apiResponse &&
-        'url_affiliate' in apiResponse &&
-        true
-      );
-    };
-
-    if (apiResponse && isAd(apiResponse)) {
-      const height = parseInt(apiResponse.height);
-      const width = parseInt(apiResponse.width);
-      const imagePath = apiResponse.url_segment_image ? `${runtimeConfig.public.adsServer}${apiResponse.url_segment_image}` : undefined;
-
-      // console.log(`[${utility.currentFileName}::onMounted] apiResponse:`, toRaw(apiResponse));
-      state.whichAdToShow = {
-        adFormat: apiResponse.ad_format,
-        adLayoutKey: apiResponse.ad_layout_key,
-        adSlot: (apiResponse.ad_type === 'GoogleAdSense') ? parseInt(apiResponse.ad_code) : undefined,
-        adType: apiResponse.ad_type,
-        displayRatio: parseInt(apiResponse.display_ratio),
-        height,
-        href: apiResponse.url_affiliate,
-        imageAltText: apiResponse.title,
-        imageDescription: apiResponse.image_description,
-        imagePath,
-        price: apiResponse.price ? parseFloat(apiResponse.price) : undefined,
-        priceDiscountAmount: apiResponse.price_discount_amount,
-        width,
+        return (
+          'ad_code' in apiResponse &&
+          'ad_type' in apiResponse &&
+          'display_ratio' in apiResponse &&
+          'url_affiliate' in apiResponse &&
+          true
+        );
       };
 
-      if (imagePath) notifyParentOfAdDimensions(imagePath, height, width);
-    }
+      if (apiResponse && isAd(apiResponse)) {
+        const height = parseInt(apiResponse.height);
+        const width = parseInt(apiResponse.width);
+        const imagePath = apiResponse.url_segment_image ? `${runtimeConfig.public.adsServer}${apiResponse.url_segment_image}` : undefined;
 
-    state.isLoading = false;
+        // console.log(`[${utility.currentFileName}::onMounted] apiResponse:`, toRaw(apiResponse));
+        state.whichAdToShow = {
+          adFormat: apiResponse.ad_format,
+          adLayoutKey: apiResponse.ad_layout_key,
+          adSlot: (apiResponse.ad_type === 'GoogleAdSense') ? parseInt(apiResponse.ad_code) : undefined,
+          adType: apiResponse.ad_type,
+          displayRatio: parseInt(apiResponse.display_ratio),
+          height,
+          href: apiResponse.url_affiliate,
+          imageAltText: apiResponse.title,
+          imageDescription: apiResponse.image_description,
+          imagePath,
+          price: apiResponse.price ? parseFloat(apiResponse.price) : undefined,
+          priceDiscountAmount: apiResponse.price_discount_amount,
+          width,
+        };
+
+        if (imagePath) notifyParentOfAdDimensions(imagePath, height, width);
+      }
+    } catch (error) {
+      console.error(`[${utility.currentFileName}::pickRandomAd()] Fail to retrieve valid ads data, aborting.`, error);
+    } finally {
+      state.isLoading = false;
+    }
   };
 
   // === Lifecycle Hooks ===
