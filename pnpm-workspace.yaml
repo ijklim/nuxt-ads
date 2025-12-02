@@ -1,3 +1,15 @@
 overrides:
+  # CVE-2024-4068: Command injection in glob CLI
+  # https://github.com/advisories/GHSA-8wr7-jxp7-mj8q
+  # BREAKING CHANGE: Updated from glob@10.4.5 to 13.0.0 (major version jump)
+  # - Requires Node.js 20 or >=22 (compatible with project requirement)
+  # - May introduce API breaking changes for glob dependency consumers
+  # - Removes transitive deps: @isaacs/cliui, jackspeak, foreground-child, package-json-from-dist
+  # - Adds transitive deps: @isaacs/balanced-match, @isaacs/brace-expansion@5.0.0
+  # - Introduces minimatch@10.1.1 alongside existing minimatch@5.1.6 and minimatch@9.0.1
+  # - All tests passing; monitor for globbing pattern inconsistencies
   glob@>=10.2.0 <10.5.0: '>=10.5.0'
-  node-forge@<1.3.2: '>=1.3.2'
+  # CVE-2025-12816: ASN.1 interpretation-conflict vulnerability in node-forge
+  # https://github.com/advisories/GHSA-5gfm-wpxj-wjgq
+  # Requires version 1.3.3 or higher to include security fix
+  node-forge@<1.3.3: '>=1.3.3'
