@@ -149,6 +149,7 @@
       .catch((error) => {
         console.error(`[${utility.currentFileName}::pickRandomAd()] Fail to retrieve valid ads data, aborting.`, error);
         state.isLoading = false;
+        return;
       });
 
     /**
