@@ -54,7 +54,7 @@ jobs:
           version: 10
 
       - name: Setup Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
         with:
           node-version: 22
           # Cache: Speed up dependency installation by caching pnpm's store directory
@@ -90,7 +90,7 @@ jobs:
       # This avoids rebuilding the site during the deploy job; we just reuse the pre-built output
       # Artifacts are automatically deleted after 90 days (configurable in GitHub settings)
       - name: Upload generated site as artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: generated-output
           path: .output/public
