@@ -81,9 +81,11 @@
   }
 
   interface IStateObject {
+    isLoading: boolean;
     whichAdToShow: AdObject;
   }
   const state: IStateObject = reactive({
+    isLoading: false,
     whichAdToShow: { adType: 'none', displayRatio: 0 },
   });
 
@@ -127,6 +129,8 @@
    * Note: All query strings are passed to server for processing
    */
   const pickRandomAd = async () => {
+    state.isLoading = true;
+
     // useFetch: https://nuxt.com/docs/api/composables/use-fetch
     const params = new URLSearchParams();
     params.append('random', "1");
@@ -144,6 +148,7 @@
     const apiResponse = await $fetch<IResponseFetchAd>(url)
       .catch((error) => {
         console.error(`[${utility.currentFileName}::pickRandomAd()] Fail to retrieve valid ads data, aborting.`, error);
+        state.isLoading = false;
       });
 
     /**
@@ -187,6 +192,8 @@
 
       if (imagePath) notifyParentOfAdDimensions(imagePath, height, width);
     }
+
+    state.isLoading = false;
   };
 
   // === Lifecycle Hooks ===
@@ -197,6 +204,9 @@
 
 <template>
   <div class="text-center">
+    <!-- === Loader === -->
+    <div v-if="state.isLoading" class="loader"></div>
+
     <!-- === Google AdSense === -->
     <GoogleAdSense
       v-if="state.whichAdToShow.adType === 'GoogleAdSense'"
@@ -265,5 +275,20 @@
 
   figure {
     margin: 0;
+  }
+
+  .loader {
+    border: 4px solid #f3f3f3;
+    border-top: 4px solid darkgreen;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    animation: spin 1s linear infinite;
+    margin: 20px auto;
+  }
+
+  @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
   }
 </style>
