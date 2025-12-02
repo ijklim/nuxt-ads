@@ -6,13 +6,18 @@
 version: 2
 updates:
   - package-ecosystem: "npm" # See documentation for possible values
+    commit-message:
+      prefix: "ci"
     directory: "/" # Location of package manifests
+    open-pull-requests-limit: 5
     schedule:
       interval: "weekly"
-    open-pull-requests-limit: 5
+    versioning-strategy: increase
 
   - package-ecosystem: "github-actions"
+    commit-message:
+      prefix: "ci"
     directory: "/"
+    open-pull-requests-limit: 5
     schedule:
       interval: "weekly"
-    open-pull-requests-limit: 5
