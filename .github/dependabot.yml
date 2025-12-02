@@ -12,7 +12,7 @@ updates:
     open-pull-requests-limit: 5
     schedule:
       interval: "weekly"
-    versioning-strategy: increase
+    versioning-strategy: increase-if-necessary # Only bump versions when necessary to satisfy dependencies
 
   - package-ecosystem: "github-actions"
     commit-message:

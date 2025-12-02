@@ -214,4 +214,131 @@ describe('RandomAd.vue', () => {
       expect(postMessageSpy.mock.calls.length >= 0).toBe(true)
     })
   })
+
+  describe('isLoading State', () => {
+    it('initializes isLoading as false', () => {
+      ;(globalThis as any).$fetch.mockResolvedValueOnce(mockAmazonAdResponse)
+
+      const wrapper = mount(RandomAd)
+
+      // Wait for the async fetch to complete
+      expect((wrapper.vm as any).state.isLoading).toBeDefined()
+    })
+
+    it('sets isLoading to true when pickRandomAd is called', async () => {
+      const fetchPromise = new Promise(resolve => {
+        setTimeout(() => resolve(mockAmazonAdResponse), 200)
+      })
+      ;(globalThis as any).$fetch.mockReturnValueOnce(fetchPromise)
+
+      const wrapper = mount(RandomAd)
+
+      // Immediately after mount, isLoading should be true while fetch is in progress
+      expect((wrapper.vm as any).state.isLoading).toBe(true)
+    })
+
+    it('sets isLoading to false after successful ad fetch', async () => {
+      ;(globalThis as any).$fetch.mockResolvedValueOnce(mockAmazonAdResponse)
+
+      const wrapper = mount(RandomAd)
+
+      // Wait for the async fetch to complete
+      await new Promise(resolve => setTimeout(resolve, 100))
+
+      expect((wrapper.vm as any).state.isLoading).toBe(false)
+    })
+
+    it('sets isLoading to false when API call fails', async () => {
+      const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {})
+      ;(globalThis as any).$fetch.mockRejectedValueOnce(new Error('Network error'))
+
+      const wrapper = mount(RandomAd)
+
+      await new Promise(resolve => setTimeout(resolve, 100))
+
+      expect((wrapper.vm as any).state.isLoading).toBe(false)
+      consoleSpy.mockRestore()
+    })
+
+    it('sets isLoading to false when response validation fails', async () => {
+      const invalidResponse = { invalid: 'data' }
+      ;(globalThis as any).$fetch.mockResolvedValueOnce(invalidResponse)
+
+      const wrapper = mount(RandomAd)
+
+      await new Promise(resolve => setTimeout(resolve, 100))
+
+      expect((wrapper.vm as any).state.isLoading).toBe(false)
+    })
+  })
+
+  describe('Loader Element Visibility', () => {
+    it('displays loader element when isLoading is true', async () => {
+      const fetchPromise = new Promise(resolve => {
+        setTimeout(() => resolve(mockAmazonAdResponse), 200)
+      })
+      ;(globalThis as any).$fetch.mockReturnValueOnce(fetchPromise)
+
+      const wrapper = mount(RandomAd)
+
+      // Wait for Vue to render the loader
+      await new Promise(resolve => setTimeout(resolve, 10))
+
+      // Check immediately - loader should be visible while fetch is in progress
+      expect((wrapper.vm as any).state.isLoading).toBe(true)
+      expect(wrapper.find('.loader').exists()).toBe(true)
+    })
+
+    it('hides loader element when isLoading becomes false', async () => {
+      ;(globalThis as any).$fetch.mockResolvedValueOnce(mockAmazonAdResponse)
+
+      const wrapper = mount(RandomAd)
+
+      await new Promise(resolve => setTimeout(resolve, 100))
+
+      expect((wrapper.vm as any).state.isLoading).toBe(false)
+      expect(wrapper.find('.loader').exists()).toBe(false)
+    })
+
+    it('shows loader again when shuffle button is clicked', async () => {
+      ;(globalThis as any).$fetch
+        .mockResolvedValueOnce(mockAmazonAdResponse)
+        .mockImplementationOnce(() => {
+          return new Promise(resolve => {
+            setTimeout(() => resolve(mockGoogleAdResponse), 50)
+          })
+        })
+
+      ;(globalThis as any).useRoute = vi.fn(() => ({
+        query: { sb: '1' },
+      }))
+
+      const wrapper = mount(RandomAd)
+
+      await new Promise(resolve => setTimeout(resolve, 100))
+      expect((wrapper.vm as any).state.isLoading).toBe(false)
+
+      const button = wrapper.find('button')
+      await button.trigger('click')
+
+      // Loader should be visible again during the new fetch
+      expect((wrapper.vm as any).state.isLoading).toBe(true)
+      expect(wrapper.find('.loader').exists()).toBe(true)
+    })
+
+    it('has correct loader styling with animation classes', async () => {
+      const fetchPromise = new Promise(resolve => {
+        setTimeout(() => resolve(mockAmazonAdResponse), 200)
+      })
+      ;(globalThis as any).$fetch.mockReturnValueOnce(fetchPromise)
+
+      const wrapper = mount(RandomAd)
+
+      await new Promise(resolve => setTimeout(resolve, 10))
+
+      const loader = wrapper.find('.loader')
+      expect(loader.exists()).toBe(true)
+      expect(loader.element.className).toContain('loader')
+    })
+  })
 })

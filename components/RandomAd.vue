@@ -206,7 +206,12 @@
 <template>
   <div class="text-center">
     <!-- === Loader === -->
-    <div v-if="state.isLoading" class="loader"></div>
+    <div
+      v-if="state.isLoading"
+      aria-label="Loading advertisement"
+      class="loader"
+      role="status"
+    />
 
     <!-- === Google AdSense === -->
     <GoogleAdSense
