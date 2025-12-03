@@ -7,13 +7,14 @@ settings:
 overrides:
   glob@>=10.2.0 <13.0.0: '>=13.0.0'
   node-forge@<1.3.3: '>=1.3.3'
+  parse-url@<10.0.0: '>=10.0.0'
 
 importers:
 
   .:
     devDependencies:
       '@nuxt/devtools':
-        specifier: latest
+        specifier: ^3.1.1
         version: 3.1.1(vite@7.2.2(jiti@2.6.1)(terser@5.44.1)(yaml@2.8.1))(vue@3.5.24)
       '@playwright/test':
         specifier: ^1.56.1
@@ -1091,10 +1092,6 @@ packages:
 
   '@types/estree@1.0.8':
     resolution: {integrity: sha512-dWHzHa2WqEXI/O1E9OjrocMTKJl2mSrEolh1Iomrv6U+JuNwaHXsXx9bLu5gG7BUWFIN0skIQJQ/L1rIex4X6w==}
-
-  '@types/parse-path@7.1.0':
-    resolution: {integrity: sha512-EULJ8LApcVEPbrfND0cRQqutIOdiIgJ1Mgrhpy755r14xMohPTEpkV/k28SJvuOs9bHRFW8x+KeDAEPiGQPB9Q==}
-    deprecated: This is a stub types definition. parse-path provides its own type definitions, so you do not need this installed.
 
   '@types/resolve@1.20.2':
     resolution: {integrity: sha512-60BCwRFOZCQhDncwQdxxeOEEkbc5dIMccYLwbxsS4TUNeVECQ/pBJ0j09mrHOl/JJvpRPGwO9SvE4nR2Nb/a4Q==}
@@ -2414,8 +2411,8 @@ packages:
   parse-path@7.1.0:
     resolution: {integrity: sha512-EuCycjZtfPcjWk7KTksnJ5xPMvWGA/6i4zrLYhRG0hGvC3GPU/jGUj3Cy+ZR0v30duV3e23R95T1lE2+lsndSw==}
 
-  parse-url@9.2.0:
-    resolution: {integrity: sha512-bCgsFI+GeGWPAvAiUv63ZorMeif3/U0zaXABGJbOWt5OH2KCaPHF6S+0ok4aqM9RuIPGyZdx9tR9l13PsW4AYQ==}
+  parse-url@10.0.3:
+    resolution: {integrity: sha512-RvldzLvNE0DtOO1loukZsYcHCzHVUnHe7GNyrKIkavp7fNWs5ueX3kUzY/hXS8uRqDWwtaRKDcAmLEVouPIxIw==}
     engines: {node: '>=14.13.0'}
 
   parse5@8.0.0:
@@ -4529,10 +4526,6 @@ snapshots:
 
   '@types/estree@1.0.8': {}
 
-  '@types/parse-path@7.1.0':
-    dependencies:
-      parse-path: 7.1.0
-
   '@types/resolve@1.20.2': {}
 
   '@unhead/vue@2.0.19(vue@3.5.24)':
@@ -5351,7 +5344,7 @@ snapshots:
   git-up@8.1.1:
     dependencies:
       is-ssh: 1.4.1
-      parse-url: 9.2.0
+      parse-url: 10.0.3
 
   git-url-parse@16.1.0:
     dependencies:
@@ -6155,9 +6148,8 @@ snapshots:
     dependencies:
       protocols: 2.0.2
 
-  parse-url@9.2.0:
+  parse-url@10.0.3:
     dependencies:
-      '@types/parse-path': 7.1.0
       parse-path: 7.1.0
 
   parse5@8.0.0:
