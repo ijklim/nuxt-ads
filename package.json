@@ -1,7 +1,7 @@
 {
   "name": "nuxt-app",
   "displayName": "Nuxt Ads",
-  "version": "3.3.16",
+  "version": "3.3.17",
   "private": true,
   "scripts": {
     "build": "nuxt build",
@@ -26,6 +26,7 @@
     "vitest": "^4.0.8"
   },
   "dependencyNotes": {
+    "@nuxt/devtools": "Visual development tools for Nuxt with component inspector, state management, and performance insights. Pinned from 'latest' to '^3.1.1' for version stability and reproducible builds.",
     "nuxt-viewport": "Module that detects screen breakpoint, used by Mochahost banner",
     "vitest": "Lightning-fast unit test framework powered by Vite. Used for component and utility function testing with hot module reloading support.",
     "@vue/test-utils": "Official Vue 3 testing utility library. Provides component mounting, DOM queries, event simulation, and mocking capabilities for Vue components.",
