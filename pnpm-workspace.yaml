@@ -1,5 +1,5 @@
 overrides:
-  # CVE-2024-4068: Command injection in glob CLI
+  # CVE-2024-3741: Command injection in glob CLI
   # https://github.com/advisories/GHSA-8wr7-jxp7-mj8q
   # BREAKING CHANGE: Updated to glob@13.0.0 (major version jump from 10.4.5)
   # - Requires Node.js 20 or >=22 (compatible with project requirement)
