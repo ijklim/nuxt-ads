@@ -1,7 +1,7 @@
 # Ad App
 
 [![Dependabot Status](https://img.shields.io/badge/Dependabot-enabled-success?logo=dependabot&logoColor=white)](https://github.com/ijklim/nuxt-ads/blob/main/.github/dependabot.yml)
-[![CI Status](https://github.com/ijklim/nuxt-ads/actions/workflows/ssh-deploy.yml/badge.svg?label=CI%20Status)](https://github.com/ijklim/nuxt-ads/actions/workflows/ssh-deploy.yml)
+[![CI Status](https://img.shields.io/github/actions/workflow/status/ijklim/nuxt-ads/ssh-deploy.yml?label=CI%20Status)](https://github.com/ijklim/nuxt-ads/actions/workflows/ssh-deploy.yml)
 
 A Nuxt-based ad server that displays randomized advertisements from a backend API. This application:
 
