@@ -90,7 +90,7 @@ jobs:
       # This avoids rebuilding the site during the deploy job; we just reuse the pre-built output
       # Artifacts are automatically deleted after 90 days (configurable in GitHub settings)
       - name: Upload generated site as artifact
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v6
         with:
           name: generated-output
           path: .output/public
@@ -101,7 +101,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Download site artifact
-        uses: actions/download-artifact@v6
+        uses: actions/download-artifact@v7
         with:
           name: generated-output
           path: generated-output
