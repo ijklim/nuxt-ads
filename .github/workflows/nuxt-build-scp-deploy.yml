@@ -1,5 +1,5 @@
-# Version: 3.2.0
-# Last Updated: 2025-11-09
+# Version: 3.4.0
+# Last Updated: 2025-12-18
 # Added testing job that runs before build/deploy
 
 # === REQUIRED GITHUB SECRETS ===
@@ -17,7 +17,7 @@
 #   - SSH_PORT: SSH port number (typically 22)
 #   - SSH_DEPLOY_PATH: Target directory on remote server (e.g., /home/user/public_html)
 
-name: Deploy to Shared Hosting
+name: Deploy Nuxt App to Shared Hosting
 
 on:
   push:
