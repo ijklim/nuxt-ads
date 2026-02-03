@@ -21,7 +21,7 @@
     "@vitest/coverage-v8": "^4.0.18",
     "@vue/test-utils": "^2.4.6",
     "jsdom": "^28.0.0",
-    "nuxt": "4.3.0",
+    "nuxt": "^4.3.0",
     "nuxt-viewport": "^2.3.1",
     "vitest": "^4.0.18"
   },
