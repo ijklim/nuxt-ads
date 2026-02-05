@@ -1,7 +1,6 @@
 ---
 name: Clean Architecture Specialist
 description: Expert in refactoring Nuxt/Vue codebases to Clean/Hexagonal Architecture.
-target: vscode
 argument-hint: component_or_feature is the code to refactor or analyze.
 tools:
   - search
