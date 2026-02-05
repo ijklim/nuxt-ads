@@ -66,9 +66,12 @@ export class AdRepository implements IAdRepository {
        mapped.ad_slot = data.ad_code;
        mapped.ad_layout_key = data.ad_layout_key;
        mapped.ad_format = data.ad_format;
-    } else if (data.ad_type === 'Mochahost' || data.ad_type === 'ImageAd') {
+     } else if (data.ad_type === 'Mochahost' || data.ad_type === 'ImageAd' || data.ad_type === 'MochahostBanner') {
        // Validator expects: image, link
        // API: url_segment_image, url_affiliate
+       if (data.ad_type === 'MochahostBanner') {
+        mapped.ad_type = 'Mochahost';
+       }
        mapped.image = data.url_segment_image ? `${baseUrl}${data.url_segment_image}` : undefined;
        mapped.link = data.url_affiliate || data.url_product;
        // Map legacy 'Mochahost' type to 'Mochahost' (Validator allows it)

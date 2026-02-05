@@ -21,19 +21,22 @@ const mockUseUtility = vi.fn(() => ({
   currentFileName: 'RandomAd.vue',
 }))
 
+import { useAdController } from '../composables/useAdController'
+
 // Make mocked functions and Vue functions available globally
-;(globalThis as any).useRoute = mockUseRoute
-;(globalThis as any).useRuntimeConfig = mockUseRuntimeConfig
-;(globalThis as any).useUtility = mockUseUtility
-;(globalThis as any).reactive = reactive
-;(globalThis as any).ref = ref
-;(globalThis as any).computed = computed
-;(globalThis as any).watch = watch
-;(globalThis as any).onMounted = onMounted
-;(globalThis as any).onUnmounted = onUnmounted
+vi.stubGlobal('useRoute', mockUseRoute)
+vi.stubGlobal('useRuntimeConfig', mockUseRuntimeConfig)
+vi.stubGlobal('useUtility', mockUseUtility)
+vi.stubGlobal('useAdController', useAdController)
+vi.stubGlobal('reactive', reactive)
+vi.stubGlobal('ref', ref)
+vi.stubGlobal('computed', computed)
+vi.stubGlobal('watch', watch)
+vi.stubGlobal('onMounted', onMounted)
+vi.stubGlobal('onUnmounted', onUnmounted)
 
 // Mock global $fetch
-;(globalThis as any).$fetch = vi.fn()
+vi.stubGlobal('$fetch', vi.fn())
 
 // Configure global stubs for Nuxt/Vue components
 config.global.stubs = {
