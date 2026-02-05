@@ -6,6 +6,7 @@
 -->
 <script setup lang="ts">
   import type { AmazonAd, GoogleAd, ImageAd } from '@/domain/ads/types';
+  import { sendSafeMessage } from '@/infrastructure/security/messaging';
 
   // === Composables ===
   const { query } = useRoute();
@@ -44,8 +45,8 @@
         height: calculatedHeight,
         width: calculatedWidth,
       };
-      // console.log('[Debug Only] message', message);  // For debug purpose only
-      window.parent.postMessage(message, '*');
+      // Use safe messaging with origin validation (Phase 5 Security)
+      sendSafeMessage(message);
     };
     img.src = imagePath;
   };
