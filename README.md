@@ -1,7 +1,7 @@
 # Ad App
 
 [![Dependabot Status](https://img.shields.io/badge/Dependabot-enabled-success?logo=dependabot&logoColor=white)](https://github.com/ijklim/nuxt-ads/blob/main/.github/dependabot.yml)
-[![CI Status](https://img.shields.io/github/actions/workflow/status/ijklim/nuxt-ads/ssh-deploy.yml?label=CI%20Status)](https://github.com/ijklim/nuxt-ads/actions/workflows/ssh-deploy.yml)
+[![CI Status](https://img.shields.io/github/actions/workflow/status/ijklim/nuxt-ads/nuxt-build-scp-deploy.yml?label=CI%20Status)](https://github.com/ijklim/nuxt-ads/actions/workflows/nuxt-build-scp-deploy.yml)
 
 A Nuxt-based ad server that displays randomized advertisements from a backend API. This application:
 
@@ -151,7 +151,7 @@ In your repository, go to `Settings` > `Secrets and variables` > `Actions` > `Re
 
 #### How It Works
 
-The GitHub Actions workflow (`.github/workflows/ssh-deploy.yml`) automatically:
+The GitHub Actions workflow (`.github/workflows/nuxt-build-scp-deploy.yml`) automatically:
 1. Creates a `.env` file from these secrets before build
 2. Runs `pnpm generate` to build the static site with environment variables embedded
 3. Deploys the generated files to your server via SCP

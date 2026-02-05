@@ -272,7 +272,7 @@ Automatically runs on every pull request to ensure code quality:
 **Branch Protection:**
 Both test jobs are required status checks. See [BRANCH_PROTECTION.md](./BRANCH_PROTECTION.md) for setup instructions.
 
-#### Deployment Workflow (`.github/workflows/ssh-deploy.yml`)
+#### Deployment Workflow (`.github/workflows/nuxt-build-scp-deploy.yml`)
 Runs on pushes to `main` branch:
 - Runs unit tests before building
 - Builds and deploys to shared hosting
