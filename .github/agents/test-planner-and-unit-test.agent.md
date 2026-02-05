@@ -1,7 +1,6 @@
 ---
 name: Test Planner & Unit Test Writer
 description: Creates test plans and writes Vitest unit tests for the Nuxt Ads app.
-target: vscode
 argument-hint: target_feature_or_file is the feature, component, or file to test.
 tools:
   - search
