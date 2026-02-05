@@ -91,7 +91,7 @@ pnpm preview      # Preview production build locally
 
 ## 🚀 Deployment
 - **Deployment method:** GitHub Actions with SSH to shared hosting
-- **Workflow file:** `.github/workflows/ssh-deploy.yml`
+- **Workflow file:** `.github/workflows/nuxt-build-scp-deploy.yml`
 - **Trigger:** Push to `main` branch or manual workflow dispatch
 - **Environment variables:** Set in GitHub Secrets, not in `.env` files on the server
 
