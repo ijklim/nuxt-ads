@@ -6,39 +6,39 @@ This document provides detailed guidance on implementing Clean/Hexagonal Archite
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
-│                    Presentation Layer                        │
-│  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐      │
-│  │ Components   │  │ Composables  │  │ Pages        │      │
-│  │  .vue files  │  │  .ts files   │  │  .vue files  │      │
-│  └──────────────┘  └──────────────┘  └──────────────┘      │
+│                    Presentation Layer                       │
+│  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐       │
+│  │ Components   │  │ Composables  │  │ Pages        │       │
+│  │  .vue files  │  │  .ts files   │  │  .vue files  │       │
+│  └──────────────┘  └──────────────┘  └──────────────┘       │
 └────────────────────────┬────────────────────────────────────┘
                          │ uses
                          ▼
 ┌─────────────────────────────────────────────────────────────┐
-│                   Application Layer                          │
-│  ┌──────────────┐  ┌──────────────────────────────────┐    │
-│  │   Ports      │  │        Use Cases                 │    │
-│  │ (Interfaces) │  │  - FetchRandomAd                 │    │
-│  │              │  │  - CalculateDimensions           │    │
-│  └──────────────┘  └──────────────────────────────────┘    │
+│                   Application Layer                         │
+│  ┌──────────────┐  ┌──────────────────────────────────┐     │
+│  │   Ports      │  │        Use Cases                 │     │
+│  │ (Interfaces) │  │  - FetchRandomAd                 │     │
+│  │              │  │  - CalculateDimensions           │     │
+│  └──────────────┘  └──────────────────────────────────┘     │
 └────────────────────────┬────────────────────────────────────┘
                          │ implements
                          ▼
 ┌─────────────────────────────────────────────────────────────┐
-│                  Infrastructure Layer                        │
-│  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐      │
-│  │ API Adapters │  │ Config       │  │ Messaging    │      │
-│  │ (Laravel)    │  │ Providers    │  │ (postMessage)│      │
-│  └──────────────┘  └──────────────┘  └──────────────┘      │
+│                  Infrastructure Layer                       │
+│  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐       │
+│  │ API Adapters │  │ Config       │  │ Messaging    │       │
+│  │ (Laravel)    │  │ Providers    │  │ (postMessage)│       │
+│  └──────────────┘  └──────────────┘  └──────────────┘       │
 └────────────────────────┬────────────────────────────────────┘
                          │ uses
                          ▼
 ┌─────────────────────────────────────────────────────────────┐
-│                      Domain Layer                            │
-│  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐      │
-│  │  Entities    │  │  Validators  │  │  Policies    │      │
-│  │  (Ad types)  │  │  (Rules)     │  │  (Logic)     │      │
-│  └──────────────┘  └──────────────┘  └──────────────┘      │
+│                      Domain Layer                           │
+│  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐       │
+│  │  Entities    │  │  Validators  │  │  Policies    │       │
+│  │  (Ad types)  │  │  (Rules)     │  │  (Logic)     │       │
+│  └──────────────┘  └──────────────┘  └──────────────┘       │
 └─────────────────────────────────────────────────────────────┘
 ```
 
@@ -85,27 +85,27 @@ class LaravelAdRepository implements IAdRepository {
 nuxt-ads/
 ├── domain/                          # Pure business logic (no framework deps)
 │   ├── ads/
-│   │   ├── types.ts                # Ad entities (discriminated unions)
-│   │   ├── validators.ts           # Validation logic
-│   │   ├── parsers.ts              # Data transformation
-│   │   └── policies.ts             # Business rules
+│   │   ├── types.ts                 # Ad entities (discriminated unions)
+│   │   ├── validators.ts            # Validation logic
+│   │   ├── parsers.ts               # Data transformation
+│   │   └── policies.ts              # Business rules
 │   └── shared/
-│       ├── result.ts               # Result<T, E> type
-│       └── errors.ts               # Domain errors
+│       ├── result.ts                # Result<T, E> type
+│       └── errors.ts                # Domain errors
 │
 ├── application/                     # Use cases and ports
 │   ├── ports/
-│   │   ├── IAdRepository.ts        # Interface for data access
-│   │   └── IConfigProvider.ts      # Interface for configuration
+│   │   ├── IAdRepository.ts         # Interface for data access
+│   │   └── IConfigProvider.ts       # Interface for configuration
 │   └── use-cases/
-│       ├── FetchRandomAd.ts        # Fetch and validate ad use case
-│       └── CalculateDimensions.ts  # Dimension calculation use case
+│       ├── FetchRandomAd.ts         # Fetch and validate ad use case
+│       └── CalculateDimensions.ts   # Dimension calculation use case
 │
 ├── infrastructure/                  # External integrations
 │   ├── api/
-│   │   ├── LaravelAdRepository.ts  # Laravel API implementation
-│   │   ├── httpClient.ts           # $fetch wrapper
-│   │   └── mappers.ts              # API → Domain mapping
+│   │   ├── LaravelAdRepository.ts   # Laravel API implementation
+│   │   ├── httpClient.ts            # $fetch wrapper
+│   │   └── mappers.ts               # API → Domain mapping
 │   ├── config/
 │   │   ├── RuntimeConfigProvider.ts # Nuxt config implementation
 │   │   └── validation.ts            # Config validation
@@ -113,26 +113,26 @@ nuxt-ads/
 │       └── IframeMessenger.ts       # postMessage wrapper
 │
 ├── composables/                     # Vue composables (glue layer)
-│   ├── useAdService.ts             # Wraps use cases for Vue
-│   ├── useAdDimensions.ts          # Dimension calculations
-│   └── useUtility.ts               # Existing utilities
+│   ├── useAdService.ts              # Wraps use cases for Vue
+│   ├── useAdDimensions.ts           # Dimension calculations
+│   └── useUtility.ts                # Existing utilities
 │
 ├── components/                      # Vue components (presentation)
-│   ├── RandomAd.vue                # Main ad component
+│   ├── RandomAd.vue                 # Main ad component
 │   ├── Amazon/
-│   │   └── Banner.vue              # Amazon-specific display
+│   │   └── Banner.vue               # Amazon-specific display
 │   ├── Google/
-│   │   └── AdSense.vue             # Google AdSense display
+│   │   └── AdSense.vue              # Google AdSense display
 │   └── shared/
-│       ├── AdLoader.vue            # Loading state
-│       └── AdError.vue             # Error display
+│       ├── AdLoader.vue             # Loading state
+│       └── AdError.vue              # Error display
 │
 └── tests/
     ├── unit/
-    │   ├── domain/                 # Domain logic tests (fast)
-    │   ├── application/            # Use case tests (mocked)
-    │   └── components/             # Component tests
-    └── e2e/                        # End-to-end tests
+    │   ├── domain/                  # Domain logic tests (fast)
+    │   ├── application/             # Use case tests (mocked)
+    │   └── components/              # Component tests
+    └── e2e/                         # End-to-end tests
 ```
 
 ## 🔍 Layer Details
@@ -170,9 +170,9 @@ export interface AmazonAd {
 
 // Type guard
 export function isAmazonAd(ad: unknown): ad is AmazonAd {
-  return typeof ad === 'object' && 
-         ad !== null && 
-         'type' in ad && 
+  return typeof ad === 'object' &&
+         ad !== null &&
+         'type' in ad &&
          ad.type === 'AmazonBanner'
 }
 ```
@@ -204,12 +204,12 @@ export class FetchRandomAdUseCase {
   async execute(filters?: AdFilters): Promise<Result<Ad, Error>> {
     try {
       const ad = await this.repository.fetchRandom(filters)
-      
+
       // Business validation
       if (!this.isValidAd(ad)) {
         return Result.err(new InvalidAdError('Ad failed validation'))
       }
-      
+
       return Result.ok(ad)
     } catch (error) {
       return Result.err(new AdFetchError(error))
@@ -251,7 +251,7 @@ export class LaravelAdRepository implements IAdRepository {
 
   async fetchRandom(filters?: AdFilters): Promise<Ad> {
     const params = new URLSearchParams({ random: '1' })
-    
+
     if (filters) {
       Object.entries(filters).forEach(([key, value]) => {
         params.append(key, value)
@@ -309,15 +309,15 @@ export function useAdService() {
   const fetchAd = async (filters?: Record<string, string>) => {
     loading.value = true
     error.value = null
-    
+
     const result = await useCase.execute(filters)
-    
+
     if (result.isOk()) {
       ad.value = result.value
     } else {
       error.value = result.error
     }
-    
+
     loading.value = false
   }
 
@@ -353,7 +353,7 @@ describe('validateAmazonAd', () => {
     }
 
     const result = validateAmazonAd(validAd)
-    
+
     expect(result.isOk()).toBe(true)
   })
 
@@ -361,7 +361,7 @@ describe('validateAmazonAd', () => {
     const invalidAd = { type: 'AmazonBanner' }
 
     const result = validateAmazonAd(invalidAd)
-    
+
     expect(result.isErr()).toBe(true)
   })
 })
@@ -508,19 +508,19 @@ To implement Clean Architecture in this project:
 
 ## ❓ FAQ
 
-**Q: Isn't this over-engineering for a small project?**  
+**Q: Isn't this over-engineering for a small project?**
 A: Possibly! Start with Phase 1-2. You can stop at any phase if the complexity isn't worth it.
 
-**Q: How does this work with Nuxt auto-imports?**  
+**Q: How does this work with Nuxt auto-imports?**
 A: Composables still use auto-imports. Only domain/application layers avoid framework code.
 
-**Q: What about performance?**  
+**Q: What about performance?**
 A: Additional abstraction adds negligible overhead. The benefits (testability, maintainability) typically outweigh costs.
 
-**Q: Can I use this pattern incrementally?**  
+**Q: Can I use this pattern incrementally?**
 A: Yes! Refactor one feature at a time. Old and new code can coexist during migration.
 
 ---
 
-**Last Updated**: 2026-02-04  
+**Last Updated**: 2026-02-04
 **Maintainer**: @ijklim
