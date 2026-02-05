@@ -264,12 +264,27 @@ pnpm test:coverage
 pnpm test:e2e
 ```
 
+## Maintaining Code Quality
+
+When adding new code:
+- Keep all tests passing at 100%
+- Follow established architectural patterns (see [ARCHITECTURE.md](./docs/ARCHITECTURE.md))
+- Add unit tests before implementing features
+- Document APIs using JSDoc comments
+
+When refactoring:
+- Maintain strict layer boundaries (Domain → Application → Infrastructure → Presentation)
+- Update documentation if interfaces or public APIs change
+- Ensure all 51 tests still pass
+- Review security implications for any validation changes
+
 ## Questions?
 
 If you have questions about contributing, please:
 
 1. Check existing issues and discussions
-2. Create a new issue with your question
-3. Reach out to the maintainers
+2. Review documentation: [ARCHITECTURE.md](./docs/ARCHITECTURE.md), [SECURITY.md](./docs/SECURITY.md), [API_DOCUMENTATION.md](./docs/API_DOCUMENTATION.md)
+3. Create a new issue with your question
+4. Reach out to the maintainers
 
 Thank you for contributing to Nuxt Ads! 🎉
