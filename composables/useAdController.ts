@@ -1,4 +1,3 @@
-import { ref } from 'vue';
 import { FetchRandomAdUseCase } from '../application/use-cases/FetchRandomAd';
 import { AdRepository } from '../infrastructure/repositories/AdRepository';
 import { NuxtConfigProvider } from '../infrastructure/config/NuxtConfigProvider';

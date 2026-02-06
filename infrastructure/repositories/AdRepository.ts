@@ -4,6 +4,23 @@ import { Result } from '../../domain/shared/result';
 import { validateAd } from '../../domain/ads/validators';
 import type { Ad } from '../../domain/ads/types';
 
+/**
+ * API response shape from Laravel backend
+ */
+interface ApiAdResponse {
+  ad_type: 'GoogleAdSense' | 'AmazonBanner' | 'Mochahost' | 'ImageAd' | 'MochahostBanner';
+  ad_code?: string;
+  ad_layout_key?: string;
+  ad_format?: string;
+  url_segment_image?: string;
+  url_affiliate?: string;
+  url_product?: string;
+  title?: string;
+  image_description?: string;
+  price_discount_amount?: number;
+  [key: string]: any;
+}
+
 export class AdRepository implements IAdRepository {
   constructor(private configProvider: IConfigProvider) {}
 
@@ -26,7 +43,7 @@ export class AdRepository implements IAdRepository {
       const url = `${baseUrl}/api/ads?${params.toString()}`;
 
       // Using global $fetch provided by Nuxt
-      const response = await $fetch<any>(url);
+      const response = await $fetch<ApiAdResponse>(url);
 
       const mappedData = this.mapApiResponse(response, baseUrl);
 
@@ -40,7 +57,7 @@ export class AdRepository implements IAdRepository {
     }
   }
 
-  private mapApiResponse(data: any, baseUrl: string): any {
+  private mapApiResponse(data: ApiAdResponse, baseUrl: string): any {
     if (!data || typeof data !== 'object') return data;
 
     // Common transformations
@@ -67,16 +84,12 @@ export class AdRepository implements IAdRepository {
        mapped.ad_layout_key = data.ad_layout_key;
        mapped.ad_format = data.ad_format;
      } else if (data.ad_type === 'Mochahost' || data.ad_type === 'ImageAd' || data.ad_type === 'MochahostBanner') {
-       // Validator expects: image, link
-       // API: url_segment_image, url_affiliate
+       // Normalize MochahostBanner to Mochahost for backward compatibility
        if (data.ad_type === 'MochahostBanner') {
         mapped.ad_type = 'Mochahost';
        }
        mapped.image = data.url_segment_image ? `${baseUrl}${data.url_segment_image}` : undefined;
        mapped.link = data.url_affiliate || data.url_product;
-       // Map legacy 'Mochahost' type to 'Mochahost' (Validator allows it)
-       // Or map to 'ImageAd'
-       // Validator allows 'Mochahost' ad_type.
     }
 
     return mapped;

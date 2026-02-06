@@ -171,7 +171,7 @@ The fundamental rule of Clean Architecture:
 
 **Test Coverage:** ✅ Covered by unit tests
 
-For port interface definitions, see [IAdRepository.ts](../infrastructure/application/ports/IAdRepository.ts) and [IConfigProvider.ts](../infrastructure/application/ports/IConfigProvider.ts). Tests are located in [tests/unit/application/FetchRandomAd.test.ts](../tests/unit/application/FetchRandomAd.test.ts).
+Port interfaces (`IAdRepository`, `IConfigProvider`) are defined in the `application/ports/` directory. Unit tests validate the use case behavior.
 
 ---
 
@@ -192,7 +192,7 @@ For port interface definitions, see [IAdRepository.ts](../infrastructure/applica
 
 **Test Coverage:** ✅ Covered by unit tests
 
-For adapter implementation, see [AdRepository.ts](../infrastructure/repositories/AdRepository.ts) for API integration and [NuxtConfigProvider.ts](../infrastructure/config/NuxtConfigProvider.ts) for configuration handling. Tests are located in [tests/unit/infrastructure/AdRepository.test.ts](../tests/unit/infrastructure/AdRepository.test.ts).
+Adapter implementations (`AdRepository` for API integration, `NuxtConfigProvider` for configuration) are located in the `infrastructure/` layer. Unit tests validate adapters with mocked HTTP calls.
 
 ---
 
@@ -213,7 +213,7 @@ For adapter implementation, see [AdRepository.ts](../infrastructure/repositories
 
 **Test Coverage:** ✅ Covered by unit tests
 
-For controller composable implementation, see [useAdController.ts](../composables/useAdController.ts). For component integration, see [RandomAd.vue](../components/RandomAd.vue). Comprehensive tests are available in [tests/unit/components/RandomAd.test.ts](../tests/unit/components/RandomAd.test.ts).
+The presentation controller (`useAdController` composable) orchestrates use cases, while the main component (`RandomAd.vue`) handles UI rendering. Unit tests validate the component behavior with mocked dependencies.
 
 ---
 
