@@ -237,18 +237,6 @@ Safely sends postMessage to parent window.
 
 **Test Examples:** [tests/unit/infrastructure/messaging.test.ts](../tests/unit/infrastructure/messaging.test.ts)
 
-#### `validateMessageEvent()`
-
-Validates postMessage events with origin checking. Only allows messages from same origin by default.
-
-**Parameters:**
-- `event: MessageEvent` - MessageEvent to validate
-- `allowedOrigins?: string[]` - Array of allowed origins (defaults to current origin)
-
-**Returns:** `SafeMessage | null` - SafeMessage if valid, null if invalid
-
-See [messaging.ts](../infrastructure/security/messaging.ts) for implementation details.
-
 ---
 
 ## 🎨 Presentation Layer APIs

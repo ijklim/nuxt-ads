@@ -56,7 +56,13 @@
    */
   const loadAd = async () => {
       const filters: Record<string, string> = {};
-      Object.keys(query).forEach(k => filters[k] = String(query[k]));
+      Object.entries(query).forEach(([key, value]) => {
+        if (typeof value === 'string') {
+          filters[key] = value;
+        } else if (Array.isArray(value)) {  // Handle array values (e.g., multiple categories)
+          filters[key] = value.join(','); // Join array into comma-separated string
+        }
+      });
 
       await fetchAd(filters);
 

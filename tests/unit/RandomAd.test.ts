@@ -76,6 +76,24 @@ describe('RandomAd.vue', () => {
       expect(callArgs).toContain('pk=123')
     })
 
+    it('handles array query parameters by joining with commas', async () => {
+      ;(globalThis as any).$fetch.mockResolvedValueOnce(mockAmazonAdResponse)
+      ;(globalThis as any).useRoute = vi.fn(() => ({
+        query: { category: ['homepage', 'sidebar'], pk: '123' },
+      }))
+
+      const wrapper = mount(RandomAd)
+
+      await wrapper.vm.$nextTick()
+      await new Promise(resolve => setTimeout(resolve, 0))
+
+      expect((globalThis as any).$fetch).toHaveBeenCalled()
+      const callArgs = (globalThis as any).$fetch.mock.calls?.[0]?.[0]
+      expect(callArgs).toContain('random=1')
+      expect(callArgs).toContain('category=homepage%2Csidebar')
+      expect(callArgs).toContain('pk=123')
+    })
+
     it('handles API errors gracefully', async () => {
       const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {})
       ;(globalThis as any).$fetch.mockRejectedValueOnce(mockApiErrors.networkError)

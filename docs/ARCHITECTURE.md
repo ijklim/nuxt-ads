@@ -128,7 +128,6 @@ The fundamental rule of Clean Architecture:
 - Domain → Application
 - Domain → Infrastructure
 - Application → Presentation (one-way only)
-Application → Presentation (one-way only)
 ```
 
 ---

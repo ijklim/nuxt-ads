@@ -1,7 +1,6 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { AdRepository } from '../../../infrastructure/repositories/AdRepository';
 import type { IConfigProvider } from '../../../application/ports/IConfigProvider';
-import { Result } from '../../../domain/shared/result';
 
 // Mock ConfigProvider
 const mockConfigProvider: IConfigProvider = {
@@ -34,7 +33,7 @@ describe('AdRepository', () => {
     vi.stubGlobal('$fetch', mockFetch);
 
     const repo = new AdRepository(mockConfigProvider);
-    const result = await repo.fetchRandom({ foo: 'bar' });
+    await repo.fetchRandom({ foo: 'bar' });
 
     expect(mockFetch).toHaveBeenCalledTimes(1);
     // URL check: http://test-server.com/api/ads?random=1&foo=bar
