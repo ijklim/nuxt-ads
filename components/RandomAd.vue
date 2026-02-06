@@ -3,92 +3,25 @@
   Query Strings Supported:
   • [laravel-ads::AdController.php::get()] at, pk, random
   • sb: If '1' display Shuffle Button
+
+  Domain Type Alignment:
+  • GoogleAd: format, layoutKey, slot
+  • AmazonAd: height, href, imageUrl, imageAlt, imageDescription, price, discountAmount
+  • ImageAd: height, width, href, imageUrl, imageAlt
 -->
 <script setup lang="ts">
+  import type { AmazonAd, GoogleAd, ImageAd } from '@/domain/ads/types';
+  import { sendSafeMessage } from '@/infrastructure/security/messaging';
+
   // === Composables ===
   const { query } = useRoute();
-  const runtimeConfig = useRuntimeConfig();
-  const utility = useUtility(import.meta);
-  // console.log(`[${utility.currentFileName}] query:`, query);
+  const { ad, isLoading, error, fetchAd } = useAdController();
 
-
-  // === Data ===
-  /**
-   * Ad Types that could be displayed
-   */
-  type AdType = 'none' | 'AmazonBanner' | 'GoogleAdSense' | 'MochahostBanner';
-
-  // Core Ad Object
-  interface IEmptyAdObject {
-    adType?: AdType;
-    displayRatio: number;
-  }
-
-  // Should match `ijklim_ads::ad_types::AmazonBanner`
-  interface IAmazonAdObject extends IEmptyAdObject {
-    height?: number;
-    href: string;
-    imageAltText: string;
-    imageDescription?: string;
-    imagePath: string;
-    price?: number;
-    priceDiscountAmount?: string;
-    width?: number;
-  };
-
-  // Should match `ijklim_ads::ad_types::GoogleAdSense`
-  interface IGoogleAdObject extends IEmptyAdObject {
-    adFormat: string;
-    adLayoutKey: string;
-    adSlot: number;
-  };
-
-  // Obsolete: Replaced IImageAdObject
-  // interface IMochahostAdObject extends IEmptyAdObject {
-  //   height: number;
-  //   href: string;
-  //   imageAltText: string;
-  //   imageUrl: string;
-  // };
-
-  // Should match `ijklim_ads::ad_types::Image`
-  interface IImageAdObject extends IEmptyAdObject {
-    height: number;
-    href: string;
-    imageAltText: string;
-    imagePath: string;
-    width?: number;
-  };
-
-  type AdObject = IAmazonAdObject | IEmptyAdObject | IGoogleAdObject | IImageAdObject;
-
-  interface IResponseFetchAd {
-    ad_code: string,
-    ad_format: string,
-    ad_layout_key: string,
-    ad_type: AdType,
-    display_ratio: string,
-    height: string,
-    image_description: string,
-    price: string,
-    price_discount_amount: string,
-    product_code: string,
-    title: string,
-    url_affiliate: string,
-    url_product: string,
-    url_segment_image: string,
-    width: string,
-  }
-
-  interface IStateObject {
-    isLoading: boolean;
-    whichAdToShow: AdObject;
-  }
-  const state: IStateObject = reactive({
-    isLoading: false,
-    whichAdToShow: { adType: 'none', displayRatio: 0 },
-  });
-
+  // === Computed for Template ===
+  const amazonAd = computed(() => ad.value?.type === 'AmazonBanner' ? ad.value as AmazonAd : null);
+  const googleAd = computed(() => ad.value?.type === 'GoogleAdSense' ? ad.value as GoogleAd : null);
+  const imageAd = computed(() => ad.value?.type === 'ImageAd' ? ad.value as ImageAd : null);
+  const showShuffle = computed(() => query.sb === '1');
 
   // === Methods ===
   /**
@@ -117,88 +50,43 @@
         height: calculatedHeight,
         width: calculatedWidth,
       };
-      // console.log('[Debug Only] message', message);  // For debug purpose only
-      window.parent.postMessage(message, '*');
+      // Use safe messaging with origin validation (Phase 5 Security)
+      sendSafeMessage(message);
     };
     img.src = imagePath;
   };
 
   /**
-   * Call ads-server api to retrieve a random ad
-   *
-   * Note: All query strings are passed to server for processing
+   * Load a random ad based on query parameters
+   * Note: Array values are joined with commas (backend expects comma-separated values, not repeated keys)
    */
-  const pickRandomAd = async () => {
-    try {
-      state.isLoading = true;
+  const loadAd = async () => {
+      const filters: Record<string, string> = {};
+      Object.entries(query).forEach(([key, value]) => {
+        if (typeof value === 'string') {
+          filters[key] = value;
+        } else if (Array.isArray(value)) {  // Handle array values (e.g., multiple categories)
+          filters[key] = value.join(','); // Backend expects comma-separated string
+        }
+      });
 
-      // useFetch: https://nuxt.com/docs/api/composables/use-fetch
-      const params = new URLSearchParams();
-      params.append('random', "1");
-      // console.log(`[${utility.currentFileName}::pickRandomAd()] query:`, toRaw(query));
-      // Add other query strings from url
-      Object.keys(query)
-        .forEach((key) => {
-          params.append(key, `${query[key]}`);
-        });
+      await fetchAd(filters);
 
-      const url = `${runtimeConfig.public.adsServer}/api/ads?${params.toString()}`;
-      // console.log('[Debug Only] pickRandomAd()::runtimeConfig.public', runtimeConfig.public);
-      // console.log('[Debug Only] pickRandomAd()::url', url);
-
-      const apiResponse = await $fetch<IResponseFetchAd>(url);
-
-      /**
-       * Checking a few Ad properties to ensure response matches Ad type
-       *
-       * @param {IResponseFetchAd} apiResponse
-       */
-      const isAd = (apiResponse: IResponseFetchAd) => {
-        // console.log('[Debug Only] isAd()::apiResponse', apiResponse);
-
-        return (
-          'ad_code' in apiResponse &&
-          'ad_type' in apiResponse &&
-          'display_ratio' in apiResponse &&
-          'url_affiliate' in apiResponse &&
-          true
-        );
-      };
-
-      if (apiResponse && isAd(apiResponse)) {
-        const height = parseInt(apiResponse.height);
-        const width = parseInt(apiResponse.width);
-        const imagePath = apiResponse.url_segment_image ? `${runtimeConfig.public.adsServer}${apiResponse.url_segment_image}` : undefined;
-
-        // console.log(`[${utility.currentFileName}::onMounted] apiResponse:`, toRaw(apiResponse));
-        state.whichAdToShow = {
-          adFormat: apiResponse.ad_format,
-          adLayoutKey: apiResponse.ad_layout_key,
-          adSlot: (apiResponse.ad_type === 'GoogleAdSense') ? parseInt(apiResponse.ad_code) : undefined,
-          adType: apiResponse.ad_type,
-          displayRatio: parseInt(apiResponse.display_ratio),
-          height,
-          href: apiResponse.url_affiliate,
-          imageAltText: apiResponse.title,
-          imageDescription: apiResponse.image_description,
-          imagePath,
-          price: apiResponse.price ? parseFloat(apiResponse.price) : undefined,
-          priceDiscountAmount: apiResponse.price_discount_amount,
-          width,
-        };
-
-        if (imagePath) notifyParentOfAdDimensions(imagePath, height, width);
+      if (ad.value) {
+          if (ad.value.type === 'AmazonBanner' || ad.value.type === 'ImageAd') {
+               // Safe cast because of type check
+               const imgAd = ad.value as AmazonAd | ImageAd;
+               // Ensure imageUrl is present (required by domain but verify for safety)
+               if (imgAd.imageUrl) {
+                 notifyParentOfAdDimensions(imgAd.imageUrl, imgAd.height, imgAd.width);
+               }
+          }
       }
-    } catch (error) {
-      console.error(`[${utility.currentFileName}::pickRandomAd()] Fail to retrieve valid ads data, aborting.`, error);
-    } finally {
-      state.isLoading = false;
-    }
   };
 
   // === Lifecycle Hooks ===
   onMounted(() => {
-    pickRandomAd();
+    loadAd();
   });
 </script>
 
@@ -206,7 +94,7 @@
   <div class="text-center">
     <!-- === Loader === -->
     <div
-      v-if="state.isLoading"
+      v-if="isLoading"
       aria-label="Loading advertisement"
       class="loader"
       role="status"
@@ -214,44 +102,45 @@
 
     <!-- === Google AdSense === -->
     <GoogleAdSense
-      v-if="state.whichAdToShow.adType === 'GoogleAdSense'"
-      :adFormat="(<IGoogleAdObject>state.whichAdToShow).adFormat"
-      :adLayoutKey="(<IGoogleAdObject>state.whichAdToShow).adLayoutKey"
-      :adSlot="(<IGoogleAdObject>state.whichAdToShow).adSlot"
+      v-if="googleAd"
+      :adFormat="googleAd.format"
+      :adLayoutKey="googleAd.layoutKey"
+      :adSlot="googleAd.slot"
     />
 
     <!-- === Amazon Banner === -->
     <AmazonBanner
-      v-if="state.whichAdToShow.adType === 'AmazonBanner'"
-      :height="(<IAmazonAdObject>state.whichAdToShow)?.height ?? undefined"
-      :href="(<IAmazonAdObject>state.whichAdToShow).href"
-      :image="(<IAmazonAdObject>state.whichAdToShow).imagePath"
-      :imageAltText="(<IAmazonAdObject>state.whichAdToShow).imageAltText"
-      :imageDescription="(<IAmazonAdObject>state.whichAdToShow)?.imageDescription ?? undefined"
-      :price="(<IAmazonAdObject>state.whichAdToShow)?.price ?? undefined"
-      :priceDiscountAmount="(<IAmazonAdObject>state.whichAdToShow)?.priceDiscountAmount ?? undefined"
+      v-if="amazonAd"
+      :height="amazonAd.height"
+      :href="amazonAd.href"
+      :image="amazonAd.imageUrl"
+      :imageAltText="amazonAd.imageAlt"
+      :imageDescription="amazonAd.imageDescription"
+      :price="amazonAd.price"
+      :priceDiscountAmount="amazonAd.discountAmount"
     />
 
     <!-- === ImageAd === -->
     <NuxtLink
-      v-if="['MochahostBanner', 'ImageAd'].includes(state.whichAdToShow.adType ?? '')"
+      v-if="imageAd"
       rel="nofollow noopener"
       target="_blank"
-      :href="(<IImageAdObject>state.whichAdToShow).href"
+      :href="imageAd.href"
     >
       <figure>
         <img
-          :alt="(<IImageAdObject>state.whichAdToShow).imageAltText"
-          :src="(<IImageAdObject>state.whichAdToShow).imagePath"
+          :alt="imageAd.imageAlt"
+          :src="imageAd.imageUrl"
           style="max-width: 100%; height: auto;"
         />
       </figure>
     </NuxtLink>
 
+    <!-- === Shuffle Button === -->
     <button
       density="compact"
-      v-if="query?.sb === '1'"
-      @click="pickRandomAd"
+      v-if="showShuffle"
+      @click="loadAd"
     >
       Shuffle
     </button>

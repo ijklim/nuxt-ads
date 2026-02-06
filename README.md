@@ -84,6 +84,25 @@ NUXT_PUBLIC_ADS_SERVER=https://your-ads-api.com
 cp .env.example .env
 ```
 
+---
+
+## 📚 Documentation
+
+This project includes comprehensive architecture and security documentation:
+
+- **[ARCHITECTURE.md](./docs/ARCHITECTURE.md)** - 6-phase architecture journey, design patterns, and dependency rules
+- **[SECURITY.md](./docs/SECURITY.md)** - Threat models, security layers, and best practices
+- **[API_DOCUMENTATION.md](./docs/API_DOCUMENTATION.md)** - Public API reference for all layers
+
+**Quick Start:**
+1. New team members: Start with [ARCHITECTURE.md](./docs/ARCHITECTURE.md)
+2. Adding features: Check [ARCHITECTURE.md](./docs/ARCHITECTURE.md) for layer patterns, then review [API_DOCUMENTATION.md](./docs/API_DOCUMENTATION.md)
+3. Security concerns: Consult [SECURITY.md](./docs/SECURITY.md) threat matrix
+
+---
+
+## 🚀 Deployment
+
 **For GitHub Actions Deployment:**
 Since the app uses static generation (`pnpm generate`), environment variables must be set **at build time**. The GitHub Actions workflow creates a `.env` file from GitHub Secrets before generating the static site.
 
