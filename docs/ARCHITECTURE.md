@@ -150,7 +150,7 @@ The fundamental rule of Clean Architecture:
 - Explicit error handling with Result pattern
 - Type-safe discriminated unions for Ad types
 
-**Test Coverage:** 7 tests
+**Test Coverage:** ✅ Covered by unit tests
 
 ---
 
@@ -169,7 +169,7 @@ The fundamental rule of Clean Architecture:
 - No concrete implementations
 - Dependency injection ready
 
-**Test Coverage:** 2 tests
+**Test Coverage:** ✅ Covered by unit tests
 
 For port interface definitions, see [IAdRepository.ts](../infrastructure/application/ports/IAdRepository.ts) and [IConfigProvider.ts](../infrastructure/application/ports/IConfigProvider.ts). Tests are located in [tests/unit/application/FetchRandomAd.test.ts](../tests/unit/application/FetchRandomAd.test.ts).
 
@@ -190,7 +190,7 @@ For port interface definitions, see [IAdRepository.ts](../infrastructure/applica
 - Maps external data to Domain entities
 - Tested with mocked HTTP calls
 
-**Test Coverage:** 5 tests
+**Test Coverage:** ✅ Covered by unit tests
 
 For adapter implementation, see [AdRepository.ts](../infrastructure/repositories/AdRepository.ts) for API integration and [NuxtConfigProvider.ts](../infrastructure/config/NuxtConfigProvider.ts) for configuration handling. Tests are located in [tests/unit/infrastructure/AdRepository.test.ts](../tests/unit/infrastructure/AdRepository.test.ts).
 
@@ -211,7 +211,7 @@ For adapter implementation, see [AdRepository.ts](../infrastructure/repositories
 - Dependency injection via constructor
 - Clean separation of concerns
 
-**Test Coverage:** 18 tests (all passing)
+**Test Coverage:** ✅ Covered by unit tests
 
 For controller composable implementation, see [useAdController.ts](../composables/useAdController.ts). For component integration, see [RandomAd.vue](../components/RandomAd.vue). Comprehensive tests are available in [tests/unit/components/RandomAd.test.ts](../tests/unit/components/RandomAd.test.ts).
 
@@ -243,7 +243,7 @@ For controller composable implementation, see [useAdController.ts](../composable
    - Message structure validation
    - Type field required
 
-**Test Coverage:** 13 tests (6 validators + 7 messaging)
+**Test Coverage:** ✅ Covered by unit tests
 
 For security implementation, see [validators.ts](../infrastructure/security/validators.ts) for input validation and [messaging.ts](../infrastructure/security/messaging.ts) for safe messaging. Tests are located in [tests/unit/infrastructure/security.test.ts](../tests/unit/infrastructure/security.test.ts) and [tests/unit/infrastructure/messaging.test.ts](../tests/unit/infrastructure/messaging.test.ts).
 
@@ -257,11 +257,11 @@ For security implementation, see [validators.ts](../infrastructure/security/vali
 - `docs/ARCHITECTURE.md` (this file) - Complete architecture reference
 - `docs/SECURITY.md` - Security practices and threat models
 - `docs/API_DOCUMENTATION.md` - Public API reference with JSDoc
-- Test coverage analysis (51 passing tests)
+- Test coverage analysis
 
 **Key Achievements:**
-- ✅ 51 unit tests passing (100% pass rate)
-- ✅ 9 test suites covering all layers
+- ✅ Unit tests passing
+- ✅ Test suites covering all layers
 - ✅ Comprehensive JSDoc comments on public APIs
 - ✅ Architecture decision records documented
 - ✅ Security threat models documented
@@ -330,15 +330,15 @@ nuxt-ads/
 
 ## 🧪 Test Coverage Summary
 
-| Layer | Module | Tests | Status |
-|-------|--------|-------|--------|
-| Domain | Validators | 7 | ✅ Passing |
-| Application | FetchRandomAd | 2 | ✅ Passing |
-| Infrastructure | AdRepository | 5 | ✅ Passing |
-| Infrastructure | Security Validators | 6 | ✅ Passing |
-| Infrastructure | Safe Messaging | 7 | ✅ Passing |
-| Presentation | RandomAd Component | 18 | ✅ Passing |
-| **Total** | **6 Test Suites** | **51** | **✅ 100%** |
+| Layer | Module | Status |
+|-------|--------|--------|
+| Domain | Validators | ✅ Covered |
+| Application | FetchRandomAd | ✅ Covered |
+| Infrastructure | AdRepository | ✅ Covered |
+| Infrastructure | Security Validators | ✅ Covered |
+| Infrastructure | Safe Messaging | ✅ Covered |
+| Presentation | RandomAd Component | ✅ Covered |
+| **Total** | **All Test Suites** | **✅ Covered** |
 
 ---
 
@@ -419,7 +419,7 @@ Run the full test suite:
 - `pnpm test:watch` - Watch mode for development
 - `pnpm test:coverage` - Generate coverage report
 
-See [tests/](../tests/) directory for test files organized by layer. All 51 tests must pass before committing changes.
+See [tests/](../tests/) directory for test files organized by layer. All tests must pass before committing changes.
 
 ---
 
@@ -504,4 +504,4 @@ The Nuxt Ads application now implements a robust, production-ready Clean Archite
 5. ✅ **Security Layer** - Validation and safe messaging
 6. ✅ **Documentation** - Complete guides and API docs
 
-All 51 unit tests pass, demonstrating a solid foundation for future development and maintenance.
+All unit tests pass, demonstrating a solid foundation for future development and maintenance.

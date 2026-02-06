@@ -231,7 +231,8 @@ Safely sends postMessage to parent window.
 
 **Security Features:**
 - ✅ Message validation before sending
-- ✅ Configurable target origin (defaults to current origin)
+- ✅ Auto-detects parent origin in iframe scenarios
+- ✅ Configurable target origin (defaults to current origin for same-origin)
 - ✅ Error handling with logging
 - ✅ No message broadcast (parent only)
 
@@ -365,16 +366,7 @@ All public APIs have comprehensive unit tests. Run the full test suite:
 - `pnpm test tests/unit/infrastructure/` - Infrastructure layer tests
 - `pnpm test tests/unit/components/` - Component tests
 
-**Test Coverage:** 51 tests (100% passing)
-- Domain: 7 tests
-- Application: 2 tests
-- Infrastructure: 18 tests
-- Components & Composables: 18 tests
-- Security: 6 tests
-- Infrastructure (Repository): 5 tests
-- Infrastructure (Security): 6 tests
-- Infrastructure (Messaging): 7 tests
-- Presentation: 18 tests
+**Test Coverage:** ✅ Comprehensive unit tests
 
 ---
 

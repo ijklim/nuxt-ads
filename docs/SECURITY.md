@@ -99,12 +99,13 @@ For implementation details and sender/receiver patterns, see [messaging.ts](../i
 | Feature | Implementation | Benefit |
 |---------|----------------|---------|
 | Origin checking | Explicit list, no `*` | Prevents message injection |
+| Parent origin detection | Auto-detects from referrer in iframe | Safe cross-origin messaging |
 | Fail-closed | Reject on any validation error | Secure by default |
 | Type enforcement | Required `type` field | Clear message intent |
 | No broadcast | Target parent window only | Limits exposure |
 | Error handling | Try-catch with logging | Prevents crashes |
 
-**Test Coverage:** 7 tests
+**Test Coverage:** ✅ Covered by unit tests
 - ✅ Accepts message from same origin
 - ✅ Rejects message from different origin
 - ✅ Rejects message with invalid structure
@@ -182,14 +183,14 @@ For implementation details and sender/receiver patterns, see [messaging.ts](../i
 
 Security tests are automatically included in the main test suite:
 - `pnpm test` - Run all tests including security tests
-- `pnpm test tests/unit/infrastructure/security.test.ts` - Input & config validation (6 tests)
-- `pnpm test tests/unit/infrastructure/messaging.test.ts` - Safe messaging (7 tests)
+- `pnpm test tests/unit/infrastructure/security.test.ts` - Input & config validation
+- `pnpm test tests/unit/infrastructure/messaging.test.ts` - Safe messaging
 
 Security-specific test files:
-- [tests/unit/infrastructure/security.test.ts](../tests/unit/infrastructure/security.test.ts) - Input & config validation (6 tests)
-- [tests/unit/infrastructure/messaging.test.ts](../tests/unit/infrastructure/messaging.test.ts) - Safe messaging (7 tests)
+- [tests/unit/infrastructure/security.test.ts](../tests/unit/infrastructure/security.test.ts) - Input & config validation
+- [tests/unit/infrastructure/messaging.test.ts](../tests/unit/infrastructure/messaging.test.ts) - Safe messaging
 
-All 13 security tests must pass before deployment.
+All security tests must pass before deployment.
 
 ### Manual Testing Checklist
 

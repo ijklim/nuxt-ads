@@ -30,7 +30,7 @@ describe('AdRepository', () => {
       height: 100,
       width: 100
     });
-    vi.stubGlobal('$fetch', mockFetch);
+    (globalThis as any).$fetch = mockFetch;
 
     const repo = new AdRepository(mockConfigProvider);
     await repo.fetchRandom({ foo: 'bar' });
@@ -57,7 +57,7 @@ describe('AdRepository', () => {
       price: '19.99'
     };
 
-    vi.stubGlobal('$fetch', vi.fn().mockResolvedValue(mockData));
+    (globalThis as any).$fetch = vi.fn().mockResolvedValue(mockData);
 
     const repo = new AdRepository(mockConfigProvider);
     const result = await repo.fetchRandom();
@@ -77,7 +77,7 @@ describe('AdRepository', () => {
         ad_format: 'auto'
      };
 
-     vi.stubGlobal('$fetch', vi.fn().mockResolvedValue(mockData));
+    (globalThis as any).$fetch = vi.fn().mockResolvedValue(mockData);
 
      const repo = new AdRepository(mockConfigProvider);
      const result = await repo.fetchRandom();
@@ -90,7 +90,7 @@ describe('AdRepository', () => {
   });
 
   it('should return errorResult if fetch fails', async () => {
-     vi.stubGlobal('$fetch', vi.fn().mockRejectedValue(new Error('Network Error')));
+    (globalThis as any).$fetch = vi.fn().mockRejectedValue(new Error('Network Error'));
 
      const repo = new AdRepository(mockConfigProvider);
      const result = await repo.fetchRandom();
@@ -103,7 +103,7 @@ describe('AdRepository', () => {
 
   it('should return errorResult if validation fails', async () => {
       // Missing required fields
-      vi.stubGlobal('$fetch', vi.fn().mockResolvedValue({ ad_type: 'AmazonBanner' }));
+      (globalThis as any).$fetch = vi.fn().mockResolvedValue({ ad_type: 'AmazonBanner' });
 
       const repo = new AdRepository(mockConfigProvider);
       const result = await repo.fetchRandom();

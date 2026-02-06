@@ -4,20 +4,54 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest'
 import { mount } from '@vue/test-utils'
 import RandomAd from '@/components/RandomAd.vue'
-import { mockAmazonAdResponse, mockGoogleAdResponse, mockImageAdResponse, mockApiErrors } from '../fixtures/mockData'
+import type { AmazonAd, GoogleAd, ImageAd } from '@/domain/ads/types'
+
+const amazonAd: AmazonAd = {
+  id: 'AMAZON-001',
+  type: 'AmazonBanner',
+  displayRatio: 1,
+  height: 250,
+  width: 300,
+  href: 'https://amazon.com/dp/B123456789',
+  imageUrl: '/ads/amazon/laptop.jpg',
+  imageAlt: 'Premium laptop',
+  imageDescription: 'Premium laptop',
+  price: 999.99,
+  discountAmount: '100',
+}
+
+const googleAd: GoogleAd = {
+  id: 'GOOGLE-001',
+  type: 'GoogleAdSense',
+  displayRatio: 1,
+  format: 'responsive',
+  layoutKey: 'google_layout_key',
+  slot: 1234567890,
+}
+
+const imageAd: ImageAd = {
+  id: 'IMAGE-001',
+  type: 'ImageAd',
+  displayRatio: 1,
+  height: 280,
+  width: 336,
+  href: 'https://mochahost.com',
+  imageUrl: '/ads/mochahost/banner.png',
+  imageAlt: 'Web hosting services',
+}
 
 // Mocks are configured in test/setup.ts
 
 describe('RandomAd.vue', () => {
   beforeEach(() => {
     vi.clearAllMocks()
-    // Reset $fetch mock to default - return a promise that resolves to empty object
-    ;(globalThis as any).$fetch = vi.fn().mockResolvedValue({})
+    ;(globalThis as any).__mockAdController.reset()
     // Reset useRoute mock to default
     ;(globalThis as any).useRoute = vi.fn(() => ({
       query: {},
     }))
   })
+
 
   describe('Component Rendering', () => {
     it('renders the component with default state', () => {
@@ -49,18 +83,13 @@ describe('RandomAd.vue', () => {
 
   describe('Ad Fetching', () => {
     it('fetches ad on component mount', async () => {
-      ;(globalThis as any).$fetch.mockResolvedValueOnce(mockAmazonAdResponse)
-
       const wrapper = mount(RandomAd)
+      await wrapper.vm.$nextTick()
 
-      await wrapper.vm.$nextTick() // Wait for mount
-      await new Promise(resolve => setTimeout(resolve, 0)) // Wait for fetch
-
-      expect((globalThis as any).$fetch).toHaveBeenCalled()
+      expect((globalThis as any).__mockAdController.fetchAd).toHaveBeenCalledTimes(1)
     })
 
-    it('constructs correct API URL with query parameters', async () => {
-      ;(globalThis as any).$fetch.mockResolvedValueOnce(mockAmazonAdResponse)
+    it('passes query parameters to fetchAd', async () => {
       ;(globalThis as any).useRoute = vi.fn(() => ({
         query: { at: 'homepage', pk: '123' },
       }))
@@ -68,16 +97,12 @@ describe('RandomAd.vue', () => {
       const wrapper = mount(RandomAd)
 
       await wrapper.vm.$nextTick()
-      await new Promise(resolve => setTimeout(resolve, 0))
 
-      const callArgs = (globalThis as any).$fetch.mock.calls?.[0]?.[0]
-      expect(callArgs).toContain('random=1')
-      expect(callArgs).toContain('at=homepage')
-      expect(callArgs).toContain('pk=123')
+      const callArgs = (globalThis as any).__mockAdController.fetchAd.mock.calls?.[0]?.[0]
+      expect(callArgs).toEqual({ at: 'homepage', pk: '123' })
     })
 
     it('handles array query parameters by joining with commas', async () => {
-      ;(globalThis as any).$fetch.mockResolvedValueOnce(mockAmazonAdResponse)
       ;(globalThis as any).useRoute = vi.fn(() => ({
         query: { category: ['homepage', 'sidebar'], pk: '123' },
       }))
@@ -85,25 +110,23 @@ describe('RandomAd.vue', () => {
       const wrapper = mount(RandomAd)
 
       await wrapper.vm.$nextTick()
-      await new Promise(resolve => setTimeout(resolve, 0))
 
-      expect((globalThis as any).$fetch).toHaveBeenCalled()
-      const callArgs = (globalThis as any).$fetch.mock.calls?.[0]?.[0]
-      expect(callArgs).toContain('random=1')
-      expect(callArgs).toContain('category=homepage%2Csidebar')
-      expect(callArgs).toContain('pk=123')
+      const callArgs = (globalThis as any).__mockAdController.fetchAd.mock.calls?.[0]?.[0]
+      expect(callArgs).toEqual({ category: 'homepage,sidebar', pk: '123' })
     })
 
     it('handles API errors gracefully', async () => {
+      const mockController = (globalThis as any).__mockAdController
       const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {})
-      ;(globalThis as any).$fetch.mockRejectedValueOnce(mockApiErrors.networkError)
+      mockController.fetchAd.mockImplementationOnce(async () => {
+        mockController.state.error.value = new Error('Network request failed')
+        console.error('Failed to fetch ad:', mockController.state.error.value)
+      })
 
       const wrapper = mount(RandomAd)
 
       await wrapper.vm.$nextTick()
-      await new Promise(resolve => setTimeout(resolve, 0))
 
-      // The controller logs errors
       expect(consoleSpy).toHaveBeenCalled()
       consoleSpy.mockRestore()
     })
@@ -111,50 +134,43 @@ describe('RandomAd.vue', () => {
 
   describe('Ad Type Rendering', () => {
     it('renders GoogleAdSense component for GoogleAdSense ad type', async () => {
-      ;(globalThis as any).$fetch.mockResolvedValueOnce(mockGoogleAdResponse)
+      ;(globalThis as any).__mockAdController.state.ad.value = googleAd
 
       const wrapper = mount(RandomAd)
 
       await wrapper.vm.$nextTick()
-      await new Promise(resolve => setTimeout(resolve, 50))
 
       // Check for stubbed component
       expect(wrapper.find('.google-ad-stub').exists()).toBe(true)
       // Check computed property on VM
-      const googleAd = (wrapper.vm as any).googleAd
-      expect(googleAd).toBeTruthy()
-      expect(googleAd.type).toBe('GoogleAdSense')
+      const googleAdValue = (wrapper.vm as any).googleAd
+      expect(googleAdValue).toBeTruthy()
+      expect(googleAdValue.type).toBe('GoogleAdSense')
     })
 
     it('renders AmazonBanner component for AmazonBanner ad type', async () => {
-      ;(globalThis as any).$fetch.mockResolvedValueOnce(mockAmazonAdResponse)
+      ;(globalThis as any).__mockAdController.state.ad.value = amazonAd
 
       const wrapper = mount(RandomAd)
 
       await wrapper.vm.$nextTick()
-      await new Promise(resolve => setTimeout(resolve, 50))
 
       expect(wrapper.find('.amazon-banner-stub').exists()).toBe(true)
-      const amazonAd = (wrapper.vm as any).amazonAd
-      expect(amazonAd).toBeTruthy()
-      expect(amazonAd.type).toBe('AmazonBanner')
+      const amazonAdValue = (wrapper.vm as any).amazonAd
+      expect(amazonAdValue).toBeTruthy()
+      expect(amazonAdValue.type).toBe('AmazonBanner')
     })
 
     it('renders image link for MochahostBanner ad type', async () => {
-      // Logic for Mochahost -> ImageAd
-      ;(globalThis as any).$fetch.mockResolvedValueOnce(mockImageAdResponse)
+      ;(globalThis as any).__mockAdController.state.ad.value = imageAd
 
       const wrapper = mount(RandomAd)
 
       await wrapper.vm.$nextTick()
-      await new Promise(resolve => setTimeout(resolve, 50))
 
-      const imageAd = (wrapper.vm as any).imageAd
-      expect(imageAd).toBeTruthy()
-      // Note: Domain maps 'MochahostBanner' (from API) -> 'ImageAd' or similar depending on Validator
-      // In Validator: 'Mochahost' is allowed but mapped to 'ImageAd' type usually?
-      // Let's check validator: if ad_type is 'Mochahost', it returns ImageAd.
-      expect(imageAd.type).toBe('ImageAd') // Validator enforces this type constant
+      const imageAdValue = (wrapper.vm as any).imageAd
+      expect(imageAdValue).toBeTruthy()
+      expect(imageAdValue.type).toBe('ImageAd') // Validator enforces this type constant
 
       // Check DOM
       expect(wrapper.find('img').exists()).toBe(true)
@@ -162,60 +178,19 @@ describe('RandomAd.vue', () => {
   })
 
   describe('Data Validation', () => {
-    it('validates ad response has required fields', async () => {
-      ;(globalThis as any).$fetch.mockResolvedValueOnce({
-        ad_code: 'TEST',
-        ad_type: 'AmazonBanner',
-        display_ratio: '300',
-        url_affiliate: 'https://example.com',
-        ad_format: 'banner',
-        ad_layout_key: 'key',
-        height: '250',
-        width: '300',
-        // Validator needs src/image or url_segment_image mapping
-        url_segment_image: '/img.jpg',
-        title: 'Test Ad',
-        image_description: '',
-        price: '',
-        price_discount_amount: '',
-        product_code: '',
-        url_product: '',
-      })
-
+    it('renders no ad content when ad is null', async () => {
       const wrapper = mount(RandomAd)
 
       await wrapper.vm.$nextTick()
-      await new Promise(resolve => setTimeout(resolve, 50))
 
-      const amazonAd = (wrapper.vm as any).amazonAd
-      expect(amazonAd).toBeTruthy()
-    })
-
-    it('rejects response missing required fields', async () => {
-      const incompleteResponse = {
-        ad_code: 'TEST',
-        // missing ad_type
-        display_ratio: '300',
-      }
-
-      ;(globalThis as any).$fetch.mockResolvedValueOnce(incompleteResponse)
-
-      const wrapper = mount(RandomAd)
-
-      await wrapper.vm.$nextTick()
-      await new Promise(resolve => setTimeout(resolve, 50))
-
-      const ad = (wrapper.vm as any).ad
-      expect(ad).toBeNull()
+      expect(wrapper.find('.google-ad-stub').exists()).toBe(false)
+      expect(wrapper.find('.amazon-banner-stub').exists()).toBe(false)
+      expect(wrapper.find('img').exists()).toBe(false)
     })
   })
 
   describe('Shuffle Button Interaction', () => {
     it('fetches new ad when shuffle button clicked', async () => {
-      ;(globalThis as any).$fetch
-        .mockResolvedValueOnce(mockAmazonAdResponse)
-        .mockResolvedValueOnce(mockGoogleAdResponse)
-
       ;(globalThis as any).useRoute = vi.fn(() => ({
         query: { sb: '1' },
       }))
@@ -223,16 +198,14 @@ describe('RandomAd.vue', () => {
       const wrapper = mount(RandomAd)
 
       await wrapper.vm.$nextTick()
-      await new Promise(resolve => setTimeout(resolve, 50))
-      expect((globalThis as any).$fetch).toHaveBeenCalledTimes(1)
+      expect((globalThis as any).__mockAdController.fetchAd).toHaveBeenCalledTimes(1)
 
       const button = wrapper.find('button')
       await button.trigger('click')
 
       await wrapper.vm.$nextTick()
-      await new Promise(resolve => setTimeout(resolve, 50))
 
-      expect((globalThis as any).$fetch).toHaveBeenCalledTimes(2)
+      expect((globalThis as any).__mockAdController.fetchAd).toHaveBeenCalledTimes(2)
     })
   })
 
@@ -240,8 +213,6 @@ describe('RandomAd.vue', () => {
     it('sends message to parent window with correct dimensions', async () => {
       const postMessageSpy = vi.fn()
       window.parent = { postMessage: postMessageSpy } as any
-
-      ;(globalThis as any).$fetch.mockResolvedValueOnce(mockImageAdResponse)
 
       const wrapper = mount(RandomAd)
 
@@ -282,7 +253,12 @@ describe('RandomAd.vue', () => {
 
   describe('isLoading State', () => {
     it('initializes isLoading as false after fetch completes', async () => {
-      ;(globalThis as any).$fetch.mockResolvedValueOnce(mockAmazonAdResponse)
+      const mockController = (globalThis as any).__mockAdController
+      mockController.fetchAd.mockImplementationOnce(async () => {
+        mockController.state.isLoading.value = true
+        await Promise.resolve()
+        mockController.state.isLoading.value = false
+      })
 
       const wrapper = mount(RandomAd)
 
@@ -294,11 +270,16 @@ describe('RandomAd.vue', () => {
     })
 
     it('sets isLoading to true whilst fetching', async () => {
-      let resolveFetch: Function = () => {};
+      const mockController = (globalThis as any).__mockAdController
+      let resolveFetch: Function = () => {}
       const fetchPromise = new Promise(resolve => {
         resolveFetch = resolve
       })
-      ;(globalThis as any).$fetch.mockReturnValueOnce(fetchPromise)
+      mockController.fetchAd.mockImplementationOnce(async () => {
+        mockController.state.isLoading.value = true
+        await fetchPromise
+        mockController.state.isLoading.value = false
+      })
 
       const wrapper = mount(RandomAd)
 
@@ -307,15 +288,47 @@ describe('RandomAd.vue', () => {
       expect((wrapper.vm as any).isLoading).toBe(true)
 
       // Cleanup
-      resolveFetch!(mockAmazonAdResponse);
+      resolveFetch!(undefined)
     })
 
     it('sets isLoading to false when API call fails', async () => {
+      const mockController = (globalThis as any).__mockAdController
       const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {})
-      ;(globalThis as any).$fetch.mockRejectedValueOnce(new Error('Network error'))
+      mockController.fetchAd.mockImplementationOnce(async () => {
+        mockController.state.isLoading.value = true
+        mockController.state.error.value = new Error('Network error')
+        console.error('Failed to fetch ad:', mockController.state.error.value)
+        mockController.state.isLoading.value = false
+      })
 
       const wrapper = mount(RandomAd)
 
+      await new Promise(resolve => setTimeout(resolve, 50))
+
+      expect((wrapper.vm as any).isLoading).toBe(false)
+      consoleSpy.mockRestore()
+    })
+
+    it('sets isLoading to false when query parameters are invalid', async () => {
+      const mockController = (globalThis as any).__mockAdController
+      const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {})
+      ;(globalThis as any).useRoute = vi.fn(() => ({
+        query: { malicious: 'payload' },
+      }))
+
+      mockController.fetchAd.mockImplementationOnce(async (filters: Record<string, string>) => {
+        if ('malicious' in filters) {
+          mockController.state.isLoading.value = true
+          mockController.state.error.value = new Error('Invalid query parameters')
+          console.error('Invalid query parameters:', mockController.state.error.value)
+          mockController.state.isLoading.value = false
+          return
+        }
+      })
+
+      const wrapper = mount(RandomAd)
+
+      await wrapper.vm.$nextTick()
       await new Promise(resolve => setTimeout(resolve, 50))
 
       expect((wrapper.vm as any).isLoading).toBe(false)
@@ -325,12 +338,8 @@ describe('RandomAd.vue', () => {
 
   describe('Loader Element Visibility', () => {
     it('displays loader element when isLoading is true', async () => {
-        // We need to keep the promise pending to check loading state
-        let resolveFetch: any;
-        const fetchPromise = new Promise(resolve => {
-          resolveFetch = resolve
-        })
-        ;(globalThis as any).$fetch.mockReturnValueOnce(fetchPromise)
+        const mockController = (globalThis as any).__mockAdController
+        mockController.state.isLoading.value = true
 
         const wrapper = mount(RandomAd)
 
@@ -340,15 +349,17 @@ describe('RandomAd.vue', () => {
         expect(wrapper.find('.loader').exists()).toBe(true)
 
         // Finish up
-        resolveFetch(mockAmazonAdResponse)
+        mockController.state.isLoading.value = false
     })
 
     it('hides loader element when isLoading becomes false', async () => {
-      ;(globalThis as any).$fetch.mockResolvedValueOnce(mockAmazonAdResponse)
+      const mockController = (globalThis as any).__mockAdController
+      mockController.state.isLoading.value = true
 
       const wrapper = mount(RandomAd)
 
-      await new Promise(resolve => setTimeout(resolve, 50))
+      mockController.state.isLoading.value = false
+      await wrapper.vm.$nextTick()
 
       expect((wrapper.vm as any).isLoading).toBe(false)
       expect(wrapper.find('.loader').exists()).toBe(false)

@@ -47,13 +47,13 @@ export function validateMessageEvent(
 
 /**
  * Safely send postMessage to parent window
- * Only sends to the same origin by default
+ * Detects parent origin when in iframe, defaults to current origin otherwise
  * @param message Message to send
- * @param targetOrigin Target origin (defaults to parent's origin or current origin)
+ * @param targetOrigin Target origin (auto-detects parent origin if in iframe)
  */
 export function sendSafeMessage(
   message: SafeMessage,
-  targetOrigin: string = window.location.origin
+  targetOrigin?: string
 ): void {
   try {
     // Validate message structure
@@ -62,8 +62,27 @@ export function sendSafeMessage(
       return;
     }
 
+    // Determine target origin:
+    // 1. Use provided targetOrigin if specified
+    // 2. If in iframe, try to detect parent origin from referrer
+    // 3. Fall back to current origin (safe for same-origin)
+    let origin = targetOrigin;
+    if (!origin) {
+      if (window.self !== window.top && document.referrer) {
+        // In iframe: extract origin from referrer
+        try {
+          origin = new URL(document.referrer).origin;
+        } catch {
+          origin = window.location.origin;
+        }
+      } else {
+        // Not in iframe or no referrer: use current origin
+        origin = window.location.origin;
+      }
+    }
+
     // Send to parent only (not broadcast to all frames)
-    window.parent.postMessage(message, targetOrigin);
+    window.parent.postMessage(message, origin);
   } catch (error) {
     console.error('[Security] Failed to send message:', error);
   }
