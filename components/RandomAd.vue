@@ -3,6 +3,11 @@
   Query Strings Supported:
   • [laravel-ads::AdController.php::get()] at, pk, random
   • sb: If '1' display Shuffle Button
+
+  Domain Type Alignment:
+  • GoogleAd: format, layoutKey, slot
+  • AmazonAd: height, href, imageUrl, imageAlt, imageDescription, price, discountAmount
+  • ImageAd: height, width, href, imageUrl, imageAlt
 -->
 <script setup lang="ts">
   import type { AmazonAd, GoogleAd, ImageAd } from '@/domain/ads/types';
@@ -53,6 +58,7 @@
 
   /**
    * Load a random ad based on query parameters
+   * Note: Array values are joined with commas (backend expects comma-separated values, not repeated keys)
    */
   const loadAd = async () => {
       const filters: Record<string, string> = {};
@@ -60,7 +66,7 @@
         if (typeof value === 'string') {
           filters[key] = value;
         } else if (Array.isArray(value)) {  // Handle array values (e.g., multiple categories)
-          filters[key] = value.join(','); // Join array into comma-separated string
+          filters[key] = value.join(','); // Backend expects comma-separated string
         }
       });
 
@@ -70,8 +76,10 @@
           if (ad.value.type === 'AmazonBanner' || ad.value.type === 'ImageAd') {
                // Safe cast because of type check
                const imgAd = ad.value as AmazonAd | ImageAd;
-               // Ensure imageUrl is present (it is required in domain)
-               notifyParentOfAdDimensions(imgAd.imageUrl, imgAd.height, imgAd.width);
+               // Ensure imageUrl is present (required by domain but verify for safety)
+               if (imgAd.imageUrl) {
+                 notifyParentOfAdDimensions(imgAd.imageUrl, imgAd.height, imgAd.width);
+               }
           }
       }
   };

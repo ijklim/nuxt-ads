@@ -10,6 +10,11 @@ describe('Safe Messaging', () => {
     window.location = { ...originalLocation, origin: 'https://example.com' } as any;
   });
 
+  afterEach(() => {
+    // Restore original window.location to prevent test leakage
+    (window as any).location = originalLocation;
+  });
+
   describe('validateMessageEvent', () => {
     it('accepts message from same origin', () => {
       const event = new MessageEvent('message', {
