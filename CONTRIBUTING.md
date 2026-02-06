@@ -275,7 +275,7 @@ When adding new code:
 When refactoring:
 - Maintain strict layer boundaries (Domain → Application → Infrastructure → Presentation)
 - Update documentation if interfaces or public APIs change
-- Ensure all 51 tests still pass
+- Ensure all tests still pass
 - Review security implications for any validation changes
 
 ## Questions?
