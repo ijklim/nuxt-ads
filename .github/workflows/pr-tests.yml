@@ -57,7 +57,7 @@ jobs:
       # On cache hit this avoids running `pnpm install`; on cache miss
       # the subsequent steps will run `pnpm install` and populate the cache
       # for future workflow runs.
-      - name: Cache node_modules and .pnpm-store
+      - name: Restore node_modules and .pnpm-store cache
         id: cache-node-modules-pnpm
         uses: actions/cache@v4
         with:
@@ -96,7 +96,7 @@ jobs:
       # Uses the lockfile/hash to invalidate when dependencies (or Playwright)
       # change. On cache hit the install step is skipped.
       # Project-scoped to .playwright/browsers for consistency with node_modules.
-      - name: Cache Playwright browsers
+      - name: Restore Playwright browsers cache
         id: cache-playwright-browsers
         uses: actions/cache@v4
         with:
