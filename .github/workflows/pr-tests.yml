@@ -53,19 +53,23 @@ jobs:
 
       # Cache for pnpm is handled by setup-node (cache: pnpm), so no extra actions/cache needed.
 
-      - name: Restore node_modules cache
-        id: node-mod-cache
+      # Restore cached node_modules and pnpm store when available.
+      # On cache hit this avoids running `pnpm install`; on cache miss
+      # the subsequent steps will run `pnpm install` and populate the cache
+      # for future workflow runs.
+      - name: Cache node_modules and .pnpm-store
+        id: cache-node-modules-pnpm
         uses: actions/cache@v4
         with:
           path: |
             node_modules
             .pnpm-store
-          key: ${{ runner.os }}-pnpm-node-modules-${{ hashFiles('**/pnpm-lock.yaml','**/package.json') }}
+          key: ${{ runner.os }}-node-modules-pnpm-${{ hashFiles('**/pnpm-lock.yaml','**/package.json') }}
           restore-keys: |
-            ${{ runner.os }}-pnpm-node-modules-
+            ${{ runner.os }}-node-modules-pnpm-
 
       - name: Install dependencies
-        if: steps.node-mod-cache.outputs.cache-hit != 'true'
+        if: steps.cache-node-modules-pnpm.outputs.cache-hit != 'true'
         run: pnpm install --no-frozen-lockfile
 
       # --- VALIDATION PHASE ---
@@ -79,8 +83,24 @@ jobs:
 
       # --- E2E PHASE (Reuses existing environment) ---
 
+      # Cache Playwright downloaded browser binaries to speed up CI.
+      # Uses the lockfile/hash to invalidate when dependencies (or Playwright)
+      # change. On cache hit the install step is skipped.
+      # Project-scoped to .playwright/browsers for consistency with node_modules.
+      - name: Cache Playwright browsers
+        id: cache-playwright-browsers
+        uses: actions/cache@v4
+        with:
+          path: .playwright/browsers
+          key: ${{ runner.os }}-playwright-browsers-${{ hashFiles('**/pnpm-lock.yaml','**/package.json') }}
+          restore-keys: |
+            ${{ runner.os }}-playwright-browsers-
+
       - name: Install Playwright browsers
+        if: steps.cache-playwright-browsers.outputs.cache-hit != 'true'
         run: pnpm exec playwright install --with-deps
+        env:
+          PLAYWRIGHT_BROWSERS_PATH: .playwright/browsers
 
       - name: Run E2E tests
         run: pnpm test:e2e
