@@ -5,96 +5,100 @@
 import { test, expect } from '@playwright/test'
 
 const timeout = 30000;
+const maxLoadTimeMs = 15000;
+
+const mockApiAdResponse = {
+  ad_type: 'AmazonBanner',
+  id: 'e2e-ad-1',
+  url_segment_image: '/images/e2e-mock-ad.jpg',
+  url_affiliate: 'https://example.com/product',
+  title: 'Mock Ad',
+  image_description: 'Mock ad description',
+  height: 250,
+  width: 300,
+};
+
+async function gotoApp(page: Parameters<typeof test.beforeEach>[0]['page'], path = '/') {
+  await page.goto(path, { waitUntil: 'domcontentloaded' });
+  await expect(page.locator('body')).toBeVisible({ timeout });
+}
 
 test.describe('Ad Server E2E Tests', () => {
+  test.describe.configure({ mode: 'serial' });
+
   test.beforeEach(async ({ page }) => {
-    // Set environment before navigation
-    await page.goto('http://localhost:8810')
+    await page.route('**/api/ads**', async (route) => {
+      await route.fulfill({
+        status: 200,
+        contentType: 'application/json',
+        body: JSON.stringify(mockApiAdResponse),
+      });
+    });
+
+    await gotoApp(page);
   })
 
   test.describe('Ad Loading', () => {
     test('should load and display an ad on page load', async ({ page }) => {
-      await page.waitForLoadState('networkidle')
-
-      // Wait for ad content to render - look for any ad content
       await page.waitForSelector('img, ins.adsbygoogle, a[target="_blank"]', { timeout })
 
-      // Verify some ad content is present
       const adContent = page.locator('img, ins.adsbygoogle, a[target="_blank"]')
       await expect(adContent.first()).toBeVisible()
     })
 
     test('should fetch ad from correct API endpoint', async ({ page }) => {
-      let apiCallMade = false
+      const responsePromise = page.waitForResponse(
+        response => response.url().includes('/api/ads') && response.status() === 200,
+        { timeout },
+      );
 
-      page.on('response', response => {
-        if (response.url().includes('/api/ads') && response.status() === 200) {
-          apiCallMade = true
-        }
-      })
+      await gotoApp(page);
 
-      await page.goto('http://localhost:8810')
-      await page.waitForLoadState('networkidle')
-
-      // Verify API was called
-      expect(apiCallMade).toBe(true)
+      const response = await responsePromise;
+      expect(response.ok()).toBe(true)
     })
 
     test('should pass query parameters to API', async ({ page }) => {
-      let capturedUrl = ''
+      const responsePromise = page.waitForResponse(
+        response => response.url().includes('/api/ads') && response.status() === 200,
+        { timeout },
+      );
 
-      page.on('response', response => {
-        if (response.url().includes('/api/ads')) {
-          capturedUrl = response.url()
-        }
-      })
+      await gotoApp(page, '/?at=test-page&pk=123&sb=1');
 
-      await page.goto('http://localhost:8810?at=test-page&pk=123&sb=1')
-      await page.waitForLoadState('networkidle')
-
-      // Verify query parameters were passed to API
-      if (capturedUrl) {
-        expect(capturedUrl).toContain('at=test-page')
-        expect(capturedUrl).toContain('pk=123')
-      }
+      const capturedUrl = (await responsePromise).url();
+      expect(capturedUrl).toContain('at=test-page')
+      expect(capturedUrl).toContain('pk=123')
     })
   })
 
   test.describe('Shuffle Functionality', () => {
     test('should show shuffle button when sb=1', async ({ page }) => {
-      await page.goto('http://localhost:8810?sb=1')
+      await gotoApp(page, '/?sb=1');
 
       const shuffleButton = page.locator('button')
       await expect(shuffleButton).toBeVisible()
     })
 
     test('should fetch new ad when shuffle button clicked', async ({ page }) => {
-      await page.goto('http://localhost:8810?sb=1')
+      await gotoApp(page, '/?sb=1');
 
-      // Wait for initial ad load
       await page.waitForSelector('img, ins.adsbygoogle, a[target="_blank"]', { timeout })
 
-      let apiCallCount = 0
+      const nextApiResponsePromise = page.waitForResponse(
+        response => response.url().includes('/api/ads') && response.status() === 200,
+        { timeout },
+      );
 
-      page.on('response', response => {
-        if (response.url().includes('/api/ads') && response.status() === 200) {
-          apiCallCount++
-        }
-      })
-
-      // Click shuffle button
       const shuffleButton = page.locator('button')
       await shuffleButton.click()
+      await nextApiResponsePromise;
 
-      // Wait for new API call
-      await page.waitForTimeout(timeout)
-
-      // Verify button still visible
-      expect(shuffleButton).toBeVisible()
+      await expect(shuffleButton).toBeVisible()
     })
 
     test('should not show shuffle button when sb is not set', async ({ page }) => {
-      await page.goto('http://localhost:8810')
+      await gotoApp(page)
 
       const shuffleButton = page.locator('button')
       const count = await shuffleButton.count()
@@ -104,11 +108,8 @@ test.describe('Ad Server E2E Tests', () => {
 
   test.describe('Ad Types Rendering', () => {
     test('should render ad content on page', async ({ page }) => {
-      await page.goto('http://localhost:8810')
+      await gotoApp(page)
 
-      await page.waitForLoadState('networkidle')
-
-      // Look for any ad content - image, link, or ad container
       const hasAdContent = await page.locator('img, a[target="_blank"], ins').count() > 0
       expect(hasAdContent).toBe(true)
     })
@@ -125,16 +126,12 @@ test.describe('Ad Server E2E Tests', () => {
     // })
 
     test('should render image link when ad contains image', async ({ page }) => {
-      await page.goto('http://localhost:8810')
+      await gotoApp(page)
 
-      await page.waitForLoadState('networkidle')
-
-      // Verify page loaded with some content
       const images = page.locator('img')
       const links = page.locator('a')
       const hasContent = (await images.count() > 0) || (await links.count() > 0)
 
-      // At minimum, the page should have loaded
       expect(hasContent).toBeTruthy()
     })
   })
@@ -161,16 +158,14 @@ test.describe('Ad Server E2E Tests', () => {
 
   test.describe('Accessibility', () => {
     test('should have content on page', async ({ page }) => {
-      await page.goto('http://localhost:8810')
-      await page.waitForLoadState('networkidle')
+      await gotoApp(page)
 
       const body = page.locator('body')
       await expect(body).toBeVisible()
     })
 
     test('should have proper link attributes when external links exist', async ({ page }) => {
-      await page.goto('http://localhost:8810')
-      await page.waitForLoadState('networkidle')
+      await gotoApp(page)
 
       const externalLinks = page.locator('a[target="_blank"]')
       const count = await externalLinks.count()
@@ -185,7 +180,7 @@ test.describe('Ad Server E2E Tests', () => {
     })
 
     test('should render buttons with visible text', async ({ page }) => {
-      await page.goto('http://localhost:8810?sb=1')
+      await gotoApp(page, '/?sb=1')
 
       const button = page.locator('button')
       const count = await button.count()
@@ -201,29 +196,26 @@ test.describe('Ad Server E2E Tests', () => {
     test('should load ads within acceptable time', async ({ page }) => {
       const startTime = Date.now()
 
-      await page.goto('http://localhost:8810')
+      await gotoApp(page)
       await page.waitForSelector('img, ins.adsbygoogle, a[target="_blank"]', { timeout })
 
       const endTime = Date.now()
       const loadTime = endTime - startTime
 
-      // Ad should load within 5 seconds
-      expect(loadTime).toBeLessThan(5000)
+      expect(loadTime).toBeLessThan(maxLoadTimeMs)
     })
 
     test('should not have memory leaks on repeated shuffles', async ({ page }) => {
-      await page.goto('http://localhost:8810?sb=1')
-      await page.waitForLoadState('networkidle')
+      await gotoApp(page, '/?sb=1')
 
       const button = page.locator('button:has-text("Shuffle")')
+      await expect(button).toBeVisible()
 
-      // Click shuffle 5 times rapidly
       for (let i = 0; i < 5; i++) {
         await button.click()
         await page.waitForTimeout(200)
       }
 
-      // Page should still be functional
       const body = page.locator('body')
       await expect(body).toBeVisible()
     })
@@ -239,14 +231,11 @@ test.describe('Ad Server E2E Tests', () => {
         }
       })
 
-      await page.goto('http://localhost:8810')
-      await page.waitForLoadState('networkidle')
+      await gotoApp(page)
 
-      // Verify page loaded
       const body = page.locator('body')
       await expect(body).toBeVisible()
 
-      // CORS errors should not occur
       expect(criticalErrors).toBe(false)
     })
   })

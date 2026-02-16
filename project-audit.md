@@ -29,7 +29,7 @@ Date: 2026-02-03
 
 **Key modules/files**
 - Runtime config: [nuxt.config.ts](nuxt.config.ts)
-- CORS middleware: [server/middleware/cors-ivan.ts](server/middleware/cors-ivan.ts)
+- CORS handling: previously implemented via server middleware (server/middleware/cors-ivan.ts) — middleware folder removed; ensure hosting or CDN static headers provide appropriate CORS rules
 - API access currently embedded in UI: [components/RandomAd.vue](components/RandomAd.vue)
 
 **Boundary violations**
@@ -38,7 +38,7 @@ Date: 2026-02-03
 
 **High-risk couplings / failure points**
 - Missing or empty `NUXT_PUBLIC_ADS_SERVER` yields invalid requests with no fallback.
-- CORS middleware does not apply to static generation (noted in file), which may cause production mismatches.
+- Note: server middleware was removed and therefore CORS must be enforced by the hosting layer or static headers; verify CDN/host config to avoid production mismatches.
 - No retry, timeout, or error classification for ad server failures.
 
 ---

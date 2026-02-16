@@ -198,6 +198,7 @@ pnpm run test && pnpm test:e2e
 
 **ads.js Embed:**
 - ✅ No CORS errors
+- ⚠️ CORS handling depends on hosting/CDN configuration; server middleware was removed from the repository — ensure the deploy environment sets appropriate CORS headers to avoid embed failures
 
 ## Mock Data
 
