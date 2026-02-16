@@ -64,13 +64,22 @@ jobs:
           path: |
             node_modules
             .pnpm-store
-          key: ${{ runner.os }}-node-modules-pnpm-${{ hashFiles('**/pnpm-lock.yaml','**/package.json') }}
+          key: ${{ runner.os }}-cache-node-modules-pnpm-${{ hashFiles('**/pnpm-lock.yaml','**/package.json') }}
           restore-keys: |
-            ${{ runner.os }}-node-modules-pnpm-
+            ${{ runner.os }}-cache-node-modules-pnpm-
 
       - name: Install dependencies
         if: steps.cache-node-modules-pnpm.outputs.cache-hit != 'true'
         run: pnpm install --no-frozen-lockfile
+
+      - name: Save node_modules and .pnpm-store cache
+        uses: actions/cache/save@v4
+        if: steps.cache-node-modules-pnpm.outputs.cache-hit != 'true'
+        with:
+          path: |
+            node_modules
+            .pnpm-store
+          key: ${{ runner.os }}-cache-node-modules-pnpm-${{ hashFiles('**/pnpm-lock.yaml','**/package.json') }}
 
       # --- VALIDATION PHASE ---
 
@@ -92,15 +101,22 @@ jobs:
         uses: actions/cache@v4
         with:
           path: .playwright/browsers
-          key: ${{ runner.os }}-playwright-browsers-${{ hashFiles('**/pnpm-lock.yaml','**/package.json') }}
+          key: ${{ runner.os }}-cache-playwright-browsers-${{ hashFiles('**/pnpm-lock.yaml','**/package.json') }}
           restore-keys: |
-            ${{ runner.os }}-playwright-browsers-
+            ${{ runner.os }}-cache-playwright-browsers-
 
       - name: Install Playwright browsers
         if: steps.cache-playwright-browsers.outputs.cache-hit != 'true'
         run: pnpm exec playwright install --with-deps
         env:
           PLAYWRIGHT_BROWSERS_PATH: .playwright/browsers
+
+      - name: Save Playwright browsers cache
+        uses: actions/cache/save@v4
+        if: steps.cache-playwright-browsers.outputs.cache-hit != 'true'
+        with:
+          path: .playwright/browsers
+          key: ${{ runner.os }}-cache-playwright-browsers-${{ hashFiles('**/pnpm-lock.yaml','**/package.json') }}
 
       - name: Run E2E tests
         run: pnpm test:e2e
