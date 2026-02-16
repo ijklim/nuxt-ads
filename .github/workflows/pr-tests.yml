@@ -53,7 +53,19 @@ jobs:
 
       # Cache for pnpm is handled by setup-node (cache: pnpm), so no extra actions/cache needed.
 
+      - name: Restore node_modules cache
+        id: node-mod-cache
+        uses: actions/cache@v4
+        with:
+          path: |
+            node_modules
+            .pnpm-store
+          key: ${{ runner.os }}-pnpm-node-modules-${{ hashFiles('**/pnpm-lock.yaml','**/package.json') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-node-modules-
+
       - name: Install dependencies
+        if: steps.node-mod-cache.outputs.cache-hit != 'true'
         run: pnpm install --no-frozen-lockfile
 
       # --- VALIDATION PHASE ---
