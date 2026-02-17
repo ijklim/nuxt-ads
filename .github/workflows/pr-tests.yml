@@ -32,12 +32,17 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 40
     env:
-      PLAYWRIGHT_BROWSERS_PATH: .playwright/browsers
       # Cache key prefixes for consistency. Note: Step IDs in `if` conditions below
       # are hardcoded (cache-node-modules-pnpm, cache-playwright-browsers) and cannot
       # be variables. Update these prefixes if you change cache naming strategy.
       CACHE_KEY_PREFIX_NODE_MODULES: cache-node-modules-pnpm
       CACHE_KEY_PREFIX_PLAYWRIGHT_BROWSERS: cache-playwright-browsers
+
+      # Nuxt configuration - sourced from GitHub repository secrets
+      NUXT_PUBLIC_ADS_SERVER: ${{ secrets.NUXT_PUBLIC_ADS_SERVER }}
+      NUXT_PUBLIC_AD_CLIENT: ${{ secrets.NUXT_PUBLIC_AD_CLIENT }}
+
+      PLAYWRIGHT_BROWSERS_PATH: .playwright/browsers
     steps:
       # --- SHARED SETUP (Runs once per workflow) ---
 
@@ -94,8 +99,9 @@ jobs:
         run: pnpm test
 
       # Build once and reuse for E2E
-      - name: Build application
-        run: pnpm build
+      # Note: Not necessary as Playwright has command that starts the server
+      # - name: Build application
+      #   run: pnpm build
 
       # --- E2E PHASE (Reuses existing environment) ---
 
@@ -128,6 +134,8 @@ jobs:
       - name: Run E2E tests
         run: pnpm test:e2e
         env:
+          NUXT_PUBLIC_ADS_SERVER: ${{ secrets.NUXT_PUBLIC_ADS_SERVER }}
+          NUXT_PUBLIC_AD_CLIENT: ${{ secrets.NUXT_PUBLIC_AD_CLIENT }}
           PLAYWRIGHT_BROWSERS_PATH: ${{ env.PLAYWRIGHT_BROWSERS_PATH }}
 
       # --- ARTIFACT UPLOADS ---

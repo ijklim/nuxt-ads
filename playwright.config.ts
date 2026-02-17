@@ -53,8 +53,5 @@ export default defineConfig({
     url: `http://localhost:${portTesting}`,
     reuseExistingServer: true,
     timeout: 120 * 1000,
-    env: {
-      ...process.env,  // Inherit all parent env vars (including GitHub Actions secrets and variables)
-    },
   },
 });
