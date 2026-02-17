@@ -69,29 +69,28 @@ jobs:
       # On cache hit this avoids running `pnpm install`; on cache miss
       # the subsequent steps will run `pnpm install` and populate the cache
       # for future workflow runs.
-      - name: Restore node_modules and .pnpm-store cache
-        id: cache-node-modules-pnpm
-        uses: actions/cache@v4
-        with:
-          path: |
-            node_modules
-            .pnpm-store
-          key: ${{ runner.os }}-${{ env.CACHE_KEY_PREFIX_NODE_MODULES }}-${{ hashFiles('**/pnpm-lock.yaml','**/package.json') }}
-          restore-keys: |
-            ${{ runner.os }}-${{ env.CACHE_KEY_PREFIX_NODE_MODULES }}-
+      # - name: Restore node_modules and .pnpm-store cache
+      #   id: cache-node-modules-pnpm
+      #   uses: actions/cache@v4
+      #   with:
+      #     path: |
+      #       node_modules
+      #       .pnpm-store
+      #     key: ${{ runner.os }}-${{ env.CACHE_KEY_PREFIX_NODE_MODULES }}-${{ hashFiles('**/pnpm-lock.yaml','**/package.json') }}
+      #     restore-keys: |
+      #       ${{ runner.os }}-${{ env.CACHE_KEY_PREFIX_NODE_MODULES }}-
 
       - name: Install dependencies
-        if: steps.cache-node-modules-pnpm.outputs.cache-hit != 'true'
+        # if: steps.cache-node-modules-pnpm.outputs.cache-hit != 'true'
         run: pnpm install --no-frozen-lockfile
 
-      - name: Save node_modules and .pnpm-store cache
-        uses: actions/cache/save@v4
-        if: steps.cache-node-modules-pnpm.outputs.cache-hit != 'true'
-        with:
-          path: |
-            node_modules
-            .pnpm-store
-          key: ${{ runner.os }}-${{ env.CACHE_KEY_PREFIX_NODE_MODULES }}-${{ hashFiles('**/pnpm-lock.yaml','**/package.json') }}
+      # - name: Save node_modules and .pnpm-store cache
+      #   uses: actions/cache/save@v4
+      #   with:
+      #     path: |
+      #       node_modules
+      #       .pnpm-store
+      #     key: ${{ runner.os }}-${{ env.CACHE_KEY_PREFIX_NODE_MODULES }}-${{ hashFiles('**/pnpm-lock.yaml','**/package.json') }}
 
       # --- VALIDATION PHASE ---
 
@@ -109,14 +108,14 @@ jobs:
       # Uses the lockfile/hash to invalidate when dependencies (or Playwright)
       # change. On cache hit the install step is skipped.
       # Project-scoped to .playwright/browsers for consistency with node_modules.
-      - name: Restore Playwright browsers cache
-        id: cache-playwright-browsers
-        uses: actions/cache@v4
-        with:
-          path: ${{ env.PLAYWRIGHT_BROWSERS_PATH }}
-          key: ${{ runner.os }}-${{ env.CACHE_KEY_PREFIX_PLAYWRIGHT_BROWSERS }}-${{ hashFiles('**/pnpm-lock.yaml','**/package.json') }}
-          restore-keys: |
-            ${{ runner.os }}-${{ env.CACHE_KEY_PREFIX_PLAYWRIGHT_BROWSERS }}-
+      # - name: Restore Playwright browsers cache
+      #   id: cache-playwright-browsers
+      #   uses: actions/cache@v4
+      #   with:
+      #     path: ${{ env.PLAYWRIGHT_BROWSERS_PATH }}
+      #     key: ${{ runner.os }}-${{ env.CACHE_KEY_PREFIX_PLAYWRIGHT_BROWSERS }}-${{ hashFiles('**/pnpm-lock.yaml','**/package.json') }}
+      #     restore-keys: |
+      #       ${{ runner.os }}-${{ env.CACHE_KEY_PREFIX_PLAYWRIGHT_BROWSERS }}-
 
       - name: Install Playwright browsers
         if: steps.cache-playwright-browsers.outputs.cache-hit != 'true'
@@ -124,12 +123,12 @@ jobs:
         env:
           PLAYWRIGHT_BROWSERS_PATH: ${{ env.PLAYWRIGHT_BROWSERS_PATH }}
 
-      - name: Save Playwright browsers cache
-        uses: actions/cache/save@v4
-        if: steps.cache-playwright-browsers.outputs.cache-hit != 'true'
-        with:
-          path: ${{ env.PLAYWRIGHT_BROWSERS_PATH }}
-          key: ${{ runner.os }}-${{ env.CACHE_KEY_PREFIX_PLAYWRIGHT_BROWSERS }}-${{ hashFiles('**/pnpm-lock.yaml','**/package.json') }}
+      # - name: Save Playwright browsers cache
+      #   uses: actions/cache/save@v4
+      #   if: steps.cache-playwright-browsers.outputs.cache-hit != 'true'
+      #   with:
+      #     path: ${{ env.PLAYWRIGHT_BROWSERS_PATH }}
+      #     key: ${{ runner.os }}-${{ env.CACHE_KEY_PREFIX_PLAYWRIGHT_BROWSERS }}-${{ hashFiles('**/pnpm-lock.yaml','**/package.json') }}
 
       - name: Run E2E tests
         run: pnpm test:e2e
