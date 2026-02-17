@@ -24,6 +24,8 @@ async function gotoApp(page: Parameters<typeof test.beforeEach>[0]['page'], path
 }
 
 test.describe('Ad Server E2E Tests', () => {
+  // Run tests sequentially (one at a time) to avoid race conditions from parallel
+  // execution. Important for E2E tests that share a dev server instance.
   test.describe.configure({ mode: 'serial' });
 
   test.beforeEach(async ({ page }) => {
