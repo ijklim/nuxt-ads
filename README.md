@@ -50,6 +50,7 @@ A Nuxt-based ad server that displays randomized advertisements from a backend AP
 
 **Security & Best Practices:**
 - **CORS Middleware** - Proper cross-origin request handling with configurable headers
+- **CORS Handling** - CORS is configured via hosting or static headers (server middleware removed from the repo)
 - **XSS Prevention** - Content sanitization and trusted origin validation
 - **Secret Management** - GitHub Secrets for sensitive credentials (never committed to repo)
 - **Access Control** - postMessage origin verification for iframe communication

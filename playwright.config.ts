@@ -8,15 +8,27 @@ const portTesting = 8810;
  */
 export default defineConfig({
   testDir: './tests/e2e',
-  fullyParallel: true,
+
+  // true: run tests in parallel (faster but may have race conditions)
+  // false: run sequentially (slower but more stable)
+  fullyParallel: false,
+
+  // Prevent .only tests in CI to ensure full test suite runs
   forbidOnly: !!process.env.CI,
+
+  // Retry failed tests up to 2 times in CI for transient issues
   retries: process.env.CI ? 2 : 0,
-  workers: process.env.CI ? 4 : undefined,
+
+  // Limit to 4 workers in CI to reduce resource contention, otherwise use 1 worker for more stable test runs locally
+  workers: process.env.CI ? 2 : 1,
+
   reporter: [['html', { outputFolder: './playwright-results' }]],
   outputDir: './playwright-results',
   use: {
-    baseURL: 'http://localhost:8810',
+    baseURL: `http://localhost:${portTesting}`,
     trace: 'on-first-retry',
+    actionTimeout: 10000, // Individual actions shouldn't take forever
+    navigationTimeout: 15000, // Navigations can be a bit slower, especially on CI
   },
 
   projects: [
@@ -37,9 +49,9 @@ export default defineConfig({
   ],
 
   webServer: {
-    command: `pnpm dev --port=${portTesting}`,
+    command: process.env.CI ? `pnpm build && pnpm preview --port=${portTesting}` : `pnpm dev --port=${portTesting}`,
     url: `http://localhost:${portTesting}`,
     reuseExistingServer: true,
-    timeout: 30 * 1000,
+    timeout: 120 * 1000,
   },
 });
